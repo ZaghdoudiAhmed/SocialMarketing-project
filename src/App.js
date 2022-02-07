@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { Router, Routes, Route } from "react-router-dom";
+import Accueil from "./components/accueil";
+//import Timeline from "./components/timeline/time-line";
+//import Timelinefriends from "./components/timeline/timeline-friends";
+//import Timelinegroups from "./components/timeline/timeline-groups";
+//import Timelinephotos from "./components/timeline/timeline-photos";
+//import Timelinevideos from "./components/timeline/timeline-videos";
+//import About from "./components/timeline/about";
+//import Messages from "./components/timeline/messages";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Accueil />
+    //   <Router>
+    //     <Routes>
+    //       <Route path="/timeline" element={<Timeline />} />
+    //     </Routes>
+    //   </Router>
+    // </div>
+    // <Timeline />
+    // <Timelinefriends />
+    // <Timelinegroups />
+    // <Timelinephotos />
+    // <Timelinevideos />
+    // <Messages />
+    //<About />
   );
 }
 
