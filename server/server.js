@@ -15,7 +15,7 @@ app.use(cors());
 // Set up Mongoose
 
 const CONNECTION_URL =
-  "mongodb+srv://ahmed:ahmed@cluster0.kffsu.mongodb.net/socialmarketingpi?retryWrites=true&w=majority";
+  "mongodb+srv://ahmed:ahmed@cluster0.kffsu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5000;
 //mongoose.connect(isDev ? config.db_dev : config.db);
 //mongoose.Promise = global.Promise;
