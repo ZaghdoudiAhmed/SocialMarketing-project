@@ -1,7 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Link, Routes, Route } from "react-router-dom";
+import axios from "axios";
 
 function Accueil() {
+  const url = "http://localhost:3000/posts/";
+  const [postData, setPostData] = useState({
+    Description: "",
+    // creator: "",
+    Private: true,
+    Creator: "reirfrj45656rgrjyg5656",
+  });
+  const [data, setData] = useState([]);
+
+  const handleSubmit = (newPost) => {
+    axios.post(url, newPost);
+    console.log(newPost);
+  };
+
+  useEffect(() => {
+    console.log(postData);
+    axios.get(url).then((res) => {
+      setData(res.data);
+    });
+  });
   return (
     <div>
       <div className="theme-layout">
@@ -1073,12 +1094,20 @@ function Accueil() {
                             <img src="images/resources/admin2.jpg" alt />
                           </figure>
                           <div className="newpst-input">
-                            <form method="post">
+                            <form>
                               <textarea
                                 rows={2}
                                 placeholder="write something"
                                 defaultValue={""}
+                                value={postData.Description}
+                                onChange={(e) =>
+                                  setPostData({
+                                    ...postData,
+                                    Description: e.target.value,
+                                  })
+                                }
                               />
+
                               <div className="attachments">
                                 <ul>
                                   <li>
@@ -1106,7 +1135,12 @@ function Accueil() {
                                     </label>
                                   </li>
                                   <li>
-                                    <button type="submit">Post</button>
+                                    <button
+                                      onClick={() => handleSubmit}
+                                      type="submit"
+                                    >
+                                      Post
+                                    </button>
                                   </li>
                                 </ul>
                               </div>

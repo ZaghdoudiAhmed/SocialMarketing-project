@@ -1,22 +1,56 @@
 var express = require("express");
+var multer = require("multer");
+
+var fs = require("fs");
+var path = require("path");
+
 var router = express.Router();
 
 var Post = require("../models/posts");
 
+//  Storing uploaded files
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+var upload = multer({ storage: storage, fileFilter: fileFilter });
+
 router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
+  // res.send("respond with a resource");
+  Post.find({}, (err, posts) => {
+    if (err) {
+      res.send("error get posts");
+    }
+    res.json(posts);
+  });
 });
 
 // Creating post
-router.post("/", (req, res, next) => {
+router.post("/", upload.single("Photo"), (req, res) => {
+  console.log(req.file);
   new Post({
     Description: req.body.Description,
-    //  Likes: req.body.Likes,
-    //  Dislikes: req.body.Dislikes,
-    //  Love: req.body.Love,
-    //  Nbr_comments: req.body.Nbr_comments,
     Private: req.body.Private,
     Creator: req.body.Creator,
+    //  Photo: req.files.name,
+    Photo: req.file.path,
   }).save((err, newpost) => {
     if (err) {
       console.log("error");

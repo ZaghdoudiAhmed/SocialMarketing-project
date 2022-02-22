@@ -16,7 +16,7 @@ var Post = new Schema({
   // comments: [{ body: "string", by: Schema.Types.ObjectId }],
 
   //  Shared: String,
-  // Photo : String,
+  Photo: String,
   // Video : String,
   //Interessant: String,
 });
