@@ -910,9 +910,7 @@ function Accueil() {
                             </li>
                             <li>
                               <i className="ti-comments-smiley" />
-                              <a href="messages.html" title>
-                                Messages
-                              </a>
+                              <Link to="/messages">Messages</Link>
                             </li>
                             <li>
                               <i className="ti-bell" />

@@ -8,7 +8,7 @@ import Timelinegroups from "./components/timeline/timeline-groups";
 import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
 import About from "./components/timeline/about";
-import Messages from "./components/timeline/messages";
+import Messanger from "./components/timeline/messages/messanger";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="/timelinevideos" element={<Timelinevideos />} />
 
         {/* <Route path="/company" element={<Indexcompany />} /> */}
-        <Route path="/messages" element={<Messages />} />
+        <Route path="/messages" element={<Messanger />} />
       </Routes>
     </BrowserRouter>
   );
