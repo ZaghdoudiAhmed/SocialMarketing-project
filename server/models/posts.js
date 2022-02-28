@@ -13,7 +13,7 @@ var Post = new Schema({
   // Views: [Schema.Types.ObjectId],
   Creator: { type: String, required: true },
   //  Creator: { type: Schema.Types.ObjectId, ref: "User" },
-  // comments: [{ body: "string", by: Schema.Types.ObjectId }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 
   //  Shared: String,
   Photo: String,

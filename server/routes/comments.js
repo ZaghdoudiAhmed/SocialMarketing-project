@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 
 var Comment = require("../models/comment");
+var Post = require("../models/posts");
 
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
@@ -68,6 +69,35 @@ router.post("/dislike/:id", (req, res, next) => {
     { $inc: { Dislikes: 1 } }
   ).exec();
   res.json("done");
+});
+
+//A comment for a post
+router.post("/post/:id/comment", async (req, res, next) => {
+  //post id
+  const id = req.params.id;
+  // get the comment text and record post id
+  const comment = new Comment({
+    Body: req.body.Body,
+    Post_id: id,
+  });
+  await comment.save();
+  // get the post
+  const Relatedpost = await Post.findOneAndUpdate(
+    { _id: req.params.id },
+    { $inc: { Nbr_comments: 1 } }
+  );
+
+  //push the comment to the post.comments array
+
+  Relatedpost.comments.push(comment);
+
+  //save
+  await Relatedpost.save((err) => {
+    if (err) {
+      console.log(err);
+    }
+    res.json(Relatedpost);
+  });
 });
 
 module.exports = router;

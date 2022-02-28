@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var Comment = new Schema({
-  Description: String,
+  Body: String,
   Date_creation: { type: Date, default: Date.now },
   Likes: { type: Number, default: 0 },
   Dislikes: { type: Number, default: 0 },

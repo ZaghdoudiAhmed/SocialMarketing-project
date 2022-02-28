@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./message.css";
 
 import Conversation from "./conversation";
 import Message from "./message";
@@ -11,9 +10,11 @@ function Messanger(props) {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState(null);
-  const [socket, setSocket] = useState("");
-  const scrollRef = useRef();
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const scrollRef = useRef();
+  const socket = useRef();
   const url = "http://localhost:3000/conversations/";
 
   const getConversations = async () => {
@@ -62,8 +63,30 @@ function Messanger(props) {
   }, [messages]);
 
   useEffect(() => {
-    io("ws://localhost:8900");
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
   }, []);
+
+  // useEffect(() => {
+  //   socket.current.emit("addUser", user._id);
+  //   socket.current.on("getUsers", (users) => {
+  //      setOnlineUsers(
+  //       user.followings.filter((f) => users.some((u) => u.userId === f))
+  //     );
+  //    });
+  // }, [user]);
   return (
     <div>
       <div className="theme-layout">

@@ -14,7 +14,8 @@ var storage = multer.diskStorage({
     cb(null, "./uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + file.originalname);
+    //cb(null, new Date().toISOString() + file.originalname);
+    cb(null, file.originalname);
   },
 });
 
@@ -49,14 +50,14 @@ router.post("/", upload.single("Photo"), (req, res) => {
     Description: req.body.Description,
     Private: req.body.Private,
     Creator: req.body.Creator,
-    //  Photo: req.files.name,
-    Photo: req.file.path,
+    Photo: req.file.originalname,
   }).save((err, newpost) => {
     if (err) {
       console.log("error");
     } else {
-      console.log(newpost);
-      res.json(" Post :" + newpost._id + "added");
+      // console.log(newpost);
+      // res.json(" Post :" + newpost._id + "added");
+      res.status(200).send(req.file);
     }
   });
 });
