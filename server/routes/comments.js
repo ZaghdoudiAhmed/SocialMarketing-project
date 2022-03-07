@@ -5,7 +5,8 @@ var Comment = require("../models/comment");
 var Post = require("../models/posts");
 
 router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
+  res.json(Comment.find().populate("Post_id").exec());
+  r;
 });
 
 // Adding a comment
@@ -97,6 +98,38 @@ router.post("/post/:id/comment", async (req, res, next) => {
       console.log(err);
     }
     res.json(Relatedpost);
+  });
+});
+
+// A comment replayed to an other comment
+router.post("/post/:idpost/comment/:idcomment", async (req, res, next) => {
+  // get the post by id
+  const idpost = req.params.idpost;
+  //Create the comment model
+  const commentmodel = new Comment({
+    Body: req.body.Body,
+    Post_id: idpost,
+  });
+
+  //Get the comment
+  // const commentreply = await Comment.findOneAndUpdate(
+  //   { _id: req.params.idcomment },
+  //   { $push: { comments: comment } }
+  // );
+  // commentreply.save((err) => {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   res.json(commentreply);
+  // });
+  const comment = await Comment.findOne({ _id: req.params.idcomment });
+
+  comment.comments.push(commentmodel);
+  await comment.save((err) => {
+    if (err) {
+      console.log(err);
+    }
+    res.json(comment);
   });
 });
 

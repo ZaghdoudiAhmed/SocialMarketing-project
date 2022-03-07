@@ -45,7 +45,6 @@ router.get("/", function (req, res, next) {
 
 // Creating post
 router.post("/", upload.single("Photo"), (req, res) => {
-  console.log(req.file);
   new Post({
     Description: req.body.Description,
     Private: req.body.Private,
