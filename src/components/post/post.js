@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useRef } from "react";
 import { format } from "timeago.js";
 import moment from "moment";
 import Swal from "sweetalert2";
@@ -8,23 +8,56 @@ import "./post.css";
 
 function Post({ post }) {
   const [postid, setPostId] = useState("");
-  const [likes, setLikes] = useState(post.Likes);
-  const [dislike, setDislike] = useState(post.Dislikes);
+  const [likes, setLikes] = useState(post?.Likes);
+  const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState([]);
-  const [bodycomment, setBodyComment] = useState("");
+  const [bodycomment, setBodyComment] = useState(null);
+
+  const hasLikedPost = likes.find((like) => like === "reirfrj45656rgrjyg5656");
+  const hasDislikedPost = dislike.find(
+    (dislike) => dislike === "reirfrj45656rgrjyg5656"
+  );
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const handlelike = async (e) => {
     e.preventDefault();
+    const user = {
+      userId: "reirfrj45656rgrjyg5656",
+    };
 
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/posts/like/" + postid
-      );
-      //  console.log(res);
-      setLikes(post.Likes + 1);
-    } catch (err) {
-      console.log(err);
-    }
+    axios
+      .put("http://localhost:3000/posts/" + postid + "/like", user)
+      .then((res) => {
+        if (hasLikedPost) {
+          setLikes(post.Likes.filter((id) => id !== "reirfrj45656rgrjyg5656"));
+          Toast.fire({
+            icon: "success",
+            title: "you unliked this post ",
+          });
+        } else if (hasDislikedPost) {
+          setDislike(
+            post.Dislikes.filter((id) => id !== "reirfrj45656rgrjyg5656")
+          );
+          setLikes([...post?.Likes, "reirfrj45656rgrjyg5656"]);
+        } else {
+          setLikes([...post?.Likes, "reirfrj45656rgrjyg5656"]);
+          Toast.fire({
+            icon: "success",
+            title: "you liked this post ",
+          });
+        }
+      });
   };
 
   const getComments = async () => {
@@ -42,14 +75,28 @@ function Post({ post }) {
   const handledilike = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await axios.post(
-        "http://localhost:3000/posts/dislike/" + postid
-      );
-      setDislike(post.Dislikes + 1);
-    } catch (err) {
-      console.log(err);
-    }
+    const user = {
+      userId: "reirfrj45656rgrjyg5656",
+    };
+    axios
+      .put("http://localhost:3000/posts/" + postid + "/dislike", user)
+      .then((res) => {
+        if (hasDislikedPost) {
+          setDislike(
+            post.dislike.filter((id) => id !== "reirfrj45656rgrjyg5656")
+          );
+          Toast.fire({
+            icon: "success",
+            title: "you undislike this post ",
+          });
+        } else {
+          setDislike([...post?.Dislikes, "reirfrj45656rgrjyg5656"]);
+          Toast.fire({
+            icon: "success",
+            title: "you disliked this post ",
+          });
+        }
+      });
   };
 
   const handleComment = async (e) => {
@@ -63,15 +110,8 @@ function Post({ post }) {
         comment
       )
       .then((res) => {
-        Swal.fire(
-          "Good job!",
-          "Your comment is added successfully!",
-          "success"
-        );
-        setBodyComment("");
-
-        //   setComments([...comments, res.data]);
-        window.location.reload(false);
+        setBodyComment(null);
+        setComments([...comments, res.data]);
       })
       .catch((error) => {
         console.log(error);
@@ -84,7 +124,9 @@ function Post({ post }) {
 
     setLikes(post.Likes);
     setDislike(post.Dislikes);
+    console.log(hasLikedPost);
   }, []);
+
   return (
     <>
       <div className="central-meta item">
@@ -111,12 +153,12 @@ function Post({ post }) {
               <img src={"http://127.0.0.1:5500/server/uploads/" + post.Photo} />
               <div className="we-video-info">
                 <ul>
-                  <li>
+                  {/* <li>
                     <span className="views" data-toggle="tooltip" title="views">
                       <i className="fa fa-eye" />
                       <ins>1.2k</ins>
                     </span>
-                  </li>
+                  </li> */}
                   <li>
                     <span
                       className="comment"
@@ -129,32 +171,47 @@ function Post({ post }) {
                   </li>
                   <li>
                     <span
-                      className="like"
-                      data-toggle="tooltip"
-                      title="like"
-                      onClick={handlelike}
-                    >
-                      <i className="ti-thumb-up" />
-                      <ins>{likes}</ins>
-                    </span>
-                  </li>
-                  <li>
-                    <span className="like" data-toggle="tooltip" title="like">
-                      <i className="ti-heart" />
-                      <ins>{post.Love}</ins>
-                    </span>
-                  </li>
-                  <li>
-                    <span
                       className="dislike"
                       data-toggle="tooltip"
                       title="dislike"
                       onClick={handledilike}
                     >
-                      <i className="ti-heart-broken" />
-                      <ins>{dislike}</ins>
+                      {hasDislikedPost ? (
+                        <i className="bi bi-hand-thumbs-down-fill"></i>
+                      ) : (
+                        <i className="bi bi-hand-thumbs-down"></i>
+                      )}
+                      <ins>{dislike.length}</ins>
                     </span>
                   </li>
+                  <li>
+                    <span
+                      className="like"
+                      data-toggle="tooltip"
+                      title="like"
+                      onClick={handlelike}
+                    >
+                      {hasLikedPost ? (
+                        <i className="bi bi-hand-thumbs-up-fill"></i>
+                      ) : (
+                        <i className="bi bi-hand-thumbs-up" />
+                      )}
+
+                      <ins>{likes.length}</ins>
+                    </span>
+                  </li>
+                  {/* <li>
+                    <span
+                      className="dislike"
+                      data-toggle="tooltip"
+                      title="like"
+                    >
+                      <i className="bi bi-heart"></i>
+                      <i className="bi bi-heart-fill"></i>
+                      <ins>{post.Love}</ins>
+                    </span>
+                  </li> */}
+
                   <li className="social-media">
                     <div className="menu">
                       <div className="btn trigger">
@@ -227,28 +284,30 @@ function Post({ post }) {
           </div>
           <div className="coment-area">
             <ul className="we-comet comment-box">
-              {comments.map((c) => (
-                <li key={c} className="user-comment-box">
+              {comments?.map((c, i) => (
+                <li key={i} className="user-comment-box">
                   <div className="comet-avatar">
-                    <img src="images/resources/comet-1.jpg" alt />
+                    <img src="images/resources/comet-1.jpg" />
                   </div>
                   <div className="we-comment">
                     <div className="coment-head">
                       <h5>
-                        <a href="time-line.html" title>
-                          Jason borne
-                        </a>
+                        <a href="time-line.html">Ahmed ZAGHDOUDI</a>
                       </h5>
                       <span>{format(c.Date_creation)}</span>
-                      <a className="we-reply" href="#" title="Reply">
+                      <a
+                        className="we-reply"
+                        style={{ color: "#088dcd" }}
+                        title="Reply"
+                      >
                         <i className="fa fa-reply" />
                       </a>
                     </div>
                     <p>{c.Body}</p>
                   </div>
                   <ul>
-                    {c.comments.map((p) => (
-                      <li key={p}>
+                    {c?.comments?.map((p, j) => (
+                      <li key={j}>
                         <div className="comet-avatar">
                           <img src="images/resources/comet-1.jpg" alt />
                         </div>
@@ -271,24 +330,24 @@ function Post({ post }) {
                   </ul>
                 </li>
               ))}
-              <li>
+              {/* <li>
                 <a title className="showmore underline">
                   more comments
                 </a>
-              </li>
+              </li> */}
               <li className="post-comment">
                 <div className="comet-avatar">
                   <img src="images/resources/comet-1.jpg" alt />
                 </div>
                 <div className="post-comt-box">
                   <form method="post">
-                    <textarea
-                      placeholder="Post your comment"
-                      defaultValue={""}
-                      onChange={(e) => setBodyComment(e.target.value)}
-                      value={bodycomment}
-                    />
-                    <div className="add-smiles">
+                    <div className="input-group mb-3">
+                      <textarea
+                        placeholder="Post your comment"
+                        onChange={(e) => setBodyComment(e.target.value)}
+                        value={bodycomment}
+                      />
+                      {/* <div className="add-smiles">
                       <span className="em em-expressionless" title="add icon" />
                     </div>
                     <div className="smiles-bunch">
@@ -304,8 +363,16 @@ function Post({ post }) {
                       <i className="em em-kissing_heart" />
                       <i className="em em-rage" />
                       <i className="em em-stuck_out_tongue" />
+                    </div> */}
+                      <button
+                        className="btn btn-outline-primary"
+                        type="button"
+                        id="button-addon2"
+                        onClick={handleComment}
+                      >
+                        Button
+                      </button>
                     </div>
-                    <button onClick={handleComment} type="submit" />
                   </form>
                 </div>
               </li>

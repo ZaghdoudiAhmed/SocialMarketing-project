@@ -56,7 +56,7 @@ router.post("/", upload.single("Photo"), (req, res) => {
     } else {
       // console.log(newpost);
       // res.json(" Post :" + newpost._id + "added");
-      res.status(200).send(req.file);
+      res.json(newpost);
     }
   });
 });
@@ -134,6 +134,59 @@ router.post("/dislike/:id", (req, res, next) => {
 router.post("/love/:id", (req, res, next) => {
   Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { Love: 1 } }).exec();
   res.json("done");
+});
+
+///////////////////////////////////////////// Likes in array //////////////////////////
+
+// like  a post
+router.put("/:id/like", async (req, res, next) => {
+  const post = await Post.findById(req.params.id);
+  if (
+    !post.Likes.includes(req.body.userId) &&
+    !post.Dislikes.includes(req.body.userId)
+  ) {
+    await post.updateOne({ $push: { Likes: req.body.userId } });
+    res.json("the post has been liked");
+  } else if (
+    post.Dislikes.includes(req.body.userId) &&
+    !post.Likes.includes(req.body.userId)
+  ) {
+    await post.updateOne({ $pull: { Dislikes: req.body.userId } });
+    await post.updateOne({ $push: { Likes: req.body.userId } });
+    res.json("you was disliking this post now you are liking it :D ");
+  } else if (
+    !post.Dislikes.includes(req.body.userId) &&
+    post.Likes.includes(req.body.userId)
+  ) {
+    await post.updateOne({ $pull: { Likes: req.body.userId } });
+    res.json("unlike post");
+  }
+});
+
+//dislike a post
+router.put("/:id/dislike", async (req, res, next) => {
+  const post = await Post.findById(req.params.id);
+  if (
+    !post.Dislikes.includes(req.body.userId) &&
+    !post.Likes.includes(req.body.userId)
+  ) {
+    await post.updateOne({ $push: { Dislikes: req.body.userId } });
+    res.json("the post has been disliked ");
+  } else if (
+    !post.Dislikes.includes(req.body.userId) &&
+    post.Likes.includes(req.body.userId)
+  ) {
+    await post.updateOne({ $pull: { Likes: req.body.userId } });
+    await post.updateOne({ $push: { Dislikes: req.body.userId } });
+
+    res.json("you was liking this post now you are disliking it :D ");
+  } else if (
+    post.Dislikes.includes(req.body.userId) &&
+    !post.Likes.includes(req.body.userId)
+  ) {
+    await post.updateOne({ $pull: { Dislikes: req.body.userId } });
+    res.json("undislike the post ");
+  }
 });
 
 module.exports = router;

@@ -111,17 +111,6 @@ router.post("/post/:idpost/comment/:idcomment", async (req, res, next) => {
     Post_id: idpost,
   });
 
-  //Get the comment
-  // const commentreply = await Comment.findOneAndUpdate(
-  //   { _id: req.params.idcomment },
-  //   { $push: { comments: comment } }
-  // );
-  // commentreply.save((err) => {
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  //   res.json(commentreply);
-  // });
   const comment = await Comment.findOne({ _id: req.params.idcomment });
 
   comment.comments.push(commentmodel);

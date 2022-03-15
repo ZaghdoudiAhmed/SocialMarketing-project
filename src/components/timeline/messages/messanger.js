@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Conversation from "./conversation";
 import Message from "./message";
 import Header from "../../header";
+import Shortcuts from "../shortcuts";
+import Timelineinfo from "../timeline-info";
+
 import axios from "axios";
 import { io } from "socket.io-client";
 
@@ -80,14 +83,15 @@ function Messanger(props) {
     });
   }, []);
 
-  // useEffect(() => {
-  //   socket.current.emit("addUser", user._id);
-  //   socket.current.on("getUsers", (users) => {
-  //      setOnlineUsers(
-  //       user.followings.filter((f) => users.some((u) => u.userId === f))
-  //     );
-  //    });
-  // }, [user]);
+  useEffect(() => {
+    socket.current.emit("addUser", "fekgrgogo4546glrgthob56");
+    socket.current.on("getUsers", (users) => {
+      // setOnlineUsers(
+      //   user.followings.filter((f) => users.some((u) => u.userId === f))
+      // );
+    });
+  }, ["fekgrgogo4546glrgthob56"]);
+
   return (
     <div>
       <div className="theme-layout">
@@ -128,57 +132,7 @@ function Messanger(props) {
                   </div>
                 </div>
                 <div className="col-lg-10 col-sm-9">
-                  <div className="timeline-info">
-                    <ul>
-                      <li className="admin-name">
-                        <h5>Janice Griffith</h5>
-                        <span>Group Admin</span>
-                      </li>
-                      <li>
-                        <a
-                          className="active"
-                          href="time-line.html"
-                          title
-                          data-ripple
-                        >
-                          time line
-                        </a>
-                        <a
-                          className
-                          href="timeline-photos.html"
-                          title
-                          data-ripple
-                        >
-                          Photos
-                        </a>
-                        <a
-                          className
-                          href="timeline-videos.html"
-                          title
-                          data-ripple
-                        >
-                          Videos
-                        </a>
-                        <a
-                          className
-                          href="timeline-friends.html"
-                          title
-                          data-ripple
-                        >
-                          Friends
-                        </a>
-                        <a className href="groups.html" title data-ripple>
-                          Groups
-                        </a>
-                        <a className href="about.html" title data-ripple>
-                          about
-                        </a>
-                        <a className href="#" title data-ripple>
-                          more
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  <Timelineinfo />
                 </div>
               </div>
             </div>
@@ -201,47 +155,7 @@ function Messanger(props) {
                             </a>
                           </figure>
                         </div>
-                        <div className="widget stick-widget">
-                          <h4 className="widget-title">Shortcuts</h4>
-                          <ul className="naves">
-                            <li>
-                              <i className="ti-clipboard" />
-                              <a href="newsfeed.html" title>
-                                News feed
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-mouse-alt" />
-                              <a href="inbox.html" title>
-                                Inbox
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-files" />
-                              <a href="fav-page.html" title>
-                                My pages
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-user" />
-                              <a href="timeline-friends.html" title>
-                                friends
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-image" />
-                              <a href="timeline-photos.html" title>
-                                images
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-video-camera" />
-                              <a href="timeline-videos.html" title>
-                                videos
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                        <Shortcuts />
                         {/* Shortcuts */}
                       </aside>
                     </div>

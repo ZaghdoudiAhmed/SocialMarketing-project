@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../header";
+import Shortcuts from "./shortcuts";
+import Timelineinfo from "./timeline-info";
+
+import axios from "axios";
 
 function Timelinephotos(props) {
+  const url = "http://localhost:3000/posts";
+  const [postData, setPostData] = useState([]);
+
+  const getPosts = async () => {
+    try {
+      axios.get(url + "/all/" + "12338roty456ze3494zer34aa").then((res) => {
+        setPostData(res.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, ["12338roty456ze3494zer34aa"]);
+
   return (
     <div>
       <div className="theme-layout">
@@ -42,57 +63,7 @@ function Timelinephotos(props) {
                   </div>
                 </div>
                 <div className="col-lg-10 col-sm-9">
-                  <div className="timeline-info">
-                    <ul>
-                      <li className="admin-name">
-                        <h5>Janice Griffith</h5>
-                        <span>Group Admin</span>
-                      </li>
-                      <li>
-                        <a className href="time-line.html" title data-ripple>
-                          time line
-                        </a>
-                        <a
-                          className="active"
-                          href="timeline-photos.html"
-                          title
-                          data-ripple
-                        >
-                          Photos
-                        </a>
-                        <a
-                          className
-                          href="timeline-videos.html"
-                          title
-                          data-ripple
-                        >
-                          Videos
-                        </a>
-                        <a
-                          className
-                          href="timeline-friends.html"
-                          title
-                          data-ripple
-                        >
-                          Friends
-                        </a>
-                        <a
-                          className
-                          href="timeline-groups.html"
-                          title
-                          data-ripple
-                        >
-                          Groups
-                        </a>
-                        <a className href="about.html" title data-ripple>
-                          about
-                        </a>
-                        <a className href="#" title data-ripple>
-                          more
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  <Timelineinfo />
                 </div>
               </div>
             </div>
@@ -107,77 +78,7 @@ function Timelinephotos(props) {
                   <div className="row" id="page-contents">
                     <div className="col-lg-3">
                       <aside className="sidebar static">
-                        <div className="widget">
-                          <h4 className="widget-title">Shortcuts</h4>
-                          <ul className="naves">
-                            <li>
-                              <i className="ti-clipboard" />
-                              <a href="newsfeed.html" title>
-                                News feed
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-mouse-alt" />
-                              <a href="inbox.html" title>
-                                Inbox
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-files" />
-                              <a href="fav-page.html" title>
-                                My pages
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-user" />
-                              <a href="timeline-friends.html" title>
-                                friends
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-image" />
-                              <a href="timeline-photos.html" title>
-                                images
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-video-camera" />
-                              <a href="timeline-videos.html" title>
-                                videos
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-comments-smiley" />
-                              <a href="messages.html" title>
-                                Messages
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-bell" />
-                              <a href="notifications.html" title>
-                                Notifications
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-share" />
-                              <a href="people-nearby.html" title>
-                                People Nearby
-                              </a>
-                            </li>
-                            <li>
-                              <i className="fa fa-bar-chart-o" />
-                              <a href="insights.html" title>
-                                insights
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-power-off" />
-                              <a href="landing.html" title>
-                                Logout
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                        <Shortcuts />
                         {/* Shortcuts */}
                         <div className="widget">
                           <h4 className="widget-title">Profile intro</h4>
@@ -208,171 +109,28 @@ function Timelinephotos(props) {
                     <div className="col-lg-6">
                       <div className="central-meta">
                         <ul className="photos">
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-22.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo2.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-33.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo3.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-44.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo4.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-55.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo5.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-66.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo6.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-77.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo7.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-88.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo8.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-99.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo12.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-101.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo10.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-101.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo11.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-22.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo1.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-33.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo9.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-99.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo12.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-66.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo6.jpg" alt />
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="strip"
-                              href="images/resources/photo-66.jpg"
-                              title
-                              data-strip-group="mygroup"
-                              data-strip-group-options="loop: false"
-                            >
-                              <img src="images/resources/photo13.jpg" alt />
-                            </a>
-                          </li>
+                          {postData.map((p) => (
+                            <li>
+                              <a
+                                className="strip"
+                                href={
+                                  "http://127.0.0.1:5500/server/uploads/" +
+                                  p.Photo
+                                }
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img
+                                  src={
+                                    "http://127.0.0.1:5500/server/uploads/" +
+                                    p.Photo
+                                  }
+                                  alt
+                                />
+                              </a>
+                            </li>
+                          ))}
                         </ul>
                         <div className="lodmore">
                           <button className="btn-view btn-load-more" />

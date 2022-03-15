@@ -24,6 +24,7 @@ function App() {
 
         <Route path="/company" element={<Indexcompany />} />
         <Route path="/messages" element={<Messanger />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );

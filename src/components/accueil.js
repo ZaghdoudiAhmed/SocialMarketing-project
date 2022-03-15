@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 import Post from "./post/post";
 import Header from "./header";
+import Shortcuts from "./timeline/shortcuts";
 
 function Accueil() {
   const url = "http://localhost:3000/posts";
   const [postData, setPostData] = useState([]);
-  const [newDescription, setNewDescription] = useState(null);
+  const [newDescription, setNewDescription] = useState("");
   const [newPhoto, setNewPhoto] = useState(null);
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,9 +37,16 @@ function Accueil() {
     post.append("Creator", "reirfrj45656rgrjyg5656");
 
     try {
-      const res = await axios.post(url, post);
-      setPostData([...postData, res.data]);
-      setNewDescription("");
+      await axios.post(url, post).then((res) => {
+        Toast.fire({
+          icon: "success",
+          title: "Post added successfully",
+        });
+
+        setPostData([res.data, ...postData]);
+        setNewDescription("");
+        setFile(null);
+      });
     } catch (err) {
       console.log(err);
     }
@@ -34,8 +54,10 @@ function Accueil() {
 
   const getPosts = async () => {
     try {
-      axios.get(url + "/all/" + "12338roty456ze3494zer34aa").then((res) => {
+      axios.get(url + "/").then((res) => {
+        //    const localData = [res.data];
         setPostData(res.data);
+        //    setPostData(res.data);
       });
     } catch (err) {
       console.log(err);
@@ -44,7 +66,7 @@ function Accueil() {
 
   useEffect(() => {
     getPosts();
-  }, ["12338roty456ze3494zer34aa"]);
+  }, []);
 
   return (
     <div>
@@ -345,79 +367,7 @@ function Accueil() {
                   <div className="row merged20" id="page-contents">
                     <div className="col-lg-3">
                       <aside className="sidebar static left">
-                        <div className="widget">
-                          <h4 className="widget-title">Shortcuts</h4>
-                          <ul className="naves">
-                            <li>
-                              <i className="ti-clipboard" />
-                              <a href="newsfeed.html" title>
-                                News feed
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-mouse-alt" />
-                              <a href="inbox.html" title>
-                                Inbox
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-files" />
-                              <a href="fav-page.html" title>
-                                My pages
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-user" />
-                              <Link to="/timelinefriends" title>
-                                friends
-                              </Link>
-                            </li>
-                            <li>
-                              <i className="ti-image" />
-                              <a href="timeline-photos.html" title>
-                                images
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-video-camera" />
-                              <a href="timeline-videos.html" title>
-                                videos
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-comments-smiley" />
-                              <Link to="/messages">Messages</Link>
-                            </li>
-                            <li>
-                              <i className="ti-bell" />
-                              <a href="notifications.html" title>
-                                Notifications
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-share" />
-                              <a href="people-nearby.html" title>
-                                People Nearby
-                              </a>
-                            </li>
-                            <li>
-                              <i className="fa fa-bar-chart-o" />
-                              <a href="insights.html" title>
-                                insights
-                              </a>
-                            </li>
-                            <li>
-                              <i className="ti-direction" />
-                              <Link to="/company">Company</Link>
-                            </li>
-                            <li>
-                              <i className="ti-power-off" />
-                              <a href="landing.html" title>
-                                Logout
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                        <Shortcuts />
                         {/* Shortcuts */}
                         <div className="widget">
                           <h4 className="widget-title">Recent Activity</h4>
@@ -571,8 +521,7 @@ function Accueil() {
                             <form>
                               <textarea
                                 rows={2}
-                                placeholder="write something"
-                                defaultValue={""}
+                                placeholder="Do you wanna post something ? write here "
                                 onChange={(e) =>
                                   setNewDescription(e.target.value)
                                 }
@@ -581,12 +530,6 @@ function Accueil() {
 
                               <div className="attachments">
                                 <ul>
-                                  <li>
-                                    <i className="fa fa-music" />
-                                    <label className="fileContainer">
-                                      <input type="file" />
-                                    </label>
-                                  </li>
                                   <li>
                                     <i className="fa fa-image" />
                                     <label className="fileContainer">
@@ -604,12 +547,7 @@ function Accueil() {
                                       <input type="file" />
                                     </label>
                                   </li>
-                                  <li>
-                                    <i className="fa fa-camera" />
-                                    <label className="fileContainer">
-                                      <input type="file" />
-                                    </label>
-                                  </li>
+
                                   <li>
                                     <button
                                       onClick={handleSubmit}
@@ -626,9 +564,15 @@ function Accueil() {
                       </div>
                       {/* add post new box */}
                       <div className="loadMore">
-                        {postData.map((p) => (
-                          <Post post={p} />
-                        ))}
+                        {postData
+                          .sort(
+                            (a, b) =>
+                              new Date(b.Date_creation) -
+                              new Date(a.Date_creation)
+                          )
+                          .map((p) => (
+                            <Post post={p} />
+                          ))}
                         <div className="central-meta item">
                           <div className="user-post">
                             <div className="friend-info">
@@ -721,35 +665,35 @@ function Accueil() {
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-twitter" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-css3" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-instagram" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-dribbble" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-pinterest" />
                                             </a>
                                           </div>
@@ -761,14 +705,12 @@ function Accueil() {
                                 <div className="description">
                                   <p>
                                     Lonely Cat Enjoying in Summer Curabitur{" "}
-                                    <a href="#" title>
-                                      #mypage
-                                    </a>{" "}
-                                    ullamcorper ultricies nisi. Nam eget dui.
-                                    Etiam rhoncus. Maecenas tempus, tellus eget
-                                    condimentum rhoncus, sem quam semper libero,
-                                    sit amet adipiscing sem neque sed ipsum. Nam
-                                    quam nunc,
+                                    <a href="#">#mypage</a> ullamcorper
+                                    ultricies nisi. Nam eget dui. Etiam rhoncus.
+                                    Maecenas tempus, tellus eget condimentum
+                                    rhoncus, sem quam semper libero, sit amet
+                                    adipiscing sem neque sed ipsum. Nam quam
+                                    nunc,
                                   </p>
                                 </div>
                               </div>
@@ -785,9 +727,7 @@ function Accueil() {
                                   <div className="we-comment">
                                     <div className="coment-head">
                                       <h5>
-                                        <a href="time-line.html" title>
-                                          Jason borne
-                                        </a>
+                                        <a href="time-line.html">Jason borne</a>
                                       </h5>
                                       <span>1 year ago</span>
                                       <a
@@ -816,9 +756,7 @@ function Accueil() {
                                   <div className="we-comment">
                                     <div className="coment-head">
                                       <h5>
-                                        <a href="time-line.html" title>
-                                          Sophia
-                                        </a>
+                                        <a href="time-line.html">Sophia</a>
                                       </h5>
                                       <span>1 week ago</span>
                                       <a
@@ -895,9 +833,7 @@ function Accueil() {
                               </figure>
                               <div className="friend-name">
                                 <ins>
-                                  <a href="time-line.html" title>
-                                    Sophia
-                                  </a>
+                                  <a href="time-line.html">Sophia</a>
                                 </ins>
                                 <span>published: january,5 2018 19:PM</span>
                               </div>
@@ -957,56 +893,56 @@ function Accueil() {
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-html5" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-facebook" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-google-plus" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-twitter" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-css3" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-instagram" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-dribbble" />
                                             </a>
                                           </div>
                                         </div>
                                         <div className="rotater">
                                           <div className="btn btn-icon">
-                                            <a href="#" title>
+                                            <a href="#">
                                               <i className="fa fa-pinterest" />
                                             </a>
                                           </div>
@@ -1018,14 +954,12 @@ function Accueil() {
                                 <div className="description">
                                   <p>
                                     Curabitur Lonely Cat Enjoying in Summer{" "}
-                                    <a href="#" title>
-                                      #mypage
-                                    </a>{" "}
-                                    ullamcorper ultricies nisi. Nam eget dui.
-                                    Etiam rhoncus. Maecenas tempus, tellus eget
-                                    condimentum rhoncus, sem quam semper libero,
-                                    sit amet adipiscing sem neque sed ipsum. Nam
-                                    quam nunc,
+                                    <a href="#">#mypage</a> ullamcorper
+                                    ultricies nisi. Nam eget dui. Etiam rhoncus.
+                                    Maecenas tempus, tellus eget condimentum
+                                    rhoncus, sem quam semper libero, sit amet
+                                    adipiscing sem neque sed ipsum. Nam quam
+                                    nunc,
                                   </p>
                                 </div>
                               </div>
@@ -1042,9 +976,7 @@ function Accueil() {
                                   <div className="we-comment">
                                     <div className="coment-head">
                                       <h5>
-                                        <a href="time-line.html" title>
-                                          Jason borne
-                                        </a>
+                                        <a href="time-line.html">Jason borne</a>
                                       </h5>
                                       <span>1 year ago</span>
                                       <a
@@ -1073,9 +1005,7 @@ function Accueil() {
                                   <div className="we-comment">
                                     <div className="coment-head">
                                       <h5>
-                                        <a href="time-line.html" title>
-                                          Sophia
-                                        </a>
+                                        <a href="time-line.html">Sophia</a>
                                       </h5>
                                       <span>1 week ago</span>
                                       <a
@@ -1476,13 +1406,13 @@ function Accueil() {
                               </a>
                               <span>
                                 <i className="ti-comment" />
-                                <a href="insight.html" title>
+                                <a href="insight.html">
                                   Messages <em>9</em>
                                 </a>
                               </span>
                               <span>
                                 <i className="ti-bell" />
-                                <a href="insight.html" title>
+                                <a href="insight.html">
                                   Notifications <em>2</em>
                                 </a>
                               </span>

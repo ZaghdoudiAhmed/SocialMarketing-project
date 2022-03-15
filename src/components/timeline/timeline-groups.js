@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../header";
+import Timelineinfo from "./timeline-info";
 
 function Timelinegroups(props) {
   return (
@@ -42,57 +43,7 @@ function Timelinegroups(props) {
                   </div>
                 </div>
                 <div className="col-lg-10 col-sm-9">
-                  <div className="timeline-info">
-                    <ul>
-                      <li className="admin-name">
-                        <h5>Janice Griffith</h5>
-                        <span>Group Admin</span>
-                      </li>
-                      <li>
-                        <a className href="time-line.html" title data-ripple>
-                          time line
-                        </a>
-                        <a
-                          className
-                          href="timeline-photos.html"
-                          title
-                          data-ripple
-                        >
-                          Photos
-                        </a>
-                        <a
-                          className
-                          href="timeline-videos.html"
-                          title
-                          data-ripple
-                        >
-                          Videos
-                        </a>
-                        <a
-                          className
-                          href="timeline-friends.html"
-                          title
-                          data-ripple
-                        >
-                          Friends
-                        </a>
-                        <a
-                          className="active"
-                          href="groups.html"
-                          title
-                          data-ripple
-                        >
-                          Groups
-                        </a>
-                        <a className href="about.html" title data-ripple>
-                          about
-                        </a>
-                        <a className href="#" title data-ripple>
-                          more
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  <Timelineinfo />
                 </div>
               </div>
             </div>
