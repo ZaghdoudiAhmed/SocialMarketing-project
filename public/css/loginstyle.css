@@ -1,5 +1,6 @@
 html{
 }
+/*login & register*/
 .login-container{
     margin: 10rem 5rem 10rem 5rem
 }
@@ -68,5 +69,12 @@ html{
     100% {
         transform:rotate(360deg);
     }
+}
+
+/*- guided registration -*/
+.previewImage{
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
 }
 

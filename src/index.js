@@ -5,11 +5,23 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 /*import exportedObject from "./Context/UserContext";*/
 import {UserProvider} from "./Context/UserContext";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Accueil from "./components/accueil";
+import Timeline from "./components/timeline/time-line";
+import Timelinefriends from "./components/timeline/timeline-friends";
+import Timelinegroups from "./components/timeline/timeline-groups";
+import Timelinephotos from "./components/timeline/timeline-photos";
+import Timelinevideos from "./components/timeline/timeline-videos";
+import Test from "./components/Test";
+import Login from "./components/timeline/login";
+import Messages from "./components/timeline/messages";
+
+
 
 ReactDOM.render(
   <React.StrictMode>
       <UserProvider>
-          <App />
+              <App />
       </UserProvider>
   </React.StrictMode>,
   document.getElementById("root")

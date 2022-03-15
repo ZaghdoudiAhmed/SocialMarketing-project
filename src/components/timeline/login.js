@@ -14,33 +14,40 @@ function Login(props) {
     const[email, setEmail] = useState('')
     const[loginemail, setLoginEmail] = useState('')
     const[loginpassword, setLoginPassword] = useState('')
+    const[gender, setGender] = useState('')
     const[password, setPassword] = useState('')
     const[errors,setErrors]= useState('')
 
     const[isSubmitting, setIsSubmitting]=useState(false)
     const [userContext, setUserContext]= useContext(UserContext)
+
+
     async function registerUser(event){
         event.preventDefault()
-        console.log("clicked register")
-        const response = await  fetch('http://localhost:3000/api/users/register',
-            {
-                method : 'POST',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body : JSON.stringify({
-                    name,
-                    email,
-                    password
+        if(gender ==='' || password ==='' || name==='' || email ===''){
+            setErrors("Please fill all fields!")
+        }else {
+            const response = await fetch('http://localhost:3000/api/users/register',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password,
+                        gender
+                    })
                 })
-            })
-        const data = await response.json()
-        if(data.message){
-            setErrors(data.message)
-        }
-        if(data.status==='ok'){
-            setClassForLogin("slide-out")
-            setLogoClass('spin-me-back')
+            const data = await response.json()
+            if (data.message) {
+                setErrors(data.message)
+            }
+            if (data.success === true) {
+                setClassForLogin("slide-out")
+                setLogoClass('spin-me-back')
+            }
         }
     }
 
@@ -49,6 +56,7 @@ function Login(props) {
         console.log('password = ' +loginemail + 'email : '+loginpassword)
         fetch('http://localhost:3000/api/users/login', {
             method: 'POST',
+            withCredentials: true,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -71,24 +79,14 @@ function Login(props) {
                     }
                     else{
                         const data = await response.json()
+                        localStorage.setItem("currentUser" , data.id);
                         setUserContext(oldValues=>{
-                            alert('login successful')
-
                             return {...oldValues, token : data.token}
                         })
                         navigate('/test')
                     }
                 })
 
-/*        const data = await  response.json()
-        if(data.token){
-            localStorage.setItem('token', data.token)
-            alert('login successful')
-            navigate('/')
-        }
-        else{
-            alert ('check password')
-        }*/
     }
     return (
         <>
@@ -133,12 +131,14 @@ function Login(props) {
                     </div>
                     : null}
                     <div className="col-md-6">
-                        <div className="log-reg-area register_form fading"
-                            /* style={{display: "none"}}*/>
+                        <div className="log-reg-area register_form fading">
                             <h2 className="log-title">Register</h2>
-                            <p style={{color: 'red'}}>{errors}</p>
+                            { errors ? <div className="alert alert-danger" role="alert" >
+                                {errors}
+                            </div> : null }
+
                             <p>
-                                Don’t use Winku Yet? <a href="#" title="">Take the tour</a> or <a href="#" title="">Join
+                                Don’t use 2nd Chance Yet? <a href="#" title="">Take the tour</a> or <a href="#" title="">Join
                                 now</a>
                             </p>
                             <form method="post">
@@ -160,13 +160,13 @@ function Login(props) {
                                 <div className="form-radio">
                                     <div className="radio">
                                         <label>
-                                            <input type="radio" name="radio" defaultChecked={true}/><i
+                                            <input type="radio" name="radio" defaultChecked={false} value={'Male'}  onChange={(e)=>setGender(e.target.value)}/><i
                                             className="check-box"></i>Male
                                         </label>
                                     </div>
                                     <div className="radio">
                                         <label>
-                                            <input type="radio" name="radio"/><i className="check-box"></i>Female
+                                            <input type="radio" name="radio" value={'Female'} onChange={(e)=>setGender(e.target.value)}/><i className="check-box"></i>Female
                                         </label>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@ function Login(props) {
                                 </div>
                                 <div className="checkbox">
                                     <label>
-                                        <input type="checkbox" defaultChecked={false}/><i className="check-box"></i>Accept
+                                        <input type="checkbox" defaultChecked={false} required/><i className="check-box"></i>Accept
                                         Terms & Conditions ?
                                     </label>
                                 </div>
@@ -190,6 +190,7 @@ function Login(props) {
                                 <div className="submit-btns">
                                     <button  className="mtr-btn" type="button" onClick={registerUser}><span>Register</span></button>
                                 </div>
+
                             </form>
                         </div>
                     </div>

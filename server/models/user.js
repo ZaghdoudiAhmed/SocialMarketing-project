@@ -8,23 +8,44 @@ const Session = new Schema({
         default: "",
     },
 })
+
 var User = new Schema(
     {
         name : String,
         email : {
             type: String,
             allowNull: false,
-
+        },
+        verified : {
+          type : Boolean,
+          default : false
+        },
+        gender : {
+            type: String,
+            allowNull: false
+        },
+        firstTime : {
+            type: Boolean,
+            default : true
+        },
+        profilepic :{
+            type: Array,
+            //allowNull: false
+        },
+        confirmation:{
+            code : {
+                type : String
+            },
+            date : {
+                type : Date,
+                default : new Date()
+            }
         },
         //auth & session
 
         authStrategy: {
             type: String,
             default: "local",
-        },
-        points: {
-            type: Number,
-            default: 50,
         },
         refreshToken: {
             type: [Session],

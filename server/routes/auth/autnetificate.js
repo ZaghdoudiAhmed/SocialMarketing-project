@@ -9,7 +9,7 @@ exports.COOKIE_OPTIONS = {
     secure: !dev,
     signed: true,
     maxAge: eval('60 * 60 * 24 * 30') * 1000,
-    sameSite: "none",
+    //sameSite: "none",
 }
 
 exports.getToken = user => {
