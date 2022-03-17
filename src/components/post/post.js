@@ -6,12 +6,13 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import "./post.css";
 
-function Post({ post }) {
+function Post({ post, socket, user }) {
   const [postid, setPostId] = useState("");
   const [likes, setLikes] = useState(post?.Likes);
   const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState([]);
-  const [bodycomment, setBodyComment] = useState(null);
+  const [nbrcomments, setnbrcomments] = useState(post?.Nbr_comments);
+  const [bodycomment, setBodyComment] = useState("");
 
   const hasLikedPost = likes.find((like) => like === "reirfrj45656rgrjyg5656");
   const hasDislikedPost = dislike.find(
@@ -30,8 +31,7 @@ function Post({ post }) {
     },
   });
 
-  const handlelike = async (e) => {
-    e.preventDefault();
+  const handlelike = async () => {
     const user = {
       userId: "reirfrj45656rgrjyg5656",
     };
@@ -41,15 +41,15 @@ function Post({ post }) {
       .then((res) => {
         if (hasLikedPost) {
           setLikes(post.Likes.filter((id) => id !== "reirfrj45656rgrjyg5656"));
-          Toast.fire({
-            icon: "success",
-            title: "you unliked this post ",
-          });
         } else if (hasDislikedPost) {
           setDislike(
             post.Dislikes.filter((id) => id !== "reirfrj45656rgrjyg5656")
           );
           setLikes([...post?.Likes, "reirfrj45656rgrjyg5656"]);
+          Toast.fire({
+            icon: "success",
+            title: "you liked this post ",
+          });
         } else {
           setLikes([...post?.Likes, "reirfrj45656rgrjyg5656"]);
           Toast.fire({
@@ -83,17 +83,21 @@ function Post({ post }) {
       .then((res) => {
         if (hasDislikedPost) {
           setDislike(
-            post.dislike.filter((id) => id !== "reirfrj45656rgrjyg5656")
+            post.Dislikes.filter((id) => id !== "reirfrj45656rgrjyg5656")
           );
+        } else if (hasLikedPost) {
+          setLikes(post.Likes.filter((id) => id !== "reirfrj45656rgrjyg5656"));
+
+          setDislike([...post?.Dislikes, "reirfrj45656rgrjyg5656"]);
           Toast.fire({
             icon: "success",
-            title: "you undislike this post ",
+            title: "you disliked this post ",
           });
         } else {
           setDislike([...post?.Dislikes, "reirfrj45656rgrjyg5656"]);
           Toast.fire({
             icon: "success",
-            title: "you disliked this post ",
+            title: "you dislike this post ",
           });
         }
       });
@@ -110,21 +114,28 @@ function Post({ post }) {
         comment
       )
       .then((res) => {
-        setBodyComment(null);
+        setBodyComment("");
         setComments([...comments, res.data]);
+        setnbrcomments(nbrcomments + 1);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+  const handleNotification = (type) => {
+    socket.emit("sendNotification", {
+      senderId: user,
+      receiverId: user,
+      type,
+    });
+  };
   useEffect(() => {
     getComments();
     setPostId(post._id);
 
     setLikes(post.Likes);
     setDislike(post.Dislikes);
-    console.log(hasLikedPost);
   }, []);
 
   return (
@@ -166,7 +177,7 @@ function Post({ post }) {
                       title="Comments"
                     >
                       <i className="fa fa-comments-o" />
-                      <ins>{post.Nbr_comments}</ins>
+                      <ins>{nbrcomments}</ins>
                     </span>
                   </li>
                   <li>
@@ -189,7 +200,10 @@ function Post({ post }) {
                       className="like"
                       data-toggle="tooltip"
                       title="like"
-                      onClick={handlelike}
+                      onClick={() => {
+                        handlelike();
+                        handleNotification(1);
+                      }}
                     >
                       {hasLikedPost ? (
                         <i className="bi bi-hand-thumbs-up-fill"></i>
@@ -200,17 +214,6 @@ function Post({ post }) {
                       <ins>{likes.length}</ins>
                     </span>
                   </li>
-                  {/* <li>
-                    <span
-                      className="dislike"
-                      data-toggle="tooltip"
-                      title="like"
-                    >
-                      <i className="bi bi-heart"></i>
-                      <i className="bi bi-heart-fill"></i>
-                      <ins>{post.Love}</ins>
-                    </span>
-                  </li> */}
 
                   <li className="social-media">
                     <div className="menu">
@@ -304,6 +307,16 @@ function Post({ post }) {
                       </a>
                     </div>
                     <p>{c.Body}</p>
+                    {/* <div className="react-comments">
+                      <span className="like">
+                        <i className="bi bi-hand-thumbs-up"></i>
+                        <ins>1</ins>
+                      </span>
+                      <span className="dislike">
+                        <i className="bi bi-hand-thumbs-down" />
+                        <ins>1</ins>
+                      </span>
+                    </div> */}
                   </div>
                   <ul>
                     {c?.comments?.map((p, j) => (
@@ -347,23 +360,6 @@ function Post({ post }) {
                         onChange={(e) => setBodyComment(e.target.value)}
                         value={bodycomment}
                       />
-                      {/* <div className="add-smiles">
-                      <span className="em em-expressionless" title="add icon" />
-                    </div>
-                    <div className="smiles-bunch">
-                      <i className="em em---1" />
-                      <i className="em em-smiley" />
-                      <i className="em em-anguished" />
-                      <i className="em em-laughing" />
-                      <i className="em em-angry" />
-                      <i className="em em-astonished" />
-                      <i className="em em-blush" />
-                      <i className="em em-disappointed" />
-                      <i className="em em-worried" />
-                      <i className="em em-kissing_heart" />
-                      <i className="em em-rage" />
-                      <i className="em em-stuck_out_tongue" />
-                    </div> */}
                       <button
                         className="btn btn-outline-primary"
                         type="button"

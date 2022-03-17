@@ -1,3 +1,8 @@
 .user-comment-box {
   display: none;
 }
+
+.react-comments {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -19,9 +19,11 @@ const getUser = (userId) => {
   return users.find((user) => user.userId === userId);
 };
 
+//when ceonnect
 io.on("connection", (socket) => {
-  //when ceonnect
   console.log("a user connected.");
+
+  ///////real time messaging ////////
 
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
@@ -32,7 +34,27 @@ io.on("connection", (socket) => {
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
+
     io.to(user.socketId).emit("getMessage", {
+      senderId,
+      text,
+    });
+  });
+
+  ///////real time notification //////
+
+  socket.on("sendNotification", ({ senderId, receiverId, type }) => {
+    const receiver = getUser(receiverId);
+    console.log(receiver);
+    io.to(receiver.socketId).emit("getNotification", {
+      senderId,
+      type,
+    });
+  });
+
+  socket.on("sendText", ({ senderId, receiverId, text }) => {
+    const receiver = getUser(receiverId);
+    io.to(receiver.socketId).emit("getText", {
       senderId,
       text,
     });

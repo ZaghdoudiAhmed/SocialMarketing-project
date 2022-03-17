@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { io } from "socket.io-client";
 
 import Post from "./post/post";
 import Header from "./header";
@@ -14,6 +15,9 @@ function Accueil() {
   const [newPhoto, setNewPhoto] = useState(null);
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [user, setUser] = useState("reirfrj45656rgrjyg5656");
+
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -65,13 +69,21 @@ function Accueil() {
   };
 
   useEffect(() => {
+    setSocket(io("http://localhost:8900"));
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("addUser", user);
+  }, [socket, user]);
+
+  useEffect(() => {
     getPosts();
   }, []);
 
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header socket={socket} />
 
         <div className="fixed-sidebar right">
           <div className="chat-friendz">
@@ -571,7 +583,12 @@ function Accueil() {
                               new Date(a.Date_creation)
                           )
                           .map((p) => (
-                            <Post post={p} />
+                            <Post
+                              key={p._id}
+                              post={p}
+                              socket={socket}
+                              user={user}
+                            />
                           ))}
                         <div className="central-meta item">
                           <div className="user-post">

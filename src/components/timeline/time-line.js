@@ -337,7 +337,7 @@ function Timeline(props) {
                               new Date(a.Date_creation)
                           )
                           .map((p) => (
-                            <Post post={p} />
+                            <Post key={p._id} post={p} />
                           ))}
                       </div>
                     </div>

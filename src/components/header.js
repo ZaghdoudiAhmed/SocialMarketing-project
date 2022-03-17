@@ -1,8 +1,45 @@
-import React from "react";
+import { useEffect, useState, React } from "react";
 
 import { Link } from "react-router-dom";
 
-function Header(props) {
+function Header({ socket }) {
+  const [notifications, setNotifications] = useState([]);
+
+  const displayNotification = ({ senderId, type }) => {
+    let action;
+
+    if (type === 1) {
+      action = "liked";
+    } else if (type === 2) {
+      action = "commented";
+    } else {
+      action = "shared";
+    }
+    return (
+      <li>
+        <a href="notifications.html" title>
+          <img src="images/resources/thumb-3.jpg" alt />
+          <div className="mesg-meta">
+            <h6>Ahmed ZAghdoudi</h6>
+            <span className="notification">{`Ahmed Zaghdoudi ${action} your post.`}</span>
+            {/* <i>2 min ago</i> */}
+          </div>
+        </a>
+        <span className="tag blue">Unseen</span>
+      </li>
+    );
+  };
+
+  const handleRead = () => {
+    setNotifications([]);
+  };
+
+  useEffect(() => {
+    socket?.on("getNotification", (data) => {
+      setNotifications((prev) => [...prev, data]);
+    });
+  }, [socket]);
+
   return (
     <>
       <div className="responsive-header">
@@ -358,12 +395,15 @@ function Header(props) {
             <li>
               <a href="#" title="Notification" data-ripple>
                 <i className="ti-bell" />
-                <span>20</span>
+                {notifications.length > 0 && (
+                  <span>{notifications.length}</span>
+                )}
               </a>
               <div className="dropdowns">
-                <span>4 New Notifications</span>
+                <span>{notifications.length} New Notifications</span>
                 <ul className="drops-menu">
-                  <li>
+                  {notifications.map((n) => displayNotification(n))}
+                  {/* <li>
                     <a href="notifications.html" title>
                       <img src="images/resources/thumb-1.jpg" alt />
                       <div className="mesg-meta">
@@ -417,11 +457,11 @@ function Header(props) {
                       </div>
                     </a>
                     <span className="tag">New</span>
-                  </li>
+                  </li> */}
                 </ul>
-                <a href="notifications.html" title className="more-mesg">
-                  view more
-                </a>
+                <button onClick={handleRead} title className="more-mesg">
+                  Mark as read
+                </button>
               </div>
             </li>
             <li>
