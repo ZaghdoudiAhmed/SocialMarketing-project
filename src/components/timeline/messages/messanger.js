@@ -5,6 +5,7 @@ import Message from "./message";
 import Header from "../../header";
 import Shortcuts from "../shortcuts";
 import Timelineinfo from "../timeline-info";
+import Chatonline from "./chatonline";
 
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -16,6 +17,9 @@ function Messanger(props) {
   const [newMessage, setNewMessage] = useState(null);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
+  const currentUserId = localStorage.getItem("currentUser");
+  const [friends, setFriends] = useState([]);
 
   const scrollRef = useRef();
   const socket = useRef();
@@ -23,7 +27,7 @@ function Messanger(props) {
 
   const getConversations = async () => {
     try {
-      const res = await axios.get(url + "fekgrgogo4546glrgthob56");
+      const res = await axios.get(url + currentUserId);
       setConversations(res.data);
     } catch (err) {
       console.log(err);
@@ -40,15 +44,35 @@ function Messanger(props) {
       console.log(err);
     }
   };
+  const getFriends = async () => {
+    try {
+      const friendList = await axios.get(
+        "http://localhost:3000/api/users/friends/" + currentUserId
+      );
+      setFriends(friendList.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const message = {
-      // sender: user._id,
-      sender: "6218b4tkgb9a7fc8d3pyy7adad5",
+      sender: currentUserId,
       text: newMessage,
-      conversationId: "62165fab8c09405845d635c1",
+      conversationId: currentChat._id,
     };
+
+    const receiverId = currentChat.members.find(
+      (member) => member !== currentUserId
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: currentUserId,
+      receiverId,
+      text: newMessage,
+    });
+
     try {
       const res = await axios.post("http://localhost:3000/messages", message);
       setMessages([...messages, res.data]);
@@ -60,7 +84,8 @@ function Messanger(props) {
   useEffect(() => {
     getConversations();
     getMessages();
-  }, ["fekgrgogo4546glrgthob56"]);
+    getFriends();
+  }, [currentUserId]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -84,13 +109,28 @@ function Messanger(props) {
   }, []);
 
   useEffect(() => {
-    socket.current.emit("addUser", "fekgrgogo4546glrgthob56");
+    socket.current.emit("addUser", currentUserId);
     socket.current.on("getUsers", (users) => {
-      // setOnlineUsers(
-      //   user.followings.filter((f) => users.some((u) => u.userId === f))
-      // );
+      setOnlineUsers(
+        currentUser.followings.filter((f) => users.some((u) => u.userId === f))
+      );
     });
-  }, ["fekgrgogo4546glrgthob56"]);
+  }, [currentUserId]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
+    });
+  }, []);
 
   return (
     <div>
@@ -98,45 +138,7 @@ function Messanger(props) {
         <Header />
         {/* topbar */}
         <section>
-          <div className="feature-photo">
-            <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
-            </figure>
-            <div className="add-btn">
-              <span>1205 followers</span>
-              <a href="#" title data-ripple>
-                Add Friend
-              </a>
-            </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
-            <div className="container-fluid">
-              <div className="row merged">
-                <div className="col-lg-2 col-sm-3">
-                  <div className="user-avatar">
-                    <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
-                    </figure>
-                  </div>
-                </div>
-                <div className="col-lg-10 col-sm-9">
-                  <Timelineinfo />
-                </div>
-              </div>
-            </div>
-          </div>
+          <Timelineinfo friends={friends} setFriends={setFriends} />
         </section>
         {/* top area */}
         <section>
@@ -173,7 +175,12 @@ function Messanger(props) {
                           <div className="message-box">
                             <ul className="peoples">
                               {conversations.map((c) => (
-                                <Conversation conversation={c} />
+                                <li onClick={() => setCurrentChat(c)}>
+                                  <Conversation
+                                    conversation={c}
+                                    currentUser={currentUser}
+                                  />
+                                </li>
                               ))}
                             </ul>
                             <div className="peoples-mesg-box">
@@ -188,17 +195,22 @@ function Messanger(props) {
                                   jason bourne <i>online</i>
                                 </span>
                               </div>
-
-                              <ul className="chatting-area" ref={scrollRef}>
-                                {messages.map((m) => (
-                                  <Message
-                                    message={m}
-                                    own={
-                                      m.sender === "6218b4tkgb9a7fc8d3pyy7adad5"
-                                    }
-                                  />
-                                ))}
-                              </ul>
+                              {currentChat ? (
+                                <>
+                                  <ul className="chatting-area" ref={scrollRef}>
+                                    {messages.map((m) => (
+                                      <Message
+                                        message={m}
+                                        own={m.sender === currentUserId}
+                                      />
+                                    ))}
+                                  </ul>
+                                </>
+                              ) : (
+                                <span className="noConversationText">
+                                  Open a conversation to start a chat.
+                                </span>
+                              )}
                               <div className="message-text-container">
                                 <form method="post">
                                   <textarea
@@ -246,98 +258,14 @@ function Messanger(props) {
                           </ul>
                         </div>
                         <div className="widget stick-widget">
-                          <h4 className="widget-title">Who's follownig</h4>
+                          <h4 className="widget-title">Who's Online </h4>
+
                           <ul className="followers">
-                            <li>
-                              <figure>
-                                <img
-                                  src="images/resources/friend-avatar2.jpg"
-                                  alt
-                                />
-                              </figure>
-                              <div className="friend-meta">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Kelly Bill
-                                  </a>
-                                </h4>
-                                <a href="#" title className="underline">
-                                  Add Friend
-                                </a>
-                              </div>
-                            </li>
-                            <li>
-                              <figure>
-                                <img
-                                  src="images/resources/friend-avatar4.jpg"
-                                  alt
-                                />
-                              </figure>
-                              <div className="friend-meta">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Issabel
-                                  </a>
-                                </h4>
-                                <a href="#" title className="underline">
-                                  Add Friend
-                                </a>
-                              </div>
-                            </li>
-                            <li>
-                              <figure>
-                                <img
-                                  src="images/resources/friend-avatar6.jpg"
-                                  alt
-                                />
-                              </figure>
-                              <div className="friend-meta">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Andrew
-                                  </a>
-                                </h4>
-                                <a href="#" title className="underline">
-                                  Add Friend
-                                </a>
-                              </div>
-                            </li>
-                            <li>
-                              <figure>
-                                <img
-                                  src="images/resources/friend-avatar8.jpg"
-                                  alt
-                                />
-                              </figure>
-                              <div className="friend-meta">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Sophia
-                                  </a>
-                                </h4>
-                                <a href="#" title className="underline">
-                                  Add Friend
-                                </a>
-                              </div>
-                            </li>
-                            <li>
-                              <figure>
-                                <img
-                                  src="images/resources/friend-avatar3.jpg"
-                                  alt
-                                />
-                              </figure>
-                              <div className="friend-meta">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Allen
-                                  </a>
-                                </h4>
-                                <a href="#" title className="underline">
-                                  Add Friend
-                                </a>
-                              </div>
-                            </li>
+                            <Chatonline
+                              onlineUsers={onlineUsers}
+                              currentUserId={currentUserId}
+                              setCurrentChat={setCurrentChat}
+                            />
                           </ul>
                         </div>
                         {/* who's following */}

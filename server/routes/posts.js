@@ -35,12 +35,14 @@ var upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.get("/", function (req, res, next) {
   // res.send("respond with a resource");
-  Post.find({}, (err, posts) => {
-    if (err) {
-      res.send("error get posts");
-    }
-    res.json(posts);
-  });
+  Post.find({})
+    .populate("Creator")
+    .exec((err, posts) => {
+      if (err) {
+        console.log(err);
+      }
+      res.json(posts);
+    });
 });
 
 // Creating post
@@ -50,15 +52,13 @@ router.post("/", upload.single("Photo"), (req, res) => {
     Private: req.body.Private,
     Creator: req.body.Creator,
     Photo: req.file.originalname,
-  }).save((err, newpost) => {
-    if (err) {
-      console.log("error");
-    } else {
-      // console.log(newpost);
-      // res.json(" Post :" + newpost._id + "added");
-      res.json(newpost);
-    }
-  });
+  })
+    .save()
+    .then((newpost) => {
+      Post.populate(newpost, "Creator", (err, populatedpost) => {
+        res.json(populatedpost);
+      });
+    });
 });
 
 //Update Post
@@ -107,12 +107,14 @@ router.get("/delete/:id", (req, res, next) => {
 
 //Get all posts of a user with id
 router.get("/all/:id", (req, res, next) => {
-  Post.find({ Creator: req.params.id }, (err, posts) => {
-    if (err) {
-      res.send("error get posts");
-    }
-    res.json(posts);
-  });
+  Post.find({ Creator: req.params.id })
+    .populate("Creator")
+    .exec((err, posts) => {
+      if (err) {
+        console.log(err);
+      }
+      res.json(posts);
+    });
 });
 
 // Like a post

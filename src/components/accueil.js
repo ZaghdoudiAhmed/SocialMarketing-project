@@ -16,7 +16,8 @@ function Accueil() {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [user, setUser] = useState("reirfrj45656rgrjyg5656");
+  const [currentUser, setCurrentUser] = useState("");
+  const currentUserId = localStorage.getItem("currentUser");
 
   const Toast = Swal.mixin({
     toast: true,
@@ -38,13 +39,19 @@ function Accueil() {
     post.append("Photo", file);
     post.append("Description", newDescription);
     post.append("Private", true);
-    post.append("Creator", "reirfrj45656rgrjyg5656");
+    post.append("Creator", currentUserId);
 
     try {
       await axios.post(url, post).then((res) => {
         Toast.fire({
           icon: "success",
           title: "Post added successfully",
+        });
+        socket.emit("sendNotification", {
+          senderId: res.data.Creator._id,
+          receiverId: currentUserId,
+          senderName: res.data.Creator.name,
+          type: 4,
         });
 
         setPostData([res.data, ...postData]);
@@ -73,17 +80,31 @@ function Accueil() {
   }, []);
 
   useEffect(() => {
-    socket?.emit("addUser", user);
-  }, [socket, user]);
+    socket?.emit("addUser", currentUserId);
+  }, [socket, currentUserId]);
 
   useEffect(() => {
     getPosts();
   }, []);
 
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
+    });
+  }, []);
   return (
     <div>
       <div className="theme-layout">
-        <Header socket={socket} />
+        <Header socket={socket} currentUserId={currentUserId} />
 
         <div className="fixed-sidebar right">
           <div className="chat-friendz">
@@ -533,7 +554,7 @@ function Accueil() {
                             <form>
                               <textarea
                                 rows={2}
-                                placeholder="Do you wanna post something ? write here "
+                                placeholder="..."
                                 onChange={(e) =>
                                   setNewDescription(e.target.value)
                                 }
@@ -550,6 +571,7 @@ function Accueil() {
                                         onChange={(e) => {
                                           setFile(e.target.files[0]);
                                         }}
+                                        id="file"
                                       />
                                     </label>
                                   </li>
@@ -565,9 +587,19 @@ function Accueil() {
                                       onClick={handleSubmit}
                                       type="submit"
                                     >
-                                      Post
+                                      Share
                                     </button>
                                   </li>
+                                  <br />
+                                  {file && (
+                                    <div className="center">
+                                      <img
+                                        style={{ position: "center" }}
+                                        alt=""
+                                        src={URL.createObjectURL(file)}
+                                      />
+                                    </div>
+                                  )}
                                 </ul>
                               </div>
                             </form>
@@ -587,7 +619,7 @@ function Accueil() {
                               key={p._id}
                               post={p}
                               socket={socket}
-                              user={user}
+                              currentUser={currentUser}
                             />
                           ))}
                         <div className="central-meta item">

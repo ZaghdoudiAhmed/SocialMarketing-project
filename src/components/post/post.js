@@ -5,18 +5,19 @@ import Swal from "sweetalert2";
 
 import axios from "axios";
 import "./post.css";
+import Comment from "../comment/comment";
+import CommentForm from "../comment/commentForm";
 
-function Post({ post, socket, user }) {
-  const [postid, setPostId] = useState("");
+function Post({ post, socket, currentUser }) {
   const [likes, setLikes] = useState(post?.Likes);
   const [dislike, setDislike] = useState(post?.Dislikes);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState();
   const [nbrcomments, setnbrcomments] = useState(post?.Nbr_comments);
-  const [bodycomment, setBodyComment] = useState("");
+  const [activeComment, setActiveComment] = useState(null);
 
-  const hasLikedPost = likes.find((like) => like === "reirfrj45656rgrjyg5656");
+  const hasLikedPost = likes.find((like) => like === currentUser._id);
   const hasDislikedPost = dislike.find(
-    (dislike) => dislike === "reirfrj45656rgrjyg5656"
+    (dislike) => dislike === currentUser._id
   );
 
   const Toast = Swal.mixin({
@@ -31,27 +32,26 @@ function Post({ post, socket, user }) {
     },
   });
 
-  const handlelike = async () => {
-    const user = {
-      userId: "reirfrj45656rgrjyg5656",
-    };
+  const handlelike = async (e) => {
+    e.preventDefault();
 
+    const user = {
+      userId: currentUser._id,
+    };
     axios
-      .put("http://localhost:3000/posts/" + postid + "/like", user)
+      .put("http://localhost:3000/posts/" + post._id + "/like", user)
       .then((res) => {
         if (hasLikedPost) {
-          setLikes(post.Likes.filter((id) => id !== "reirfrj45656rgrjyg5656"));
+          setLikes(post.Likes.filter((id) => id !== currentUser._id));
         } else if (hasDislikedPost) {
-          setDislike(
-            post.Dislikes.filter((id) => id !== "reirfrj45656rgrjyg5656")
-          );
-          setLikes([...post?.Likes, "reirfrj45656rgrjyg5656"]);
+          setDislike(post.Dislikes.filter((id) => id !== currentUser._id));
+          setLikes([...post?.Likes, currentUser._id]);
           Toast.fire({
             icon: "success",
             title: "you liked this post ",
           });
         } else {
-          setLikes([...post?.Likes, "reirfrj45656rgrjyg5656"]);
+          setLikes([...post?.Likes, currentUser._id]);
           Toast.fire({
             icon: "success",
             title: "you liked this post ",
@@ -76,25 +76,24 @@ function Post({ post, socket, user }) {
     e.preventDefault();
 
     const user = {
-      userId: "reirfrj45656rgrjyg5656",
+      userId: currentUser._id,
     };
+
     axios
-      .put("http://localhost:3000/posts/" + postid + "/dislike", user)
+      .put("http://localhost:3000/posts/" + post._id + "/dislike", user)
       .then((res) => {
         if (hasDislikedPost) {
-          setDislike(
-            post.Dislikes.filter((id) => id !== "reirfrj45656rgrjyg5656")
-          );
+          setDislike(post.Dislikes.filter((id) => id !== currentUser._id));
         } else if (hasLikedPost) {
-          setLikes(post.Likes.filter((id) => id !== "reirfrj45656rgrjyg5656"));
+          setLikes(post.Likes.filter((id) => id !== currentUser._id));
 
-          setDislike([...post?.Dislikes, "reirfrj45656rgrjyg5656"]);
+          setDislike([...post?.Dislikes, currentUser._id]);
           Toast.fire({
             icon: "success",
             title: "you disliked this post ",
           });
         } else {
-          setDislike([...post?.Dislikes, "reirfrj45656rgrjyg5656"]);
+          setDislike([...post?.Dislikes, currentUser._id]);
           Toast.fire({
             icon: "success",
             title: "you dislike this post ",
@@ -103,10 +102,18 @@ function Post({ post, socket, user }) {
       });
   };
 
-  const handleComment = async (e) => {
-    e.preventDefault();
+  const handleNotification = (type) => {
+    socket.emit("sendNotification", {
+      senderId: currentUser._id,
+      receiverId: post.Creator._id,
+      senderName: currentUser.name,
+      type,
+    });
+  };
+
+  const handleComment = (body) => {
     const comment = {
-      Body: bodycomment,
+      Body: body,
     };
     axios
       .post(
@@ -114,8 +121,7 @@ function Post({ post, socket, user }) {
         comment
       )
       .then((res) => {
-        setBodyComment("");
-        setComments([...comments, res.data]);
+        setComments([...comments, res]);
         setnbrcomments(nbrcomments + 1);
       })
       .catch((error) => {
@@ -123,17 +129,8 @@ function Post({ post, socket, user }) {
       });
   };
 
-  const handleNotification = (type) => {
-    socket.emit("sendNotification", {
-      senderId: user,
-      receiverId: user,
-      type,
-    });
-  };
   useEffect(() => {
     getComments();
-    setPostId(post._id);
-
     setLikes(post.Likes);
     setDislike(post.Dislikes);
   }, []);
@@ -147,11 +144,7 @@ function Post({ post, socket, user }) {
               <img src="images/resources/friend-avatar10.jpg" alt />
             </figure>
             <div className="friend-name">
-              <ins>
-                <a href="time-line.html" title>
-                  Ahmed ZAGHDOUDI
-                </a>
-              </ins>
+              <ins>{post.Creator.name}</ins>
               <span>
                 {"published: "}
                 {moment(post.Date_creation).format("MMMM Do YYYY")}
@@ -161,15 +154,12 @@ function Post({ post, socket, user }) {
               </span>
             </div>
             <div className="post-meta">
+              <div className="description">
+                <p>{post.Description}</p>
+              </div>
               <img src={"http://127.0.0.1:5500/server/uploads/" + post.Photo} />
               <div className="we-video-info">
                 <ul>
-                  {/* <li>
-                    <span className="views" data-toggle="tooltip" title="views">
-                      <i className="fa fa-eye" />
-                      <ins>1.2k</ins>
-                    </span>
-                  </li> */}
                   <li>
                     <span
                       className="comment"
@@ -188,9 +178,9 @@ function Post({ post, socket, user }) {
                       onClick={handledilike}
                     >
                       {hasDislikedPost ? (
-                        <i className="bi bi-hand-thumbs-down-fill"></i>
+                        <i className="bi bi-hand-thumbs-down-fill" />
                       ) : (
-                        <i className="bi bi-hand-thumbs-down"></i>
+                        <i className="bi bi-hand-thumbs-down" />
                       )}
                       <ins>{dislike.length}</ins>
                     </span>
@@ -280,98 +270,21 @@ function Post({ post, socket, user }) {
                   </li>
                 </ul>
               </div>
-              <div className="description">
-                <p>{post.Description}</p>
-              </div>
             </div>
           </div>
           <div className="coment-area">
             <ul className="we-comet comment-box">
-              {comments?.map((c, i) => (
-                <li key={i} className="user-comment-box">
-                  <div className="comet-avatar">
-                    <img src="images/resources/comet-1.jpg" />
-                  </div>
-                  <div className="we-comment">
-                    <div className="coment-head">
-                      <h5>
-                        <a href="time-line.html">Ahmed ZAGHDOUDI</a>
-                      </h5>
-                      <span>{format(c.Date_creation)}</span>
-                      <a
-                        className="we-reply"
-                        style={{ color: "#088dcd" }}
-                        title="Reply"
-                      >
-                        <i className="fa fa-reply" />
-                      </a>
-                    </div>
-                    <p>{c.Body}</p>
-                    {/* <div className="react-comments">
-                      <span className="like">
-                        <i className="bi bi-hand-thumbs-up"></i>
-                        <ins>1</ins>
-                      </span>
-                      <span className="dislike">
-                        <i className="bi bi-hand-thumbs-down" />
-                        <ins>1</ins>
-                      </span>
-                    </div> */}
-                  </div>
-                  <ul>
-                    {c?.comments?.map((p, j) => (
-                      <li key={j}>
-                        <div className="comet-avatar">
-                          <img src="images/resources/comet-1.jpg" alt />
-                        </div>
-                        <div className="we-comment">
-                          <div className="coment-head">
-                            <h5>
-                              <a href="time-line.html" title>
-                                Jason borne
-                              </a>
-                            </h5>
-                            <span>{format(p.Date_creation)}</span>
-                            <a className="we-reply" href="#" title="Reply">
-                              <i className="fa fa-reply" />
-                            </a>
-                          </div>
-                          <p>{p.Body}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
+              {comments?.map((c) => (
+                <Comment
+                  key={c._id}
+                  comment={c}
+                  replies={c.comments}
+                  currentUser={currentUser}
+                  activeComment={activeComment}
+                  setActiveComment={setActiveComment}
+                />
               ))}
-              {/* <li>
-                <a title className="showmore underline">
-                  more comments
-                </a>
-              </li> */}
-              <li className="post-comment">
-                <div className="comet-avatar">
-                  <img src="images/resources/comet-1.jpg" alt />
-                </div>
-                <div className="post-comt-box">
-                  <form method="post">
-                    <div className="input-group mb-3">
-                      <textarea
-                        placeholder="Post your comment"
-                        onChange={(e) => setBodyComment(e.target.value)}
-                        value={bodycomment}
-                      />
-                      <button
-                        className="btn btn-outline-primary"
-                        type="button"
-                        id="button-addon2"
-                        onClick={handleComment}
-                      >
-                        Button
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </li>
+              <CommentForm post={post} handleComment={handleComment} />
             </ul>
           </div>
         </div>

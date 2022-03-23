@@ -2,16 +2,19 @@ import React, { useState, useEffect } from "react";
 import Header from "../header";
 import Shortcuts from "./shortcuts";
 import Timelineinfo from "./timeline-info";
-
 import axios from "axios";
 
 function Timelinephotos(props) {
   const url = "http://localhost:3000/posts";
   const [postData, setPostData] = useState([]);
+  const [friends, setFriends] = useState([]);
+
+  const [currentUser, setCurrentUser] = useState("");
+  const currentUserId = localStorage.getItem("currentUser");
 
   const getPosts = async () => {
     try {
-      axios.get(url + "/all/" + "12338roty456ze3494zer34aa").then((res) => {
+      axios.get(url + "/all/" + currentUserId).then((res) => {
         setPostData(res.data);
       });
     } catch (err) {
@@ -19,9 +22,36 @@ function Timelinephotos(props) {
     }
   };
 
+  const getFriends = async () => {
+    try {
+      const friendList = await axios.get(
+        "http://localhost:3000/api/users/friends/" + currentUserId
+      );
+      setFriends(friendList.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
+    });
+  }, []);
+
   useEffect(() => {
     getPosts();
-  }, ["12338roty456ze3494zer34aa"]);
+    getFriends();
+  }, [currentUserId]);
 
   return (
     <div>
@@ -29,45 +59,7 @@ function Timelinephotos(props) {
         <Header />
         {/* topbar */}
         <section>
-          <div className="feature-photo">
-            <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
-            </figure>
-            <div className="add-btn">
-              <span>1205 followers</span>
-              <a href="#" title data-ripple>
-                Add Friend
-              </a>
-            </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
-            <div className="container-fluid">
-              <div className="row merged">
-                <div className="col-lg-2 col-sm-3">
-                  <div className="user-avatar">
-                    <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
-                    </figure>
-                  </div>
-                </div>
-                <div className="col-lg-10 col-sm-9">
-                  <Timelineinfo />
-                </div>
-              </div>
-            </div>
-          </div>
+          <Timelineinfo friends={friends} setFriends={setFriends} />
         </section>
         {/* top area */}
         <section>
@@ -108,30 +100,33 @@ function Timelinephotos(props) {
                     {/* sidebar */}
                     <div className="col-lg-6">
                       <div className="central-meta">
-                        <ul className="photos">
-                          {postData.map((p) => (
-                            <li>
-                              <a
-                                className="strip"
-                                href={
-                                  "http://127.0.0.1:5500/server/uploads/" +
-                                  p.Photo
-                                }
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img
-                                  src={
+                        {postData.length ? (
+                          <ul className="photos">
+                            {postData?.map((p) => (
+                              <li>
+                                <a
+                                  className="strip"
+                                  href={
                                     "http://127.0.0.1:5500/server/uploads/" +
                                     p.Photo
                                   }
-                                  alt
-                                />
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
+                                  title
+                                  data-strip-group="mygroup"
+                                  data-strip-group-options="loop: false"
+                                >
+                                  <img
+                                    src={
+                                      "http://127.0.0.1:5500/server/uploads/" +
+                                      p.Photo
+                                    }
+                                    alt
+                                  />
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+
                         <div className="lodmore">
                           <button className="btn-view btn-load-more" />
                         </div>

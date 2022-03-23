@@ -43,19 +43,25 @@ io.on("connection", (socket) => {
 
   ///////real time notification //////
 
-  socket.on("sendNotification", ({ senderId, receiverId, type }) => {
-    const receiver = getUser(receiverId);
-    console.log(receiver);
-    io.to(receiver.socketId).emit("getNotification", {
-      senderId,
-      type,
-    });
-  });
+  socket.on(
+    "sendNotification",
+    ({ senderId, senderName, receiverId, type }) => {
+      const receiver = getUser(receiverId);
+      console.log(receiver);
+      io.to(receiver.socketId).emit("getNotification", {
+        senderId,
+        senderName,
+        type,
+      });
+    }
+  );
 
-  socket.on("sendText", ({ senderId, receiverId, text }) => {
+  ////////////////////////////////////////
+  socket.on("sendText", ({ senderId, senderName, receiverId, text }) => {
     const receiver = getUser(receiverId);
     io.to(receiver.socketId).emit("getText", {
       senderId,
+      senderName,
       text,
     });
   });

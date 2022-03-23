@@ -2,18 +2,37 @@ import { useEffect, useState, React } from "react";
 
 import { Link } from "react-router-dom";
 
-function Header({ socket }) {
+function Header({ socket, currentUserId }) {
   const [notifications, setNotifications] = useState([]);
 
-  const displayNotification = ({ senderId, type }) => {
+  useEffect(() => {
+    socket?.on("getNotification", (data) => {
+      setNotifications((prev) => [...prev, data]);
+    });
+  }, [socket]);
+
+  const displayNotification = ({ senderId, senderName, type }) => {
     let action;
 
     if (type === 1) {
       action = "liked";
     } else if (type === 2) {
       action = "commented";
-    } else {
+    } else if (type === 3) {
       action = "shared";
+    } else if (type === 4) {
+      return (
+        <li>
+          <a href="notifications.html" title>
+            <img src="images/resources/thumb-3.jpg" alt />
+            <div className="mesg-meta">
+              <h6>Ahmed ZAghdoudi</h6>
+              <span className="notification">{` ${senderName} posted a post.`}</span>
+            </div>
+          </a>
+          <span className="tag blue">Unseen</span>
+        </li>
+      );
     }
     return (
       <li>
@@ -21,8 +40,7 @@ function Header({ socket }) {
           <img src="images/resources/thumb-3.jpg" alt />
           <div className="mesg-meta">
             <h6>Ahmed ZAghdoudi</h6>
-            <span className="notification">{`Ahmed Zaghdoudi ${action} your post.`}</span>
-            {/* <i>2 min ago</i> */}
+            <span className="notification">{` ${senderName} ${action} your post.`}</span>
           </div>
         </a>
         <span className="tag blue">Unseen</span>
@@ -33,12 +51,6 @@ function Header({ socket }) {
   const handleRead = () => {
     setNotifications([]);
   };
-
-  useEffect(() => {
-    socket?.on("getNotification", (data) => {
-      setNotifications((prev) => [...prev, data]);
-    });
-  }, [socket]);
 
   return (
     <>
@@ -403,61 +415,6 @@ function Header({ socket }) {
                 <span>{notifications.length} New Notifications</span>
                 <ul className="drops-menu">
                   {notifications.map((n) => displayNotification(n))}
-                  {/* <li>
-                    <a href="notifications.html" title>
-                      <img src="images/resources/thumb-1.jpg" alt />
-                      <div className="mesg-meta">
-                        <h6>sarah Loren</h6>
-                        <span>Hi, how r u dear ...?</span>
-                        <i>2 min ago</i>
-                      </div>
-                    </a>
-                    <span className="tag green">New</span>
-                  </li>
-                  <li>
-                    <a href="notifications.html" title>
-                      <img src="images/resources/thumb-2.jpg" alt />
-                      <div className="mesg-meta">
-                        <h6>Jhon doe</h6>
-                        <span>Hi, how r u dear ...?</span>
-                        <i>2 min ago</i>
-                      </div>
-                    </a>
-                    <span className="tag red">Reply</span>
-                  </li>
-                  <li>
-                    <a href="notifications.html" title>
-                      <img src="images/resources/thumb-3.jpg" alt />
-                      <div className="mesg-meta">
-                        <h6>Andrew</h6>
-                        <span>Hi, how r u dear ...?</span>
-                        <i>2 min ago</i>
-                      </div>
-                    </a>
-                    <span className="tag blue">Unseen</span>
-                  </li>
-                  <li>
-                    <a href="notifications.html" title>
-                      <img src="images/resources/thumb-4.jpg" alt />
-                      <div className="mesg-meta">
-                        <h6>Tom cruse</h6>
-                        <span>Hi, how r u dear ...?</span>
-                        <i>2 min ago</i>
-                      </div>
-                    </a>
-                    <span className="tag">New</span>
-                  </li>
-                  <li>
-                    <a href="notifications.html" title>
-                      <img src="images/resources/thumb-5.jpg" alt />
-                      <div className="mesg-meta">
-                        <h6>Amy</h6>
-                        <span>Hi, how r u dear ...?</span>
-                        <i>2 min ago</i>
-                      </div>
-                    </a>
-                    <span className="tag">New</span>
-                  </li> */}
                 </ul>
                 <button onClick={handleRead} title className="more-mesg">
                   Mark as read

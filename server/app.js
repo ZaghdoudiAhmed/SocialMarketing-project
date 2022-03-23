@@ -16,32 +16,20 @@ var postsRouter = require("./routes/posts");
 var commentsRouter = require("./routes/comments");
 var conversationRouter = require("./routes/conversations");
 var messageRouter = require("./routes/messages");
-
-var app = express();
-
-
+var passport = require("passport");
 var path = require("path");
 var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var mongoose = require("mongoose");
-var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-const cors = require('cors')
 
-require('./routes/auth/autnetificate')
-require('./routes/auth/JwtStrategy')
-require('./routes/auth/LocalStrategy')
-const passport = require('passport')
-const bodyParser = require("body-parser");
-const cookieparser = require('cookie-parser')
-
-const port = 8080;
+require("./routes/auth/autnetificate");
+require("./routes/auth/JwtStrategy");
+require("./routes/auth/LocalStrategy");
 
 var app = express();
 
-app.use(bodyParser.json())
-app.use(cookieparser("secret"))
-app.use(cors())
+app.use(bodyParser.json());
+app.use(cookieParser("secret"));
+app.use(cors());
 mongoose.connect(
   "mongodb://localhost:27017/socialmarketingpi",
   {
@@ -61,14 +49,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser('secret'));
+app.use(cookieParser("secret"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use(cors());
+app.use(passport.initialize());
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
 app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
 app.use("/conversations", conversationRouter);
@@ -76,9 +64,6 @@ app.use("/messages", messageRouter);
 app.use("/api/users", usersRouter);
 
 app.use(express.urlencoded({ extended: false }));
-
-app.use(passport.initialize())
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

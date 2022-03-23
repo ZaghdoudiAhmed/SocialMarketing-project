@@ -1,57 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Shortcuts from "./shortcuts";
 import { Link } from "react-router-dom";
 
 import Timelineinfo from "./timeline-info";
 
 import Header from "../header";
+import axios from "axios";
 
 function Timelinefriends(props) {
+  const [friends, setFriends] = useState([]);
+  const currentUserId = localStorage.getItem("currentUser");
+
+  const getFriends = async () => {
+    try {
+      const friendList = await axios.get(
+        "http://localhost:3000/api/users/friends/" + currentUserId
+      );
+      setFriends(friendList.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleClick = async (userid) => {
+    try {
+      await axios
+        .put("http://localhost:3000/api/users/" + userid + "/unfollow", {
+          userId: currentUserId,
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getFriends();
+  }, []);
   return (
     <div>
       <div className="theme-layout">
         <Header />
         {/* topbar */}
         <section>
-          <div className="feature-photo">
-            <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
-            </figure>
-            <div className="add-btn">
-              <span>1205 followers</span>
-              <a href="#" title data-ripple>
-                Add Friend
-              </a>
-            </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
-            <div className="container-fluid">
-              <div className="row merged">
-                <div className="col-lg-2 col-sm-3">
-                  <div className="user-avatar">
-                    <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
-                    </figure>
-                  </div>
-                </div>
-                <div className="col-lg-10 col-sm-9">
-                  <Timelineinfo />
-                </div>
-              </div>
-            </div>
-          </div>
+          <Timelineinfo friends={friends} setFriends={setFriends} />
         </section>
         {/* top area */}
         <section>
@@ -106,7 +100,7 @@ function Timelinefriends(props) {
                               >
                                 My Friends
                               </a>{" "}
-                              <span>55</span>
+                              <span>{friends.length}</span>
                             </li>
                             <li className="nav-item">
                               <a className href="#frends-req" data-toggle="tab">
@@ -122,294 +116,50 @@ function Timelinefriends(props) {
                               id="frends"
                             >
                               <ul className="nearby-contct">
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/friend-avatar9.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
+                                {friends?.map((friend) => (
+                                  <li>
+                                    <div className="nearly-pepls">
+                                      <figure>
                                         <a href="time-line.html" title>
-                                          jhon kates
+                                          <img
+                                            // src={
+                                            //   friend.profilepic
+                                            //     ? friend.profilepic
+                                            //     : "images/resources/friend-avatar9.jpg"
+                                            // }
+                                            src="images/resources/friend-avatar9.jpg"
+                                            alt
+                                          />
                                         </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly1.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          sophia Gate
+                                      </figure>
+                                      <div className="pepl-info">
+                                        <h4>
+                                          <a href="time-line.html" title>
+                                            {friend.name}
+                                          </a>
+                                        </h4>
+                                        <span>ftv model</span>
+                                        <a
+                                          href="#"
+                                          title
+                                          className="add-butn more-action"
+                                          data-ripple
+                                          //  onClick={handleClick(friend._id)}
+                                        >
+                                          unfriend
                                         </a>
-                                      </h4>
-                                      <span>tv actresses</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly2.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          sara grey
+                                        <a
+                                          href="#"
+                                          title
+                                          className="add-butn"
+                                          data-ripple
+                                        >
+                                          add friend
                                         </a>
-                                      </h4>
-                                      <span>work at IBM</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly3.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          Sexy cat
-                                        </a>
-                                      </h4>
-                                      <span>Student</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly4.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          Sara grey
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly5.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          Amy watson
-                                        </a>
-                                      </h4>
-                                      <span>Study in university</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly6.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          caty lasbo
-                                        </a>
-                                      </h4>
-                                      <span>work as dancers</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly2.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          Ema watson
-                                        </a>
-                                      </h4>
-                                      <span>personal business</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        unfriend
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        add friend
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
+                                  </li>
+                                ))}
                               </ul>
                               <div className="lodmore">
                                 <button className="btn-view btn-load-more" />

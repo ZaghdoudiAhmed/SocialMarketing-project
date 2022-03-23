@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../header";
 
 function About(props) {
+  const [currentUser, setCurrentUser] = useState("");
+  const currentUserId = localStorage.getItem("currentUser");
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
+    });
+  }, []);
+
   return (
     <div>
       <div className="theme-layout">
@@ -45,7 +63,7 @@ function About(props) {
                   <div className="timeline-info">
                     <ul>
                       <li className="admin-name">
-                        <h5>Janice Griffith</h5>
+                        <h5>{currentUser.name}</h5>
                         <span>Group Admin</span>
                       </li>
                       <li>
@@ -246,7 +264,7 @@ function About(props) {
                                 <ul className="basics">
                                   <li>
                                     <i className="ti-user" />
-                                    sarah grey
+                                    {currentUser.name}
                                   </li>
                                   <li>
                                     <i className="ti-map-alt" />
@@ -263,6 +281,7 @@ function About(props) {
                                       className="__cf_email__"
                                       data-cfemail="3c4553494e515d55507c59515d5550125f5351"
                                     >
+                                      {currentUser.email} 
                                       [email&nbsp;protected]
                                     </a>
                                   </li>

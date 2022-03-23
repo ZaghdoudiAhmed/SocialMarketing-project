@@ -11,8 +11,13 @@ function Timeline(props) {
   const url = "http://localhost:3000/posts";
 
   const [postData, setPostData] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [onlineFriends, setOnlineFriends] = useState([]);
+
   const [newDescription, setNewDescription] = useState(null);
   const [file, setFile] = useState(null);
+  const [currentUser, setCurrentUser] = useState("");
+  const currentUserId = localStorage.getItem("currentUser");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +27,7 @@ function Timeline(props) {
     post.append("Photo", file);
     post.append("Description", newDescription);
     post.append("Private", true);
-    post.append("Creator", "12338roty456ze3494zer34aa");
+    post.append("Creator", currentUserId);
 
     try {
       const res = await axios.post(url, post);
@@ -36,7 +41,7 @@ function Timeline(props) {
 
   const getPosts = async () => {
     try {
-      axios.get(url + "/all/" + "12338roty456ze3494zer34aa").then((res) => {
+      axios.get(url + "/all/" + currentUserId).then((res) => {
         setPostData(res.data);
       });
     } catch (err) {
@@ -44,55 +49,44 @@ function Timeline(props) {
     }
   };
 
+  const getFriends = async () => {
+    try {
+      const friendList = await axios.get(
+        "http://localhost:3000/api/users/friends/" + currentUserId
+      );
+      setFriends(friendList.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     getPosts();
-  }, ["12338roty456ze3494zer34aa"]);
+    getFriends();
+  }, [currentUserId]);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
+    });
+  }, []);
 
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header currentUser={currentUser} />
         {/* topbar */}
         <section>
-          <div className="feature-photo">
-            <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
-            </figure>
-            <div className="add-btn">
-              <span>1205 followers</span>
-              <a href="#" title data-ripple>
-                Add Friend
-              </a>
-            </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
-            <div className="container-fluid">
-              <div className="row merged">
-                <div className="col-lg-2 col-sm-3">
-                  <div className="user-avatar">
-                    <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
-                    </figure>
-                  </div>
-                </div>
-                <div className="col-lg-10 col-sm-9">
-                  <Timelineinfo />
-                </div>
-              </div>
-            </div>
-          </div>
+          <Timelineinfo friends={friends} setFriends={setFriends} />
         </section>
         {/* top area */}
         <section>
@@ -337,7 +331,11 @@ function Timeline(props) {
                               new Date(a.Date_creation)
                           )
                           .map((p) => (
-                            <Post key={p._id} post={p} />
+                            <Post
+                              key={p._id}
+                              post={p}
+                              currentUser={currentUser}
+                            />
                           ))}
                       </div>
                     </div>
