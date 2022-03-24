@@ -72,9 +72,24 @@ html{
 }
 
 /*- guided registration -*/
-.previewImage{
-    height: 200px;
-    width: 200px;
+.preview{
+    position: relative;
+    top : 0;
+    left: 0;
+}
+.previewPCImage{
+    position: relative;
+    width : 760px !important;
+    max-width: 760px;
+    max-height: 225px;
+}
+.previewPPImage{
+    position: absolute;
+    top : 110px;
+    left : 30px;
+    height: 165px;
+    width: 165px;
     border-radius: 50%;
 }
+
 

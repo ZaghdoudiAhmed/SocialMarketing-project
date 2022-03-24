@@ -16,6 +16,10 @@ var User = new Schema(
             type: String,
             allowNull: false,
         },
+        role : {
+            type: String,
+            default: 'user',
+        },
         verified : {
           type : Boolean,
           default : false
@@ -30,7 +34,9 @@ var User = new Schema(
         },
         profilepic :{
             type: Array,
-            //allowNull: false
+        },
+        coverpic :{
+            type: Array,
         },
         confirmation:{
             code : {
@@ -42,7 +48,6 @@ var User = new Schema(
             }
         },
         //auth & session
-
         authStrategy: {
             type: String,
             default: "local",
@@ -58,7 +63,7 @@ User.set("toJSON", {
         return ret
     },
 })
-User.plugin(passportLocalMongoose,{ usernameField : 'email' })
+User.plugin(passportLocalMongoose,{ usernameField : 'email'})
 
 module.exports = mongoose.model('users', User);
 

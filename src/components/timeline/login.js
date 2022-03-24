@@ -1,6 +1,8 @@
 import React, {useState, useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {UserContext} from "../../Context/UserContext";
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 function Login(props) {
     const navigate = useNavigate()
@@ -13,6 +15,7 @@ function Login(props) {
     const[name, setName] = useState('')
     const[email, setEmail] = useState('')
     const[loginemail, setLoginEmail] = useState('')
+    const[resetEmail, setResetEmail] = useState('')
     const[loginpassword, setLoginPassword] = useState('')
     const[gender, setGender] = useState('')
     const[password, setPassword] = useState('')
@@ -21,6 +24,12 @@ function Login(props) {
     const[isSubmitting, setIsSubmitting]=useState(false)
     const [userContext, setUserContext]= useContext(UserContext)
 
+    const [reset, setReset]= useState(false)
+    const [sent, setSent]= useState(false)
+    const [resetCode, setResetCode] = useState('')
+    const[resetPwd, setResetPwd]=useState(false)
+    const[pwd,setpwd]=useState('')
+    const[confPwd,setConfPwd]=useState('')
 
     async function registerUser(event){
         event.preventDefault()
@@ -70,7 +79,7 @@ function Login(props) {
                     setIsSubmitting(false)
                     if(!response.ok) {
                         if (response.status === 400) {
-                            setErrors('Please fill all the fields coorectly!')
+                            setErrors('Please fill all the fields correctly!')
                         } else if (response.status === 401) {
                             setErrors('Invalid email and password combination.')
                         } else {
@@ -84,15 +93,132 @@ function Login(props) {
                             return {...oldValues, token : data.token}
                         })
                         navigate('/test')
+                       /* if(data.role==='admin'){
+                            navigate('/test')
+                        } else {
+                            navigate('/home')
+                        }*/
                     }
                 })
 
     }
+
+    async function handleReset(e){
+       // e.preventDefault()
+        var code           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < 10; i++ ) {
+            code += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        await fetch("http://localhost:3000/api/users/ResetMail", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                code : code,
+                mail : resetEmail
+            })
+        })
+        setSent(true)
+    }
+    async function handleResetPwd(){
+        const response = await fetch("http://localhost:3000/api/users/ResetPwd", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                mail : resetEmail,
+                code : resetCode
+            })
+        })
+        const data = await response.json()
+        if (data.success){
+            setResetPwd(true)
+            setSent(false)
+        } else {
+            setResetPwd(false)
+        }
+    }
+    async function handleResetPassword(){
+        const response = await fetch("http://localhost:3000/api/users/Resetpassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                mail : resetEmail,
+                pwd : pwd
+            })
+        })
+        const data = await response.json()
+        if (data.success){
+            NotificationManager.success('your password has been modified successfully.', 'Password modified');
+            setReset(false)
+        } else {
+            console.log('fail')
+        }
+    }
+
     return (
         <>
+            <NotificationContainer/>
             <div className="theme-layout">
                 <div className="row" style={{marginTop : 24+"rem"}}>
                     {showLoginCb ?
+                        reset===true ? (
+                            <div className="col-md-6">
+                                <div className="log-reg-area login_form">
+                                    <h2 className="log-title">Reset pwd</h2>
+                                    <form method="post">
+                                        <div className="form-group">
+                                            <input type="text" id="input" required="required" value={resetEmail} onChange={(e)=>{setResetEmail(e.target.value)}}/>
+                                            <label className="control-label" htmlFor="input">Email</label><i className="mtrl-select"/>
+                                        </div>
+                                        {sent && !resetPwd ?(
+                                            <div className="form-group">
+                                                <input type="text" required="required" value={resetCode} onChange={(e) => {setResetCode(e.target.value)}}/>
+                                                <label className="control-label" htmlFor="input">Reset code</label><i  className="mtrl-select"/>
+                                            </div>
+                                        ):null}
+                                        {resetPwd ? (
+                                            <>
+                                        <div className="form-group">
+                                            <input type="password" required="required" value={pwd} onChange={(e) => {setpwd(e.target.value)}}/>
+                                            <label className="control-label" htmlFor="input">New Password</label><i  className="mtrl-select"/>
+                                        </div>
+                                        <div className="form-group">
+                                            <input type="password" required="required" value={confPwd} onChange={(e) => {setConfPwd(e.target.value)}}/>
+                                            <label className="control-label" htmlFor="input">Confirm Password</label><i  className="mtrl-select"/>
+                                        </div>
+                                                {pwd.length>7 && pwd===confPwd ?
+                                                    (<button onClick={() => {handleResetPassword() }} className="mtr-btn signin" type="button"><span>Reset password</span></button>)
+                                                :null}
+                                            </>
+                                        ):null}
+                                        {!sent ?
+                                            (<button onClick={() => {handleReset() }} className="mtr-btn signin" type="button"><span>Reset</span></button>)
+                                            :!resetPwd ?
+                                             (<button onClick={() => {handleResetPwd()}} className="mtr-btn signin" type="button"><span>Verify</span></button>)
+                                            :null
+                                        }
+                                        <a href="#" title="" className="forgot-pwd" onClick={(e)=>{setReset(false)}}>Login</a>
+                                        <div className="submit-btns">
+                                            <button onClick={loginUser} className="mtr-btn signin" type="button"><span>Login</span></button>
+                                            <button onClick={()=>{
+                                                setClassForLogin("slide-in")
+                                                console.log("clicked")
+                                                setLogoClass('spin-me')
+                                            }} className="mtr-btn" type="button"><span>Register</span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            ):(
                     <div className="col-md-6">
                         <div className="log-reg-area login_form">
                             <h2 className="log-title">Login</h2>
@@ -115,7 +241,7 @@ function Login(props) {
                                         Remember Me.
                                     </label>
                                 </div>
-                                <a href="#" title="" className="forgot-pwd">Forgot Password?</a>
+                                <a href="#" title="" className="forgot-pwd" onClick={(e)=>{setReset(true)}}>Forgot Password?</a>
                                 <div className="submit-btns">
                                     <button onClick={loginUser} className="mtr-btn signin" type="button"><span>Login</span></button>
                                     <button onClick={()=>{
@@ -128,7 +254,7 @@ function Login(props) {
                                 </div>
                             </form>
                         </div>
-                    </div>
+                    </div>)
                     : null}
                     <div className="col-md-6">
                         <div className="log-reg-area register_form fading">
