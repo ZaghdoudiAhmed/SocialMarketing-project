@@ -11,6 +11,7 @@ import About from "./components/timeline/about";
 import Login from "./components/timeline/login";
 import Messages from "./components/timeline/messages";
 import Test from "./components/Test";
+import EditProfile from "./components/timeline/edit-profile";
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {UserContext} from "./Context/UserContext";
 function App() {
@@ -71,7 +72,9 @@ function App() {
               <Route path="/timelinephotos" element={<Timelinephotos/>}/>
               <Route path="/timelinevideos" element={<Timelinevideos/>}/>
               <Route path="/test" element={<Test/>}/>
+              <Route path="/edit-profile" element={<EditProfile/>}/>
               <Route path="/login" element={<Login/>}/>
+              <Route path="/about" element={<About/>}/>
               {/*<Route path="/company" element={<Indexcompany />} /> */}
                 <Route path="/messages" element={<Messages/>}/>
             </Routes>

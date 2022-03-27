@@ -38,6 +38,27 @@ var User = new Schema(
         coverpic :{
             type: Array,
         },
+        interests :{
+            type: Array,
+        },
+        phone :{
+            type: String,
+        },
+        address :{
+            type: String,
+        },
+        bio :{
+            type: String,
+        },
+        fblink :{
+            type: String,
+        },
+        lilink :{
+            type: String,
+        },
+        birthday :{
+            type: Date,
+        },
         confirmation:{
             code : {
                 type : String

@@ -19,12 +19,15 @@ const upload = multer({ storage : storage  })
 
 
 const{getToken, COOKIE_OPTIONS, getRefreshToken, verifyUser} = require('./auth/autnetificate')
-const bcrypt = require('bcrypt')
+const twilio = require('twilio');
+
 
 const jwt = require('jsonwebtoken')
 const {compareSync} = require("bcrypt");
 //confirm email
 const nodemailer = require('nodemailer');
+const Process = require("process");
+const {forEach} = require("react-bootstrap/ElementChildren");
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -953,6 +956,27 @@ router.post('/updatecoverpic', upload.single('image') , async(req, res)=>{
 
 })
 
+router.post('/updateAccount',(req,res)=>{
+    User.findById(req.body.id).then(
+        user=>{
+            user.bio = req.body.bio
+            user.phone = req.body.phone
+            user.address = req.body.address
+            user.fblink = req.body.fblink
+            user.lilink = req.body.lilink
+            for (let i = 0; i < req.body.interests.length; i++) {
+                user.interests.push(req.body.interests[i].value)
+            }
+            user.birthday = req.body.birthday
+            user.firstTime = false
+            user.save()
+        })
+
+
+
+    res.send( {success : true})
+})
+
 router.post('/refreshToken', (req,res,next)=>{
     const {signedCookies = {} }= req
     const {refreshToken} = signedCookies
@@ -1095,6 +1119,21 @@ router.post('/Resetpassword', async (req,res)=>{
         },function(err){
             console.error(err);
         })
+})
+//twilio messaging
+router.post('/sms',(req,res)=>{
+    const accountSid = Process.env.ACCOUNTSID
+    const authToken = Process.env.AUTHTOKEN;
+    const client = require('twilio')(accountSid, authToken);
+    client.messages
+        .create({
+            body: req.body.body,
+            messagingServiceSid: 'MG90a25962934f830822614125675e97ea',
+            to: req.body.phone
+        })
+        .then(message => console.log(message.sid))
+        .done();
+    res.send({success:true})
 })
 
 

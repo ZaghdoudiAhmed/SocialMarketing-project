@@ -1,6 +1,59 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 function About(props) {
+  const navigate = useNavigate()
+  const [currentUser, setCurrentUser] = useState('')
+  const currentUserId = localStorage.getItem('currentUser')
+  useEffect(() => {
+    if(!currentUserId){
+      navigate('/login')
+    }else{
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body:JSON.stringify({
+        currentUserId
+      })
+    }).then(async response => {
+      if (response.ok) {
+        const data = await response.json()
+        setCurrentUser(data.user)
+       /* if (data.user.firstTime.toString()==='true'){
+          if(data.user.verified.toString()==='false'){
+            setShow(true)
+            var code           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < 8; i++ ) {
+              code += characters.charAt(Math.floor(Math.random() *
+                  charactersLength));
+            }
+            await fetch("http://localhost:3000/api/users/mail", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body:JSON.stringify({
+                code : code,
+                id : data.user._id,
+                mail : data.user.email
+              })
+            })
+          }
+          else {
+            setShowProPic(true)
+          }
+        } else {*/
+          if (response.status === 401) {
+            window.location.reload()
+          }
+        }
+      }
+    )}
+  },[])
   return (
     <div>
       <div className="theme-layout">
@@ -941,7 +994,7 @@ function About(props) {
                   <div className="timeline-info">
                     <ul>
                       <li className="admin-name">
-                        <h5>Janice Griffith</h5>
+                        <h5>{currentUser.name}</h5>
                         <span>Group Admin</span>
                       </li>
                       <li>
@@ -1079,11 +1132,7 @@ function About(props) {
                               <i className="ti-info-alt" /> Personal Info
                             </h5>
                             <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit, sed do eiusmod tempor incididunt ut labore
-                              et dolore magna aliqua. Ut enim ad minim veniam,
-                              quis nostrud exercitation ullamco laboris nisi ut
-                              aliquip ex ea commodo consequat.
+                              {currentUser.bio}
                             </p>
                           </div>
                           <div className="d-flex flex-row mt-2">
@@ -1142,29 +1191,19 @@ function About(props) {
                                 <ul className="basics">
                                   <li>
                                     <i className="ti-user" />
-                                    sarah grey
+                                    {currentUser.name}
                                   </li>
                                   <li>
                                     <i className="ti-map-alt" />
-                                    live in Dubai
+                                    {currentUser.address}
                                   </li>
                                   <li>
                                     <i className="ti-mobile" />
-                                    +1-234-345675
+                                    {currentUser.phone}
                                   </li>
                                   <li>
                                     <i className="ti-email" />
-                                    <a
-                                      href="https://wpkixx.com/cdn-cgi/l/email-protection"
-                                      className="__cf_email__"
-                                      data-cfemail="3c4553494e515d55507c59515d5550125f5351"
-                                    >
-                                      [email&nbsp;protected]
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <i className="ti-world" />
-                                    www.yoursite.com
+                                    {currentUser.email}
                                   </li>
                                 </ul>
                               </div>

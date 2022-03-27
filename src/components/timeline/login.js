@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {UserContext} from "../../Context/UserContext";
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-
+import ReCAPTCHA from "react-google-recaptcha";
 function Login(props) {
     const navigate = useNavigate()
 
@@ -20,6 +20,8 @@ function Login(props) {
     const[gender, setGender] = useState('')
     const[password, setPassword] = useState('')
     const[errors,setErrors]= useState('')
+    const[robot,isRobot]= useState(true)
+    const[registered,isRegistered]= useState(false)
 
     const[isSubmitting, setIsSubmitting]=useState(false)
     const [userContext, setUserContext]= useContext(UserContext)
@@ -31,11 +33,17 @@ function Login(props) {
     const[pwd,setpwd]=useState('')
     const[confPwd,setConfPwd]=useState('')
 
+
+
     async function registerUser(event){
-        event.preventDefault()
+        console.log('reg user')
+        if(event){
+            event.preventDefault()
+        }
         if(gender ==='' || password ==='' || name==='' || email ===''){
             setErrors("Please fill all fields!")
-        }else {
+        }
+        else if(!robot){
             const response = await fetch('http://localhost:3000/api/users/register',
                 {
                     method: 'POST',
@@ -54,6 +62,7 @@ function Login(props) {
                 setErrors(data.message)
             }
             if (data.success === true) {
+                NotificationManager.success('Welcome to 2nd Chance!', 'Your account has been created');
                 setClassForLogin("slide-out")
                 setLogoClass('spin-me-back')
             }
@@ -141,6 +150,11 @@ function Login(props) {
             setSent(false)
         } else {
             setResetPwd(false)
+        }
+    }
+    function reCaptchCB(value){
+        if(value){
+            isRobot(false)
         }
     }
     async function handleResetPassword(){
@@ -257,8 +271,10 @@ function Login(props) {
                     </div>)
                     : null}
                     <div className="col-md-6">
-                        <div className="log-reg-area register_form fading">
-                            <h2 className="log-title">Register</h2>
+                            <div className="log-reg-area register_form fading">
+                            <h2 className="log-title">Register<i className="bi bi-heart-pulse"/></h2>
+                              {/*  {!registered ? (
+                                <>*/}
                             { errors ? <div className="alert alert-danger" role="alert" >
                                 {errors}
                             </div> : null }
@@ -303,11 +319,16 @@ function Login(props) {
                                         data-cfemail="6c29010d05002c">[email&#160;protected]</a></label><i
                                     className="mtrl-select"></i>
                                 </div>
-                                <div className="checkbox">
+                                {/* <div className="checkbox">
                                     <label>
                                         <input type="checkbox" defaultChecked={false} required/><i className="check-box"></i>Accept
                                         Terms & Conditions ?
-                                    </label>
+                                    </label>*/}
+                                <div className="mx-5">
+                                    <ReCAPTCHA
+                                        sitekey='6Ld-KAsfAAAAABrKh_MYB4borMQf3ditkWWsWx9I'
+                                        onChange={reCaptchCB}
+                                    />
                                 </div>
                                 <a onClick={()=>{
                                     setClassForLogin("slide-out")
@@ -317,8 +338,16 @@ function Login(props) {
                                     <button  className="mtr-btn" type="button" onClick={registerUser}><span>Register</span></button>
                                 </div>
 
-                            </form>
-                        </div>
+                            </form>{/*
+                                </>)
+                        :
+                            (<>
+                                <ReCAPTCHA
+                                    sitekey='6Ld-KAsfAAAAABrKh_MYB4borMQf3ditkWWsWx9I'
+                                    onChange={reCaptchCB}
+                                />
+                            </>)}*/}
+                            </div>
                     </div>
                 </div>
             </div>
