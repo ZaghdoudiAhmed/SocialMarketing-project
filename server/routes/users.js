@@ -1120,6 +1120,7 @@ router.post('/ResetPwd', (req,res)=>{
         }
     )
 })
+//reset password
 router.post('/Resetpassword', async (req,res)=>{
         User.findOne({ email: req.body.mail }).then(function(sanitizedUser){
             if (sanitizedUser){
@@ -1129,6 +1130,26 @@ router.post('/Resetpassword', async (req,res)=>{
                 });
             } else {
                 res.status(500).json({fail: 'This user does not exist'});
+            }
+        },function(err){
+            console.error(err);
+        })
+})
+//change password
+router.post('/Changepassword', async (req,res)=>{
+    User.findById(req.body.id).then(function(sanitizedUser){
+            if (sanitizedUser){
+                sanitizedUser.changePassword(req.body.oldpassword, req.body.newpassword, function(err){
+                    if(!err) {
+                        sanitizedUser.save();
+                        res.status(200).json({success: 'password reset successful'});
+                    }
+                    else{
+                        res.status(400).json({error: 'incorrect password'});
+                    }
+                })
+            } else {
+                res.status(500).json({fail: 'check password'});
             }
         },function(err){
             console.error(err);

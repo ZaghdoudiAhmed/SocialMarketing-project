@@ -12,6 +12,7 @@ import Login from "./components/timeline/login";
 import Messages from "./components/timeline/messages";
 import Test from "./components/Test";
 import EditProfile from "./components/timeline/edit-profile";
+import EditPassword from "./components/timeline/edit-password";
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {UserContext} from "./Context/UserContext";
 function App() {
@@ -75,6 +76,7 @@ function App() {
               <Route path="/edit-profile" element={<EditProfile/>}/>
               <Route path="/login" element={<Login/>}/>
               <Route path="/about" element={<About/>}/>
+              <Route path="/edit-password" element={<EditPassword/>}/>
               {/*<Route path="/company" element={<Indexcompany />} /> */}
                 <Route path="/messages" element={<Messages/>}/>
             </Routes>
