@@ -10,7 +10,7 @@ const path = require('path')
 
 const storage = multer.diskStorage({
     destination : (req, file, cb)=>{
-        cb(null, 'uploads/users')},
+        cb(null, '../public/uploads/users')},
         filename : (req, file, cb)=>{
             cb(null,Date.now()+path.extname(file.originalname))
     }
@@ -959,13 +959,27 @@ router.post('/updatecoverpic', upload.single('image') , async(req, res)=>{
 router.post('/updateAccount',(req,res)=>{
     User.findById(req.body.id).then(
         user=>{
+            /* name,
+                    lastname,
+                    bio,
+                    phone,
+                    birthday,
+                    address*/
+            if(req.body.name){
+                user.name = req.body.name
+            }
+            if(req.body.lastname){
+                user.lastname = req.body.lastname
+            }
             user.bio = req.body.bio
             user.phone = req.body.phone
             user.address = req.body.address
-            user.fblink = req.body.fblink
-            user.lilink = req.body.lilink
-            for (let i = 0; i < req.body.interests.length; i++) {
-                user.interests.push(req.body.interests[i].value)
+            if(req.body.fblink && req.body.lilink && req.body.interests) {
+                user.fblink = req.body.fblink
+                user.lilink = req.body.lilink
+                for (let i = 0; i < req.body.interests.length; i++) {
+                    user.interests.push(req.body.interests[i].value)
+                }
             }
             user.birthday = req.body.birthday
             user.firstTime = false

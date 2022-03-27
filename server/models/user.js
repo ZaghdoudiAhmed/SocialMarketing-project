@@ -12,6 +12,7 @@ const Session = new Schema({
 var User = new Schema(
     {
         name : String,
+        lastname : String,
         email : {
             type: String,
             allowNull: false,

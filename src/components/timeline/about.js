@@ -1,10 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
+
+
 function About(props) {
   const navigate = useNavigate()
   const [currentUser, setCurrentUser] = useState('')
+  const [coverPath, setCoverPath] = useState('')
+  const [propicPath, setProPicPath] = useState('')
   const currentUserId = localStorage.getItem('currentUser')
+  const interests = []
+
   useEffect(() => {
     if(!currentUserId){
       navigate('/login')
@@ -21,32 +27,36 @@ function About(props) {
       if (response.ok) {
         const data = await response.json()
         setCurrentUser(data.user)
-       /* if (data.user.firstTime.toString()==='true'){
-          if(data.user.verified.toString()==='false'){
-            setShow(true)
-            var code           = '';
-            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            var charactersLength = characters.length;
-            for ( var i = 0; i < 8; i++ ) {
-              code += characters.charAt(Math.floor(Math.random() *
-                  charactersLength));
-            }
-            await fetch("http://localhost:3000/api/users/mail", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body:JSON.stringify({
-                code : code,
-                id : data.user._id,
-                mail : data.user.email
-              })
-            })
-          }
-          else {
-            setShowProPic(true)
-          }
-        } else {*/
+
+         setCoverPath('uploads/users/'+data.user.coverpic[data.user.coverpic.length - 1])
+         setProPicPath('uploads/users/'+data.user.profilepic[data.user.profilepic.length - 1])
+
+        /* if (data.user.firstTime.toString()==='true'){
+           if(data.user.verified.toString()==='false'){
+             setShow(true)
+             var code           = '';
+             var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+             var charactersLength = characters.length;
+             for ( var i = 0; i < 8; i++ ) {
+               code += characters.charAt(Math.floor(Math.random() *
+                   charactersLength));
+             }
+             await fetch("http://localhost:3000/api/users/mail", {
+               method: "POST",
+               headers: {
+                 "Content-Type": "application/json"
+               },
+               body:JSON.stringify({
+                 code : code,
+                 id : data.user._id,
+                 mail : data.user.email
+               })
+             })
+           }
+           else {
+             setShowProPic(true)
+           }
+         } else {*/
           if (response.status === 401) {
             window.location.reload()
           }
@@ -54,6 +64,8 @@ function About(props) {
       }
     )}
   },[])
+
+
   return (
     <div>
       <div className="theme-layout">
@@ -959,7 +971,10 @@ function About(props) {
         <section>
           <div className="feature-photo">
             <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
+
+              <img src={coverPath} alt />
+
+              {/*<img src="uploads/users/1648378727337.png" alt />*/}
             </figure>
             <div className="add-btn">
               <span>1205 followers</span>
@@ -979,7 +994,7 @@ function About(props) {
                 <div className="col-lg-2 col-sm-3">
                   <div className="user-avatar">
                     <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
+                      <img src={propicPath} alt={"profile picture"} />
                       <form className="edit-phto">
                         <i className="fa fa-camera-retro" />
                         <label className="fileContainer">
@@ -1223,7 +1238,7 @@ function About(props) {
                               >
                                 <div>
                                   <a href="#" title>
-                                    Envato
+                                    {currentUser.interests}
                                   </a>
                                   <p>
                                     work as autohr in envato themeforest from
@@ -1247,9 +1262,9 @@ function About(props) {
                                 role="tabpanel"
                               >
                                 <ul className="basics">
-                                  <li>Footbal</li>
-                                  <li>internet</li>
-                                  <li>photography</li>
+                                  {currentUser.interests?.map((value,index)=> {
+                                    return <li>{value}</li>
+                                  })}
                                 </ul>
                               </div>
                               <div
