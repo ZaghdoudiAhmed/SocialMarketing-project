@@ -1142,7 +1142,7 @@ router.post('/Changepassword', async (req,res)=>{
                 sanitizedUser.changePassword(req.body.oldpassword, req.body.newpassword, function(err){
                     if(!err) {
                         sanitizedUser.save();
-                        res.status(200).json({success: 'password reset successful'});
+                        res.status(200).json({success: true});
                     }
                     else{
                         res.status(400).json({error: 'incorrect password'});

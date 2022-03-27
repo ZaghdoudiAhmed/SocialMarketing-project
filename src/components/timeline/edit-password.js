@@ -10,6 +10,7 @@ function EditPassword(props) {
     const[newPwd,setNewPwd]= useState('')
     const[confirmpwd,setConfirmPwd]= useState('')
     const[error,setError]= useState(false)
+    const[confirm,setConfirm]= useState(false)
     useEffect(() => {
         if(!currentUserId){
             navigate('/login')
@@ -60,8 +61,10 @@ function EditPassword(props) {
             )}
     },[])
     async function changePassword(event){
+        console.log('change mdp')
         event.preventDefault()
         if(newPwd===confirmpwd) {
+            setConfirm(false)
             const response = await fetch('http://localhost:3000/api/users/Changepassword',
                 {
                     method: 'POST',
@@ -77,11 +80,16 @@ function EditPassword(props) {
             const data = await response.json()
             if (data.success === true) {
                 NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
+                setConfirmPwd('')
+                setCurrentPwd('')
+                setNewPwd('')
+                setError(false)
+
             }else{
                 setError(true)
             }
         }
-
+        else setConfirm(true)
     }
     return (
         <>
@@ -89,7 +97,7 @@ function EditPassword(props) {
             <body>
             <div className="theme-layout">
 
-                <div className="responsive-header">
+               {/* <div className="responsive-header">
                     <div className="mh-head first Sticky">
 			<span className="mh-btns-left">
 				<a className="" href="#menu"><i className="fa fa-align-justify"></i></a>
@@ -277,7 +285,7 @@ function EditPassword(props) {
                             </div>
                         </div>
                     </nav>
-                </div>
+                </div>*/}
 
 
                 <div className="topbar stick">
@@ -645,10 +653,9 @@ function EditPassword(props) {
                                                         </div>
                                                         {error ? (
                                                             <div className="alert alert-danger" role="alert">
-                                                                Make sure this password is correct!
+                                                                Make sure you entered the right password!
                                                             </div>
-                                                        ): null}
-
+                                                        ):null}
                                                         <div className="form-group">
                                                             <input type="password" required="required" value={newPwd} onChange={(e)=>{setNewPwd(e.target.value)}}/>
                                                             <label className="control-label" htmlFor="input">New
@@ -659,6 +666,11 @@ function EditPassword(props) {
                                                             <label className="control-label" htmlFor="input">Confirm
                                                                 password</label><i className="mtrl-select"></i>
                                                         </div>
+                                                        {confirm ? (
+                                                            <div className="alert alert-danger" role="alert">
+                                                                Make sure your new password and Confirm password are identical!
+                                                            </div>
+                                                        ):null}
                                                         <a className="forgot-pwd underline" title="" href="#">Forgot
                                                             Password?</a>
                                                         <div className="submit-btns">
@@ -671,6 +683,7 @@ function EditPassword(props) {
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div className="col-lg-3">
                                             <aside className="sidebar static">
                                                 <div className="widget">
