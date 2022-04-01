@@ -4,16 +4,56 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var DonationRouter = require('./routers/Donation');
+var CompaignRouter = require('./routers/Campaign');
+var blogRouter = require('./routers/Blog');
+var indexRouter = require("./routers/index");
+var usersRouter = require("./routers/users");
+var app = express();
+const http = require('http').Server(app)
+http.listen(2600);
+const { ExpressPeerServer } = require("peer");
+const peerServer = ExpressPeerServer(http, {
+  debug: true,
+});
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+app.use("/peerjs", peerServer);
+
+const io = require('socket.io')(http, { cors: {origin:'*'}});
+
+
+
+io.on('connection', (socket) => {
+  socket.on("join-room", (roomId, userId, userName) => {
+
+    socket.join(roomId);
+    console.log(userId)
+    socket.broadcast.to(roomId).emit("user-connected", userId);
+
+socket.on("message", (message) => {
+      io.in(roomId).emit("createMessage", message, userName);
+    });
+ socket.on('disconnect',()=>{
+  socket.broadcast.to(roomId).emit('user-disconnected', userId)
+ });
+    });
+    
+socket.on('chat',(msg)=>{
+    io.emit('new message',msg)
+
+})
+  });
+
+
+const cors = require('cors');
+const bodyparser = require('body-parser');
 
 const port = 8080;
 
-var app = express();
+
 
 mongoose.connect(
-  "mongodb://localhost:27017/socialmarketingpi",
+  "mongodb://localhost:27017/mydb",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -31,9 +71,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+
+app.use(cors());
+app.use(bodyparser.json({limit: '50mb'}));
+app.use(bodyparser.urlencoded({limit: '50mb', extended: true}));
+
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-
+app.use('/',DonationRouter);
+app.use('/',blogRouter);
+app.use('/',CompaignRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -48,6 +96,7 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+
 });
 
 module.exports = app;

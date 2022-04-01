@@ -1,7 +1,42 @@
 .App {
   text-align: center;
 }
-
+.e-schedule{
+  backdrop-filter: blur(14px);
+  box-shadow: 15px 15px 25px rgb(129 124 124 / 20%)!important;
+  margin: 25px
+}
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment {
+  background: #99c68e!important;
+  border-radius: 2px;
+  color: #fff;
+  overflow: hidden;
+  position: absolute;
+}
+.e-quick-popup-wrapper .e-event-popup .e-popup-header .e-subject-wrap .e-subject {
+  cursor: default;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+  max-height: 87px;
+  background-color: #99c68e;
+  border-left: 6px solid #99c68e;
+  padding: 8px 0 8px 10px;
+}
+.e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment {
+  background: #99c68e;
+  border: 1px solid #fff9a3;
+  border-radius: 2px;
+  color: #fff;
+  display: -ms-flexbox;
+  display: flex;
+  height: 22px;
+  overflow: hidden;
+  position: absolute;
+}
+#control-container {
+  padding: 0px !important;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +70,26 @@
   to {
     transform: rotate(360deg);
   }
+}
+.wrapperclass {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  width: 500px;
+  height: 500px;
+
+}
+.preview {
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.editorclass {
+  background-color:whitesmoke;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  height: 85%;
+
+}
+.toolbarclass {
+  border: 1px solid #ccc; 
+
 }
