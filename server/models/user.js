@@ -49,14 +49,8 @@ var User = new Schema({
   refreshToken: {
     type: [Session],
   },
-  followers: {
-    type: Array,
-    default: [],
-  },
-  followings: {
-    type: Array,
-    default: [],
-  },
+  followers: [{ type: Schema.Types.ObjectId, ref: "users" }],
+  followings: [{ type: Schema.Types.ObjectId, ref: "users" }],
 });
 //Remove refreshToken from the response
 User.set("toJSON", {

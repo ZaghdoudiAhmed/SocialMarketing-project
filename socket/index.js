@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
   ///////real time messaging ////////
 
   //take userId and socketId from user
-  socket.on("addUser", (userId) => {
+  socket.on("newUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getUsers", users);
   });
@@ -43,18 +43,14 @@ io.on("connection", (socket) => {
 
   ///////real time notification //////
 
-  socket.on(
-    "sendNotification",
-    ({ senderId, senderName, receiverId, type }) => {
-      const receiver = getUser(receiverId);
-      console.log(receiver);
-      io.to(receiver.socketId).emit("getNotification", {
-        senderId,
-        senderName,
-        type,
-      });
-    }
-  );
+  socket.on("sendNotification", ({ senderId, receiverId, text }) => {
+    const receiver = getUser(receiverId);
+    io.to(receiver.socketId).emit("getNotification", {
+      senderId,
+      receiverId,
+      text,
+    });
+  });
 
   ////////////////////////////////////////
   socket.on("sendText", ({ senderId, senderName, receiverId, text }) => {

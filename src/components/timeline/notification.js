@@ -1,53 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import Shortcuts from "./shortcuts";
-import Timelineinfo from "./timeline-info";
-
 import Header from "../header";
+import Timelineinfo from "./timeline-info";
 import axios from "axios";
 
-import Post from "../post/post";
-function Timeline(props) {
-  const url = "http://localhost:3000/posts";
-
-  const [postData, setPostData] = useState([]);
-  const [friends, setFriends] = useState([]);
-  const [onlineFriends, setOnlineFriends] = useState([]);
-
-  const [newDescription, setNewDescription] = useState("");
-  const [file, setFile] = useState(null);
+function Notification(props) {
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const post = new FormData();
-
-    post.append("Photo", file);
-    post.append("Description", newDescription);
-    post.append("Private", true);
-    post.append("Creator", currentUserId);
-
-    try {
-      const res = await axios.post(url, post);
-      setPostData([res.data, ...postData]);
-      setNewDescription(null);
-      setFile(null);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getPosts = async () => {
-    try {
-      axios.get(url + "/all/" + currentUserId).then((res) => {
-        setPostData(res.data);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const [friends, setFriends] = useState([]);
 
   const getFriends = async () => {
     try {
@@ -61,7 +20,6 @@ function Timeline(props) {
   };
 
   useEffect(() => {
-    getPosts();
     getFriends();
   }, [currentUserId]);
 
@@ -102,79 +60,292 @@ function Timeline(props) {
                     <div className="col-lg-3">
                       <aside className="sidebar static">
                         <div className="widget">
-                          <h4 className="widget-title">Socials</h4>
-                          <ul className="socials">
-                            <li className="facebook">
-                              <a title href="#">
-                                <i className="fa fa-facebook" />{" "}
-                                <span>facebook</span> <ins>45 likes</ins>
+                          <h4 className="widget-title">Recent Photos</h4>
+                          <ul className="recent-photos">
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-11.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-1.jpg" alt />
                               </a>
                             </li>
-                            <li className="twitter">
-                              <a title href="#">
-                                <i className="fa fa-twitter" />{" "}
-                                <span>twitter</span>
-                                <ins>25 likes</ins>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-22.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-2.jpg" alt />
                               </a>
                             </li>
-                            <li className="google">
-                              <a title href="#">
-                                <i className="fa fa-google" />{" "}
-                                <span>google</span>
-                                <ins>35 likes</ins>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-33.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-3.jpg" alt />
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-44.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-4.jpg" alt />
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-55.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-5.jpg" alt />
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-66.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-6.jpg" alt />
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-77.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-7.jpg" alt />
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-88.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-8.jpg" alt />
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                className="strip"
+                                href="images/resources/recent-99.jpg"
+                                title
+                                data-strip-group="mygroup"
+                                data-strip-group-options="loop: false"
+                              >
+                                <img src="images/resources/recent-9.jpg" alt />
                               </a>
                             </li>
                           </ul>
                         </div>
-                        <Shortcuts />
-                        {/* Shortcuts */}
+                        {/* recent photos*/}
+                        <div className="widget stick-widget">
+                          <h4 className="widget-title">Shortcuts</h4>
+                          <ul className="naves">
+                            <li>
+                              <i className="ti-clipboard" />
+                              <a title href="#">
+                                News feed
+                              </a>
+                            </li>
+                            <li>
+                              <i className="ti-mouse-alt" />
+                              <a title href="inbox.html">
+                                Inbox
+                              </a>
+                            </li>
+                            <li>
+                              <i className="ti-files" />
+                              <a title href="page.html">
+                                My pages
+                              </a>
+                            </li>
+                            <li>
+                              <i className="ti-user" />
+                              <a title href="friends-list.html">
+                                friends
+                              </a>
+                            </li>
+                            <li>
+                              <i className="ti-image" />
+                              <a title href="images.html">
+                                images
+                              </a>
+                            </li>
+                            <li>
+                              <i className="ti-video-camera" />
+                              <a title href="videos.html">
+                                videos
+                              </a>
+                            </li>
+                            <li>
+                              <i className="ti-comments-smiley" />
+                              <a title href="inbox.html">
+                                Messages
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </aside>
+                    </div>
+                    {/* sidebar */}
+                    <div className="col-lg-6">
+                      <div className="central-meta">
+                        <div className="editing-interest">
+                          <h5 className="f-title">
+                            <i className="ti-bell" />
+                            All Notifications{" "}
+                          </h5>
+                          <div className="notification-box">
+                            <ul>
+                              <li>
+                                <figure>
+                                  <img
+                                    src="images/resources/friend-avatar.jpg"
+                                    alt
+                                  />
+                                </figure>
+                                <div className="notifi-meta">
+                                  <p>bob frank like your post</p>
+                                  <span>30 mints ago</span>
+                                </div>
+                                <i className="del fa fa-close" />
+                              </li>
+                              <li>
+                                <figure>
+                                  <img
+                                    src="images/resources/friend-avatar2.jpg"
+                                    alt
+                                  />
+                                </figure>
+                                <div className="notifi-meta">
+                                  <p>
+                                    Sarah Hetfield commented on your photo.{" "}
+                                  </p>
+                                  <span>1 hours ago</span>
+                                </div>
+                                <i className="del fa fa-close" />
+                              </li>
+                              <li>
+                                <figure>
+                                  <img
+                                    src="images/resources/friend-avatar3.jpg"
+                                    alt
+                                  />
+                                </figure>
+                                <div className="notifi-meta">
+                                  <p>
+                                    Mathilda Brinker commented on your new
+                                    profile status.{" "}
+                                  </p>
+                                  <span>2 hours ago</span>
+                                </div>
+                                <i className="del fa fa-close" />
+                              </li>
+                              <li>
+                                <figure>
+                                  <img
+                                    src="images/resources/friend-avatar4.jpg"
+                                    alt
+                                  />
+                                </figure>
+                                <div className="notifi-meta">
+                                  <p>
+                                    Green Goo Rock invited you to attend to his
+                                    event Goo in Gotham Bar.{" "}
+                                  </p>
+                                  <span>2 hours ago</span>
+                                </div>
+                                <i className="del fa fa-close" />
+                              </li>
+                              <li>
+                                <figure>
+                                  <img
+                                    src="images/resources/friend-avatar5.jpg"
+                                    alt
+                                  />
+                                </figure>
+                                <div className="notifi-meta">
+                                  <p>
+                                    Chris Greyson liked your profile status.{" "}
+                                  </p>
+                                  <span>1 day ago</span>
+                                </div>
+                                <i className="del fa fa-close" />
+                              </li>
+                              <li>
+                                <figure>
+                                  <img
+                                    src="images/resources/friend-avatar6.jpg"
+                                    alt
+                                  />
+                                </figure>
+                                <div className="notifi-meta">
+                                  <p>
+                                    You and Nicholas Grissom just became
+                                    friends. Write on his wall.{" "}
+                                  </p>
+                                  <span>2 days ago</span>
+                                </div>
+                                <i className="del fa fa-close" />
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* centerl meta */}
+                    <div className="col-lg-3">
+                      <aside className="sidebar static">
                         <div className="widget">
-                          <h4 className="widget-title">Recent Activity</h4>
-                          <ul className="activitiez">
-                            <li>
-                              <div className="activity-meta">
-                                <i>10 hours Ago</i>
-                                <span>
-                                  <a href="#" title>
-                                    Commented on Video posted{" "}
-                                  </a>
-                                </span>
-                                <h6>
-                                  by <a href="newsfeed.html">black demon.</a>
-                                </h6>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="activity-meta">
-                                <i>30 Days Ago</i>
-                                <span>
-                                  <a href="newsfeed.html" title>
-                                    Posted your status. “Hello guys, how are
-                                    you?”
-                                  </a>
-                                </span>
-                              </div>
-                            </li>
-                            <li>
-                              <div className="activity-meta">
-                                <i>2 Years Ago</i>
-                                <span>
-                                  <a href="#" title>
-                                    Share a video on her timeline.
-                                  </a>
-                                </span>
-                                <h6>
-                                  "
-                                  <a href="newsfeed.html">
-                                    you are so funny mr.been.
-                                  </a>
-                                  "
-                                </h6>
-                              </div>
-                            </li>
-                          </ul>
+                          <div className="banner medium-opacity bluesh">
+                            <div
+                              className="bg-image"
+                              style={{
+                                backgroundImage:
+                                  "url(images/resources/baner-widgetbg.jpg)",
+                              }}
+                            />
+                            <div className="baner-top">
+                              <span>
+                                <img alt src="images/book-icon.png" />
+                              </span>
+                              <i className="fa fa-ellipsis-h" />
+                            </div>
+                            <div className="banermeta">
+                              <p>create your own favourit page.</p>
+                              <span>like them all</span>
+                              <a data-ripple title href="#">
+                                start now!
+                              </a>
+                            </div>
+                          </div>
                         </div>
-                        {/* recent activites */}
                         <div className="widget stick-widget">
                           <h4 className="widget-title">Who's follownig</h4>
                           <ul className="followers">
@@ -271,241 +442,6 @@ function Timeline(props) {
                           </ul>
                         </div>
                         {/* who's following */}
-                      </aside>
-                    </div>
-                    {/* sidebar */}
-                    <div className="col-lg-6">
-                      <div className="loadMore">
-                        <div className="central-meta item">
-                          <div className="new-postbox">
-                            <figure>
-                              <img src="images/resources/admin2.jpg" alt />
-                            </figure>
-                            <div className="newpst-input">
-                              <form method="post">
-                                <textarea
-                                  rows={2}
-                                  placeholder="write something"
-                                  onChange={(e) =>
-                                    setNewDescription(e.target.value)
-                                  }
-                                  value={newDescription}
-                                />
-                                <div className="attachments">
-                                  <ul>
-                                    <li>
-                                      <i className="fa fa-image" />
-                                      <label className="fileContainer">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setFile(e.target.files[0]);
-                                          }}
-                                        />
-                                      </label>
-                                    </li>
-                                    <li>
-                                      <i className="fa fa-video-camera" />
-                                      <label className="fileContainer">
-                                        <input type="file" />
-                                      </label>
-                                    </li>
-
-                                    <li>
-                                      <button
-                                        type="submit"
-                                        onClick={handleSubmit}
-                                      >
-                                        Publish
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                        {/* add post new box */}
-
-                        {postData
-                          .sort(
-                            (a, b) =>
-                              new Date(b.Date_creation) -
-                              new Date(a.Date_creation)
-                          )
-                          .map((p) => (
-                            <Post
-                              key={p._id}
-                              post={p}
-                              currentUser={currentUser}
-                            />
-                          ))}
-                      </div>
-                    </div>
-                    {/* centerl meta */}
-                    <div className="col-lg-3">
-                      <aside className="sidebar static">
-                        <div className="widget">
-                          <div className="banner medium-opacity bluesh">
-                            <div
-                              style={{
-                                backgroundImage:
-                                  "url(images/resources/baner-widgetbg.jpg)",
-                              }}
-                              className="bg-image"
-                            />
-                            <div className="baner-top">
-                              <span>
-                                <img src="images/book-icon.png" alt />
-                              </span>
-                              <i className="fa fa-ellipsis-h" />
-                            </div>
-                            <div className="banermeta">
-                              <p>create your own favourit page.</p>
-                              <span>like them all</span>
-                              <a href="#" title data-ripple>
-                                start now!
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="widget friend-list stick-widget">
-                          <h4 className="widget-title">Your Friends</h4>
-                          <div id="searchDir" />
-                          <ul id="people-list" className="friendz-list">
-                            {friends.map((f) => (
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar.jpg"
-                                    alt
-                                  />
-                                  <span className="status f-online" />
-                                </figure>
-                                <div className="friendz-meta">
-                                  <Link to={`/timeline/${f._id}`}>
-                                    {f.name}
-                                  </Link>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="chat-box">
-                            <div className="chat-head">
-                              <span className="status f-online" />
-                              <h6>Bucky Barnes</h6>
-                              <div className="more">
-                                <span>
-                                  <i className="ti-more-alt" />
-                                </span>
-                                <span className="close-mesage">
-                                  <i className="ti-close" />
-                                </span>
-                              </div>
-                            </div>
-                            <div className="chat-list">
-                              <ul>
-                                <li className="me">
-                                  <div className="chat-thumb">
-                                    <img
-                                      src="images/resources/chatlist1.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="notification-event">
-                                    <span className="chat-message-item">
-                                      Hi James! Please remember to buy the food
-                                      for tomorrow! I’m gonna be handling the
-                                      gifts and Jake’s gonna get the drinks
-                                    </span>
-                                    <span className="notification-date">
-                                      <time
-                                        dateTime="2004-07-24T18:18"
-                                        className="entry-date updated"
-                                      >
-                                        Yesterday at 8:10pm
-                                      </time>
-                                    </span>
-                                  </div>
-                                </li>
-                                <li className="you">
-                                  <div className="chat-thumb">
-                                    <img
-                                      src="images/resources/chatlist2.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="notification-event">
-                                    <span className="chat-message-item">
-                                      Hi James! Please remember to buy the food
-                                      for tomorrow! I’m gonna be handling the
-                                      gifts and Jake’s gonna get the drinks
-                                    </span>
-                                    <span className="notification-date">
-                                      <time
-                                        dateTime="2004-07-24T18:18"
-                                        className="entry-date updated"
-                                      >
-                                        Yesterday at 8:10pm
-                                      </time>
-                                    </span>
-                                  </div>
-                                </li>
-                                <li className="me">
-                                  <div className="chat-thumb">
-                                    <img
-                                      src="images/resources/chatlist1.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="notification-event">
-                                    <span className="chat-message-item">
-                                      Hi James! Please remember to buy the food
-                                      for tomorrow! I’m gonna be handling the
-                                      gifts and Jake’s gonna get the drinks
-                                    </span>
-                                    <span className="notification-date">
-                                      <time
-                                        dateTime="2004-07-24T18:18"
-                                        className="entry-date updated"
-                                      >
-                                        Yesterday at 8:10pm
-                                      </time>
-                                    </span>
-                                  </div>
-                                </li>
-                              </ul>
-                              <form className="text-box">
-                                <textarea
-                                  placeholder="Post enter to post..."
-                                  defaultValue={""}
-                                />
-                                <div className="add-smiles">
-                                  <span
-                                    title="add icon"
-                                    className="em em-expressionless"
-                                  />
-                                </div>
-                                <div className="smiles-bunch">
-                                  <i className="em em---1" />
-                                  <i className="em em-smiley" />
-                                  <i className="em em-anguished" />
-                                  <i className="em em-laughing" />
-                                  <i className="em em-angry" />
-                                  <i className="em em-astonished" />
-                                  <i className="em em-blush" />
-                                  <i className="em em-disappointed" />
-                                  <i className="em em-worried" />
-                                  <i className="em em-kissing_heart" />
-                                  <i className="em em-rage" />
-                                  <i className="em em-stuck_out_tongue" />
-                                </div>
-                                <button type="submit" />
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                        {/* friends list sidebar */}
                       </aside>
                     </div>
                     {/* sidebar */}
@@ -779,4 +715,4 @@ function Timeline(props) {
   );
 }
 
-export default Timeline;
+export default Notification;

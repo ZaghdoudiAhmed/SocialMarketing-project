@@ -14,7 +14,7 @@ function Messanger(props) {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState(null);
+  const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
@@ -24,6 +24,23 @@ function Messanger(props) {
   const scrollRef = useRef();
   const socket = useRef();
   const url = "http://localhost:3000/conversations/";
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members?.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
 
   const getConversations = async () => {
     try {
@@ -37,7 +54,7 @@ function Messanger(props) {
   const getMessages = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/messages/" + "62165fab8c09405845d635c1"
+        "http://localhost:3000/messages/" + currentChat?._id
       );
       setMessages(res.data);
     } catch (err) {
@@ -54,21 +71,21 @@ function Messanger(props) {
       console.log(err);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const message = {
-      sender: currentUserId,
+      sender: currentUser._id,
       text: newMessage,
       conversationId: currentChat._id,
     };
 
     const receiverId = currentChat.members.find(
-      (member) => member !== currentUserId
+      (member) => member !== currentUser._id
     );
 
-    socket.current.emit("sendMessage", {
-      senderId: currentUserId,
+    console.log(receiverId);
+    socket?.current.emit("sendMessage", {
+      senderId: currentUser._id,
       receiverId,
       text: newMessage,
     });
@@ -92,30 +109,14 @@ function Messanger(props) {
   }, [messages]);
 
   useEffect(() => {
-    arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage, currentChat]);
+    socket?.current.emit("newUser", currentUserId);
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    socket.current.emit("addUser", currentUserId);
-    socket.current.on("getUsers", (users) => {
+    socket?.current.on("getUsers", (users) => {
       setOnlineUsers(
-        currentUser.followings.filter((f) => users.some((u) => u.userId === f))
+        currentUser?.followings?.filter((f) => users.some((u) => u._id === f))
       );
     });
-  }, [currentUserId]);
+  }, [socket, currentUser]);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/users/me", {
@@ -138,7 +139,11 @@ function Messanger(props) {
         <Header />
         {/* topbar */}
         <section>
-          <Timelineinfo friends={friends} setFriends={setFriends} />
+          <Timelineinfo
+            friends={friends}
+            setFriends={setFriends}
+            currentUser={currentUser}
+          />
         </section>
         {/* top area */}
         <section>
@@ -175,8 +180,12 @@ function Messanger(props) {
                           <div className="message-box">
                             <ul className="peoples">
                               {conversations.map((c) => (
-                                <li onClick={() => setCurrentChat(c)}>
+                                <li
+                                  key={c._id}
+                                  onClick={() => setCurrentChat(c)}
+                                >
                                   <Conversation
+                                    key={c._id}
                                     conversation={c}
                                     currentUser={currentUser}
                                   />
@@ -200,6 +209,7 @@ function Messanger(props) {
                                   <ul className="chatting-area" ref={scrollRef}>
                                     {messages.map((m) => (
                                       <Message
+                                        key={m._id}
                                         message={m}
                                         own={m.sender === currentUserId}
                                       />

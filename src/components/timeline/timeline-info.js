@@ -1,24 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function Timelineinfo({ friends, setFriends }) {
-  const [currentUser, setCurrentUser] = useState("");
-  const currentUserId = localStorage.getItem("currentUser");
-
-  useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentUserId,
-      }),
-    }).then(async (res) => {
-      const data = await res.json();
-      setCurrentUser(data.user);
-    });
-  }, []);
+function Timelineinfo({ friends, setFriends, currentUser }) {
+  const profileId = currentUser._id === "zefekfrgrg455Kfri56t56";
 
   return (
     <div className="feature-photo">
@@ -27,9 +11,11 @@ function Timelineinfo({ friends, setFriends }) {
       </figure>
       <div className="add-btn">
         <span>{friends.length} followers</span>
-        <a href="#" title data-ripple>
-          Add Friend
-        </a>
+        {profileId ? (
+          <a href="#" title data-ripple>
+            Add Friend
+          </a>
+        ) : null}
       </div>
       <form className="edit-phto">
         <i className="fa fa-camera-retro" />

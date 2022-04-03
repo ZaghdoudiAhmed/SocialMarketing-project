@@ -48,9 +48,9 @@ function Shortcuts(props) {
         </li>
         <li>
           <i className="ti-bell" />
-          <a href="notifications.html" title>
+          <Link to="/notification" title>
             Notifications
-          </a>
+          </Link>
         </li>
         <li>
           <i className="ti-share" />

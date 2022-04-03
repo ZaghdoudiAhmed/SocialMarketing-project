@@ -1,56 +1,57 @@
 import { useEffect, useState, React } from "react";
 
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-function Header({ socket, currentUserId }) {
+function Header({ socket, currentUserId, friends }) {
   const [notifications, setNotifications] = useState([]);
+  const [allnotifications, setAllNotifications] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
     socket?.on("getNotification", (data) => {
-      setNotifications((prev) => [...prev, data]);
+      setAllNotifications((prev) => [...prev, data]);
     });
   }, [socket]);
 
-  const displayNotification = ({ senderId, senderName, type }) => {
-    let action;
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
+    });
+    getAllNotif();
+  }, []);
 
-    if (type === 1) {
-      action = "liked";
-    } else if (type === 2) {
-      action = "commented";
-    } else if (type === 3) {
-      action = "shared";
-    } else if (type === 4) {
-      return (
-        <li>
-          <a href="notifications.html" title>
-            <img src="images/resources/thumb-3.jpg" alt />
-            <div className="mesg-meta">
-              <h6>Ahmed ZAghdoudi</h6>
-              <span className="notification">{` ${senderName} posted a post.`}</span>
-            </div>
-          </a>
-          <span className="tag blue">Unseen</span>
-        </li>
-      );
-    }
-    return (
-      <li>
-        <a href="notifications.html" title>
-          <img src="images/resources/thumb-3.jpg" alt />
-          <div className="mesg-meta">
-            <h6>Ahmed ZAghdoudi</h6>
-            <span className="notification">{` ${senderName} ${action} your post.`}</span>
-          </div>
-        </a>
-        <span className="tag blue">Unseen</span>
-      </li>
-    );
+  const getAllNotif = async () => {
+    axios
+      .get("http://localhost:3000/notifications/" + currentUserId)
+      .then((res) => {
+        setAllNotifications(res.data);
+      });
   };
+  // const handleRead = async (e) => {
+  //   e.preventDefault();
+  //   console.log("test2");
 
-  const handleRead = () => {
-    setNotifications([]);
-  };
+  //   try {
+  //     await axios
+  //       .delete("http://localhost:3000/notifications/" + currentUserId)
+  //       .then(() => {
+  //         setAllNotifications([]);
+  //         console.log("test");
+  //       });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   return (
     <>
@@ -239,9 +240,7 @@ function Header({ socket, currentUserId }) {
               </Link>
               <ul>
                 <li>
-                  <Link to="/timeline" title>
-                    timeline
-                  </Link>
+                  <Link to="/timeline">timeline</Link>
                 </li>
                 <li>
                   <Link to="/timelinefriends" title>
@@ -387,7 +386,7 @@ function Header({ socket, currentUserId }) {
           </ul>
           <ul className="setting-area">
             <li>
-              <a href="#" title="Home" data-ripple>
+              <a title="Home" data-ripple>
                 <i className="ti-search" />
               </a>
               <div className="searched">
@@ -400,9 +399,9 @@ function Header({ socket, currentUserId }) {
               </div>
             </li>
             <li>
-              <a href="newsfeed.html" title="Home" data-ripple>
+              <Link to="/" title="Home" data-ripple>
                 <i className="ti-home" />
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#" title="Notification" data-ripple>
@@ -412,12 +411,26 @@ function Header({ socket, currentUserId }) {
                 )}
               </a>
               <div className="dropdowns">
-                <span>{notifications.length} New Notifications</span>
+                <span>{allnotifications.length} Notifications</span>
                 <ul className="drops-menu">
-                  {notifications.map((n) => displayNotification(n))}
+                  {allnotifications.map((n) => (
+                    <li>
+                      <a href="notifications.html" title>
+                        <img src="images/resources/thumb-3.jpg" alt />
+                        <div className="mesg-meta">
+                          <h6>{n.sender.name}</h6>
+                          <p className="notification">{n.text}</p>
+                        </div>
+                      </a>
+                      <span className="tag green">seen</span>
+                    </li>
+                  ))}
                 </ul>
-                <button onClick={handleRead} title className="more-mesg">
-                  Mark as read
+                <button
+                  //   onClick={handleRead}
+                  className="btn btn-primary-outline"
+                >
+                  delete
                 </button>
               </div>
             </li>
@@ -527,9 +540,9 @@ function Header({ socket, currentUserId }) {
                 <span className="status f-off" />
                 offline
               </a>
-              <a href="#" title>
+              <Link to="/about" title>
                 <i className="ti-user" /> view profile
-              </a>
+              </Link>
               <a href="#" title>
                 <i className="ti-pencil-alt" />
                 edit profile

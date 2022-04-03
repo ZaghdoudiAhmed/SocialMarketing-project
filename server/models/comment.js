@@ -7,7 +7,7 @@ var Comment = new Schema({
   Date_creation: { type: Date, default: Date.now },
   Likes: { type: Number, default: 0 },
   Dislikes: { type: Number, default: 0 },
-  //  Creator: { type: Schema.Types.ObjectId, ref: "User" },
+  Creator: { type: Schema.Types.ObjectId, ref: "users" },
   Post_id: { type: Schema.Types.ObjectId, ref: "Post" },
   comments: [
     {
@@ -16,6 +16,7 @@ var Comment = new Schema({
       Likes: { type: Number, default: 0 },
       Dislikes: { type: Number, default: 0 },
       Post_id: { type: Schema.Types.ObjectId, ref: "Post" },
+      Creator: { type: Schema.Types.ObjectId, ref: "users" },
     },
   ],
 });

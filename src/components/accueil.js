@@ -7,23 +7,41 @@ import { io } from "socket.io-client";
 import Post from "./post/post";
 import Header from "./header";
 import Shortcuts from "./timeline/shortcuts";
+import Loading from "./loading";
+import { MentionsInput, Mention } from "react-mentions";
 
 function Accueil() {
   const url = "http://localhost:3000/posts";
   const [postData, setPostData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [newDescription, setNewDescription] = useState("");
   const [newPhoto, setNewPhoto] = useState(null);
   const [file, setFile] = useState(null);
-  const [data, setData] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [friends, setFriends] = useState([]);
+  const users = [
+    {
+      id: "1",
+      display: "Jimmy",
+    },
+    {
+      id: "2",
+      display: "Ketut",
+    },
+    {
+      id: "3",
+      display: "Gede",
+    },
+  ];
+
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
 
   const Toast = Swal.mixin({
     toast: true,
-    position: "top-end",
+    position: "top-start",
     showConfirmButton: false,
-    timer: 3000,
+    timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -45,7 +63,7 @@ function Accueil() {
       await axios.post(url, post).then((res) => {
         Toast.fire({
           icon: "success",
-          title: "Post added successfully",
+          title: "Your post is added succesfuly",
         });
         socket.emit("sendNotification", {
           senderId: res.data.Creator._id,
@@ -66,10 +84,20 @@ function Accueil() {
   const getPosts = async () => {
     try {
       axios.get(url + "/").then((res) => {
-        //    const localData = [res.data];
         setPostData(res.data);
-        //    setPostData(res.data);
+        setLoading(true);
       });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getFriends = async () => {
+    try {
+      const friendList = await axios.get(
+        "http://localhost:3000/api/users/friends/" + currentUserId
+      );
+      setFriends(friendList.data);
     } catch (err) {
       console.log(err);
     }
@@ -80,11 +108,12 @@ function Accueil() {
   }, []);
 
   useEffect(() => {
-    socket?.emit("addUser", currentUserId);
-  }, [socket, currentUserId]);
+    socket?.emit("newUser", currentUserId);
+  }, [socket]);
 
   useEffect(() => {
     getPosts();
+    getFriends();
   }, []);
 
   useEffect(() => {
@@ -104,77 +133,23 @@ function Accueil() {
   return (
     <div>
       <div className="theme-layout">
-        <Header socket={socket} currentUserId={currentUserId} />
+        <Header
+          socket={socket}
+          currentUserId={currentUserId}
+          friends={friends}
+        />
 
         <div className="fixed-sidebar right">
           <div className="chat-friendz">
             <ul className="chat-users">
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend1.jpg" alt />
-                  <span className="status f-online" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend2.jpg" alt />
-                  <span className="status f-away" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend3.jpg" alt />
-                  <span className="status f-online" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend4.jpg" alt />
-                  <span className="status f-offline" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend5.jpg" alt />
-                  <span className="status f-online" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend6.jpg" alt />
-                  <span className="status f-online" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend7.jpg" alt />
-                  <span className="status f-offline" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend8.jpg" alt />
-                  <span className="status f-online" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend9.jpg" alt />
-                  <span className="status f-away" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend10.jpg" alt />
-                  <span className="status f-away" />
-                </div>
-              </li>
-              <li>
-                <div className="author-thmb">
-                  <img src="images/resources/side-friend8.jpg" alt />
-                  <span className="status f-online" />
-                </div>
-              </li>
+              {friends.map((f) => (
+                <li key={f._id}>
+                  <div className="author-thmb">
+                    <img src="images/resources/side-friend1.jpg" alt />
+                    <span className="status f-online" />
+                  </div>
+                </li>
+              ))}
             </ul>
             <div className="chat-box">
               <div className="chat-head">
@@ -544,7 +519,10 @@ function Accueil() {
                       </aside>
                     </div>
                     {/* sidebar */}
+
                     <div className="col-lg-6">
+                      {/* <ReactPlayer url="https://www.youtube.com/watch?v=ipwiaaRXZp4" /> */}
+
                       <div className="central-meta">
                         <div className="new-postbox">
                           <figure>
@@ -552,14 +530,17 @@ function Accueil() {
                           </figure>
                           <div className="newpst-input">
                             <form>
-                              <textarea
+                              <MentionsInput
                                 rows={2}
                                 placeholder="..."
                                 onChange={(e) =>
                                   setNewDescription(e.target.value)
                                 }
                                 value={newDescription}
-                              />
+                                markup="@[__name__](___id__)"
+                              >
+                                <Mention trigger="@" data={friends} />
+                              </MentionsInput>
 
                               <div className="attachments">
                                 <ul>
@@ -607,833 +588,27 @@ function Accueil() {
                         </div>
                       </div>
                       {/* add post new box */}
-                      <div className="loadMore">
-                        {postData
-                          .sort(
-                            (a, b) =>
-                              new Date(b.Date_creation) -
-                              new Date(a.Date_creation)
-                          )
-                          .map((p) => (
-                            <Post
-                              key={p._id}
-                              post={p}
-                              socket={socket}
-                              currentUser={currentUser}
-                            />
-                          ))}
-                        <div className="central-meta item">
-                          <div className="user-post">
-                            <div className="friend-info">
-                              <figure>
-                                <img src="images/resources/nearly1.jpg" alt />
-                              </figure>
-                              <div className="friend-name">
-                                <ins>
-                                  <a href="time-line.html" title>
-                                    Sara Grey
-                                  </a>
-                                </ins>
-                                <span>published: june,2 2018 19:PM</span>
-                              </div>
-                              <div className="post-meta">
-                                <iframe
-                                  width
-                                  height={315}
-                                  src="https://www.youtube.com/embed/5JJ_jqqpTMY"
-                                  allow="autoplay;"
-                                  allowFullScreen
-                                />
-                                <div className="we-video-info">
-                                  <ul>
-                                    <li>
-                                      <span
-                                        className="views"
-                                        data-toggle="tooltip"
-                                        title="views"
-                                      >
-                                        <i className="fa fa-eye" />
-                                        <ins>1.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="comment"
-                                        data-toggle="tooltip"
-                                        title="Comments"
-                                      >
-                                        <i className="fa fa-comments-o" />
-                                        <ins>52</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="like"
-                                        data-toggle="tooltip"
-                                        title="like"
-                                      >
-                                        <i className="ti-heart" />
-                                        <ins>2.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="dislike"
-                                        data-toggle="tooltip"
-                                        title="dislike"
-                                      >
-                                        <i className="ti-heart-broken" />
-                                        <ins>200</ins>
-                                      </span>
-                                    </li>
-                                    <li className="social-media">
-                                      <div className="menu">
-                                        <div className="btn trigger">
-                                          <i className="fa fa-share-alt" />
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-html5" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-facebook" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-google-plus" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-twitter" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-css3" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-instagram" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-dribbble" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-pinterest" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div className="description">
-                                  <p>
-                                    Lonely Cat Enjoying in Summer Curabitur{" "}
-                                    <a href="#">#mypage</a> ullamcorper
-                                    ultricies nisi. Nam eget dui. Etiam rhoncus.
-                                    Maecenas tempus, tellus eget condimentum
-                                    rhoncus, sem quam semper libero, sit amet
-                                    adipiscing sem neque sed ipsum. Nam quam
-                                    nunc,
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="coment-area">
-                              <ul className="we-comet">
-                                <li>
-                                  <div className="comet-avatar">
-                                    <img
-                                      src="images/resources/comet-1.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="we-comment">
-                                    <div className="coment-head">
-                                      <h5>
-                                        <a href="time-line.html">Jason borne</a>
-                                      </h5>
-                                      <span>1 year ago</span>
-                                      <a
-                                        className="we-reply"
-                                        href="#"
-                                        title="Reply"
-                                      >
-                                        <i className="fa fa-reply" />
-                                      </a>
-                                    </div>
-                                    <p>
-                                      we are working for the dance and sing
-                                      songs. this video is very awesome for the
-                                      youngster. please vote this video and like
-                                      our channel
-                                    </p>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="comet-avatar">
-                                    <img
-                                      src="images/resources/comet-2.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="we-comment">
-                                    <div className="coment-head">
-                                      <h5>
-                                        <a href="time-line.html">Sophia</a>
-                                      </h5>
-                                      <span>1 week ago</span>
-                                      <a
-                                        className="we-reply"
-                                        href="#"
-                                        title="Reply"
-                                      >
-                                        <i className="fa fa-reply" />
-                                      </a>
-                                    </div>
-                                    <p>
-                                      we are working for the dance and sing
-                                      songs. this video is very awesome for the
-                                      youngster.
-                                      <i className="em em-smiley" />
-                                    </p>
-                                  </div>
-                                </li>
-                                <li>
-                                  <a
-                                    href="#"
-                                    title
-                                    className="showmore underline"
-                                  >
-                                    more comments
-                                  </a>
-                                </li>
-                                <li className="post-comment">
-                                  <div className="comet-avatar">
-                                    <img
-                                      src="images/resources/comet-2.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="post-comt-box">
-                                    <form method="post">
-                                      <textarea
-                                        placeholder="Post your comment"
-                                        defaultValue={""}
-                                      />
-                                      <div className="add-smiles">
-                                        <span
-                                          className="em em-expressionless"
-                                          title="add icon"
-                                        />
-                                      </div>
-                                      <div className="smiles-bunch">
-                                        <i className="em em---1" />
-                                        <i className="em em-smiley" />
-                                        <i className="em em-anguished" />
-                                        <i className="em em-laughing" />
-                                        <i className="em em-angry" />
-                                        <i className="em em-astonished" />
-                                        <i className="em em-blush" />
-                                        <i className="em em-disappointed" />
-                                        <i className="em em-worried" />
-                                        <i className="em em-kissing_heart" />
-                                        <i className="em em-rage" />
-                                        <i className="em em-stuck_out_tongue" />
-                                      </div>
-                                      <button type="submit" />
-                                    </form>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
+                      {loading ? (
+                        <div className="loadMore">
+                          {postData
+                            .sort(
+                              (a, b) =>
+                                new Date(b.Date_creation) -
+                                new Date(a.Date_creation)
+                            )
+                            .map((p) => (
+                              <Post
+                                key={p._id}
+                                post={p}
+                                socket={socket}
+                                currentUser={currentUser}
+                                friends={friends}
+                              />
+                            ))}
                         </div>
-                        <div className="central-meta item">
-                          <div className="user-post">
-                            <div className="friend-info">
-                              <figure>
-                                <img src="images/resources/nearly6.jpg" alt />
-                              </figure>
-                              <div className="friend-name">
-                                <ins>
-                                  <a href="time-line.html">Sophia</a>
-                                </ins>
-                                <span>published: january,5 2018 19:PM</span>
-                              </div>
-                              <div className="post-meta">
-                                <div className="post-map">
-                                  <div className="nearby-map">
-                                    <div id="map-canvas" />
-                                  </div>
-                                </div>
-                                {/* near by map */}
-                                <div className="we-video-info">
-                                  <ul>
-                                    <li>
-                                      <span
-                                        className="views"
-                                        data-toggle="tooltip"
-                                        title="views"
-                                      >
-                                        <i className="fa fa-eye" />
-                                        <ins>1.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="comment"
-                                        data-toggle="tooltip"
-                                        title="Comments"
-                                      >
-                                        <i className="fa fa-comments-o" />
-                                        <ins>52</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="like"
-                                        data-toggle="tooltip"
-                                        title="like"
-                                      >
-                                        <i className="ti-heart" />
-                                        <ins>2.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="dislike"
-                                        data-toggle="tooltip"
-                                        title="dislike"
-                                      >
-                                        <i className="ti-heart-broken" />
-                                        <ins>200</ins>
-                                      </span>
-                                    </li>
-                                    <li className="social-media">
-                                      <div className="menu">
-                                        <div className="btn trigger">
-                                          <i className="fa fa-share-alt" />
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-html5" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-facebook" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-google-plus" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-twitter" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-css3" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-instagram" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-dribbble" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#">
-                                              <i className="fa fa-pinterest" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                                <div className="description">
-                                  <p>
-                                    Curabitur Lonely Cat Enjoying in Summer{" "}
-                                    <a href="#">#mypage</a> ullamcorper
-                                    ultricies nisi. Nam eget dui. Etiam rhoncus.
-                                    Maecenas tempus, tellus eget condimentum
-                                    rhoncus, sem quam semper libero, sit amet
-                                    adipiscing sem neque sed ipsum. Nam quam
-                                    nunc,
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="coment-area">
-                              <ul className="we-comet">
-                                <li>
-                                  <div className="comet-avatar">
-                                    <img
-                                      src="images/resources/comet-1.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="we-comment">
-                                    <div className="coment-head">
-                                      <h5>
-                                        <a href="time-line.html">Jason borne</a>
-                                      </h5>
-                                      <span>1 year ago</span>
-                                      <a
-                                        className="we-reply"
-                                        href="#"
-                                        title="Reply"
-                                      >
-                                        <i className="fa fa-reply" />
-                                      </a>
-                                    </div>
-                                    <p>
-                                      we are working for the dance and sing
-                                      songs. this video is very awesome for the
-                                      youngster. please vote this video and like
-                                      our channel
-                                    </p>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="comet-avatar">
-                                    <img
-                                      src="images/resources/comet-2.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="we-comment">
-                                    <div className="coment-head">
-                                      <h5>
-                                        <a href="time-line.html">Sophia</a>
-                                      </h5>
-                                      <span>1 week ago</span>
-                                      <a
-                                        className="we-reply"
-                                        href="#"
-                                        title="Reply"
-                                      >
-                                        <i className="fa fa-reply" />
-                                      </a>
-                                    </div>
-                                    <p>
-                                      we are working for the dance and sing
-                                      songs. this video is very awesome for the
-                                      youngster.
-                                      <i className="em em-smiley" />
-                                    </p>
-                                  </div>
-                                </li>
-                                <li>
-                                  <a
-                                    href="#"
-                                    title
-                                    className="showmore underline"
-                                  >
-                                    more comments
-                                  </a>
-                                </li>
-                                <li className="post-comment">
-                                  <div className="comet-avatar">
-                                    <img
-                                      src="images/resources/comet-2.jpg"
-                                      alt
-                                    />
-                                  </div>
-                                  <div className="post-comt-box">
-                                    <form method="post">
-                                      <textarea
-                                        placeholder="Post your comment"
-                                        defaultValue={""}
-                                      />
-                                      <div className="add-smiles">
-                                        <span
-                                          className="em em-expressionless"
-                                          title="add icon"
-                                        />
-                                      </div>
-                                      <div className="smiles-bunch">
-                                        <i className="em em---1" />
-                                        <i className="em em-smiley" />
-                                        <i className="em em-anguished" />
-                                        <i className="em em-laughing" />
-                                        <i className="em em-angry" />
-                                        <i className="em em-astonished" />
-                                        <i className="em em-blush" />
-                                        <i className="em em-disappointed" />
-                                        <i className="em em-worried" />
-                                        <i className="em em-kissing_heart" />
-                                        <i className="em em-rage" />
-                                        <i className="em em-stuck_out_tongue" />
-                                      </div>
-                                      <button type="submit" />
-                                    </form>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="central-meta item">
-                          <div className="user-post">
-                            <div className="friend-info">
-                              <figure>
-                                <img
-                                  alt
-                                  src="images/resources/friend-avatar10.jpg"
-                                />
-                              </figure>
-                              <div className="friend-name">
-                                <ins>
-                                  <a title href="time-line.html">
-                                    test
-                                  </a>
-                                </ins>
-                                <span>published: june,2 2018 19:PM</span>
-                              </div>
-                              <div className="description">
-                                <p>
-                                  Curabitur World's most beautiful car in{" "}
-                                  <a title href="#">
-                                    #test drive booking !
-                                  </a>{" "}
-                                  the most beatuiful car available in america
-                                  and the saudia arabia, you can book your test
-                                  drive by our official website
-                                </p>
-                              </div>
-                              <div className="post-meta">
-                                <div className="linked-image align-left">
-                                  <a title href="#">
-                                    <img alt src="images/resources/page1.jpg" />
-                                  </a>
-                                </div>
-                                <div className="detail">
-                                  <span>Love Maid - ChillGroves</span>
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    ipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna
-                                    aliqua...{" "}
-                                  </p>
-                                  <a title href="#">
-                                    www.sample.com
-                                  </a>
-                                </div>
-                                <div className="we-video-info">
-                                  <ul>
-                                    <li>
-                                      <span
-                                        className="views"
-                                        data-toggle="tooltip"
-                                        title="views"
-                                      >
-                                        <i className="fa fa-eye" />
-                                        <ins>1.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="comment"
-                                        data-toggle="tooltip"
-                                        title="Comments"
-                                      >
-                                        <i className="fa fa-comments-o" />
-                                        <ins>52</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="like"
-                                        data-toggle="tooltip"
-                                        title="like"
-                                      >
-                                        <i className="ti-heart" />
-                                        <ins>2.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="dislike"
-                                        data-toggle="tooltip"
-                                        title="dislike"
-                                      >
-                                        <i className="ti-heart-broken" />
-                                        <ins>200</ins>
-                                      </span>
-                                    </li>
-                                    <li className="social-media">
-                                      <div className="menu">
-                                        <div className="btn trigger">
-                                          <i className="fa fa-share-alt" />
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-html5" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-facebook" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-google-plus" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-twitter" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-css3" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-instagram" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-dribbble" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-pinterest" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="friend-info">
-                              <figure>
-                                <img
-                                  alt
-                                  src="images/resources/friend-avatar10.jpg"
-                                />
-                              </figure>
-                              <div className="friend-name">
-                                <ins>
-                                  <a title href="time-line.html">
-                                    Janice Griffith
-                                  </a>
-                                </ins>
-                                <span>published: june,2 2018 19:PM</span>
-                              </div>
-                              <div className="description">
-                                <p>
-                                  Curabitur World's most beautiful car in{" "}
-                                  <a title href="#">
-                                    #test drive booking !
-                                  </a>{" "}
-                                  the most beatuiful car available in america
-                                  and the saudia arabia, you can book your test
-                                  drive by our official website
-                                </p>
-                              </div>
-                              <div className="post-meta">
-                                <div className="linked-image align-left">
-                                  <a title href="#">
-                                    <img alt src="images/resources/page1.jpg" />
-                                  </a>
-                                </div>
-                                <div className="detail">
-                                  <span>Love Maid - ChillGroves</span>
-                                  <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    ipisicing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna
-                                    aliqua...{" "}
-                                  </p>
-                                  <a title href="#">
-                                    www.sample.com
-                                  </a>
-                                </div>
-                                <div className="we-video-info">
-                                  <ul>
-                                    <li>
-                                      <span
-                                        className="views"
-                                        data-toggle="tooltip"
-                                        title="views"
-                                      >
-                                        <i className="fa fa-eye" />
-                                        <ins>1.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="comment"
-                                        data-toggle="tooltip"
-                                        title="Comments"
-                                      >
-                                        <i className="fa fa-comments-o" />
-                                        <ins>52</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="like"
-                                        data-toggle="tooltip"
-                                        title="like"
-                                      >
-                                        <i className="ti-heart" />
-                                        <ins>2.2k</ins>
-                                      </span>
-                                    </li>
-                                    <li>
-                                      <span
-                                        className="dislike"
-                                        data-toggle="tooltip"
-                                        title="dislike"
-                                      >
-                                        <i className="ti-heart-broken" />
-                                        <ins>200</ins>
-                                      </span>
-                                    </li>
-                                    <li className="social-media">
-                                      <div className="menu">
-                                        <div className="btn trigger">
-                                          <i className="fa fa-share-alt" />
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-html5" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-facebook" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-google-plus" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-twitter" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-css3" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-instagram" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-dribbble" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                        <div className="rotater">
-                                          <div className="btn btn-icon">
-                                            <a href="#" title>
-                                              <i className="fa fa-pinterest" />
-                                            </a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      ) : (
+                        <Loading />
+                      )}
                     </div>
                     {/* centerl meta */}
                     <div className="col-lg-3">

@@ -2,27 +2,29 @@ import { React, useState, useEffect, useRef } from "react";
 import { format } from "timeago.js";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { FacebookShareButton, FacebookIcon } from "react-share";
 
 import axios from "axios";
 import "./post.css";
 import Comment from "../comment/comment";
 import CommentForm from "../comment/commentForm";
 
-function Post({ post, socket, currentUser }) {
+function Post({ post, socket, currentUser, friends }) {
   const [likes, setLikes] = useState(post?.Likes);
   const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState();
   const [nbrcomments, setnbrcomments] = useState(post?.Nbr_comments);
-  const [activeComment, setActiveComment] = useState(null);
 
   const hasLikedPost = likes.find((like) => like === currentUser._id);
   const hasDislikedPost = dislike.find(
     (dislike) => dislike === currentUser._id
   );
 
+  const shareUrl = "https://www.youtube.com/watch?v=9WzIACv_mxs";
+  const yourPost = currentUser._id === post.Creator._id;
   const Toast = Swal.mixin({
     toast: true,
-    position: "top-end",
+    position: "top-start",
     showConfirmButton: false,
     timer: 2000,
     timerProgressBar: true,
@@ -32,12 +34,12 @@ function Post({ post, socket, currentUser }) {
     },
   });
 
-  const handlelike = async (e) => {
-    e.preventDefault();
-
+  const handlelike = async () => {
     const user = {
       userId: currentUser._id,
     };
+    const text = currentUser.name + " liked your post ";
+
     axios
       .put("http://localhost:3000/posts/" + post._id + "/like", user)
       .then((res) => {
@@ -48,14 +50,55 @@ function Post({ post, socket, currentUser }) {
           setLikes([...post?.Likes, currentUser._id]);
           Toast.fire({
             icon: "success",
-            title: "you liked this post ",
+            title: "you liked the post ",
           });
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: post.Creator._id,
+          };
+
+          if (notification.sender !== notification.receiver) {
+            const notif = axios.post(
+              "http://localhost:3000/notifications",
+              notification
+            );
+          }
+
+          if (currentUser._id !== post.Creator._id) {
+            socket.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: post.Creator._id,
+              text: text,
+            });
+          }
         } else {
           setLikes([...post?.Likes, currentUser._id]);
           Toast.fire({
             icon: "success",
-            title: "you liked this post ",
+            title: "you liked the post ",
           });
+
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: post.Creator._id,
+          };
+
+          if (notification.sender !== notification.receiver) {
+            const notif = axios.post(
+              "http://localhost:3000/notifications",
+              notification
+            );
+          }
+
+          if (currentUser._id !== post.Creator._id) {
+            socket.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: post.Creator._id,
+              text: text,
+            });
+          }
         }
       });
   };
@@ -72,12 +115,12 @@ function Post({ post, socket, currentUser }) {
     }
   };
 
-  const handledilike = async (e) => {
-    e.preventDefault();
-
+  const handledilike = async () => {
     const user = {
       userId: currentUser._id,
     };
+
+    const text = currentUser.name + " disliked your post ";
 
     axios
       .put("http://localhost:3000/posts/" + post._id + "/dislike", user)
@@ -90,14 +133,54 @@ function Post({ post, socket, currentUser }) {
           setDislike([...post?.Dislikes, currentUser._id]);
           Toast.fire({
             icon: "success",
-            title: "you disliked this post ",
+            title: "you disliked the post ",
           });
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: post.Creator._id,
+          };
+
+          if (notification.sender !== notification.receiver) {
+            const notif = axios.post(
+              "http://localhost:3000/notifications",
+              notification
+            );
+          }
+
+          if (currentUser._id !== post.Creator._id) {
+            socket.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: post.Creator._id,
+              text: text,
+            });
+          }
         } else {
           setDislike([...post?.Dislikes, currentUser._id]);
           Toast.fire({
             icon: "success",
-            title: "you dislike this post ",
+            title: "you dislike the post ",
           });
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: post.Creator._id,
+          };
+
+          if (notification.sender !== notification.receiver) {
+            const notif = axios.post(
+              "http://localhost:3000/notifications",
+              notification
+            );
+          }
+
+          if (currentUser._id !== post.Creator._id) {
+            socket.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: post.Creator._id,
+              text: text,
+            });
+          }
         }
       });
   };
@@ -111,9 +194,10 @@ function Post({ post, socket, currentUser }) {
     });
   };
 
-  const handleComment = (body) => {
+  const handleComment = (body, type) => {
     const comment = {
       Body: body,
+      Creator: currentUser._id,
     };
     axios
       .post(
@@ -121,12 +205,58 @@ function Post({ post, socket, currentUser }) {
         comment
       )
       .then((res) => {
-        setComments([...comments, res]);
+        setComments([...comments, res.data]);
         setnbrcomments(nbrcomments + 1);
+
+        const text = currentUser.name + " commented your post ";
+
+        const notification = {
+          text: text,
+          sender: currentUser._id,
+          receiver: post.Creator._id,
+        };
+        if (notification.sender !== notification.receiver) {
+          const notif = axios.post(
+            "http://localhost:3000/notifications",
+            notification
+          );
+        }
+
+        if (currentUser._id !== post.Creator._id) {
+          socket.emit("sendNotification", {
+            senderId: currentUser._id,
+            receiverId: post.Creator._id,
+            text: text,
+          });
+        }
+        Toast.fire({
+          icon: "success",
+          title: "Your comment a post ",
+        });
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleDeletePost = () => {
+    Swal.fire({
+      title: "Are you sure to delete your post ?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .get("http://localhost:3000/posts/delete/" + post._id)
+          .then((res) => {});
+
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+      }
+    });
   };
 
   useEffect(() => {
@@ -136,10 +266,11 @@ function Post({ post, socket, currentUser }) {
   }, []);
 
   return (
+
     <>
-      <div className="central-meta item">
+      <div className="central-meta post item">
         <div className="user-post">
-          <div className="friend-info">
+          <div className="friend-info ">
             <figure>
               <img src="images/resources/friend-avatar10.jpg" alt />
             </figure>
@@ -152,6 +283,21 @@ function Post({ post, socket, currentUser }) {
 
                 {format(post.Date_creation)}
               </span>
+              {yourPost && (
+                <div className="dropdown d-flex flex-justify-content">
+                  <a data-toggle="dropdown" style={{ color: "#088dcd" }}>
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </a>
+                  <div className="dropdown-menu">
+                    <a className="dropdown-item">
+                      <i className="ti-pencil-alt" href="/" /> Edit
+                    </a>
+                    <a className="dropdown-item" href="/">
+                      <i className="fa fa-trash" /> Delete
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="post-meta">
               <div className="description">
@@ -190,10 +336,7 @@ function Post({ post, socket, currentUser }) {
                       className="like"
                       data-toggle="tooltip"
                       title="like"
-                      onClick={() => {
-                        handlelike();
-                        handleNotification(1);
-                      }}
+                      onClick={handlelike}
                     >
                       {hasLikedPost ? (
                         <i className="bi bi-hand-thumbs-up-fill"></i>
@@ -268,6 +411,11 @@ function Post({ post, socket, currentUser }) {
                       </div>
                     </div>
                   </li>
+                  <li>
+                    <FacebookShareButton url={shareUrl}>
+                      <FacebookIcon size={32} round={true} />
+                    </FacebookShareButton>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -280,11 +428,14 @@ function Post({ post, socket, currentUser }) {
                   comment={c}
                   replies={c.comments}
                   currentUser={currentUser}
-                  activeComment={activeComment}
-                  setActiveComment={setActiveComment}
                 />
               ))}
-              <CommentForm post={post} handleComment={handleComment} />
+              <CommentForm
+                post={post}
+                handleComment={handleComment}
+                currentUser={currentUser}
+                friends={friends}
+              />
             </ul>
           </div>
         </div>

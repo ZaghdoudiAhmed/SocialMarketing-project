@@ -10,30 +10,32 @@ router.get("/", function (req, res, next) {
 });
 
 // Adding a comment
-router.post("/", (req, res, next) => {
+router.post("/", (req, res) => {
   new Comment({
     Description: req.body.Description,
     //  Likes: req.body.Likes,
     //  Dislikes: req.body.Dislikes,
     Post_id: req.body.Post_id,
-  }).save((err, newcomment) => {
-    if (err) {
-      console.log("error");
-    } else {
-      console.log(newcomment);
-      res.json(" Comment :" + newcomment._id + "added");
-    }
-  });
+    Creator: req.body.Creator,
+  })
+    .save()
+    .then((newcomment) => {
+      Comment.populate(newcomment, "Creator", (err, populatedcomment) => {
+        res.json(populatedcomment);
+      });
+    });
 });
+
 //Get all comments of a post
 router.get("/post/:id", (req, res, next) => {
-  Comment.find({ Post_id: req.params.id }, (err, comments) => {
-    if (err) {
-      res.send("error get comments");
-    }
-    res.json(comments);
-  });
+  Comment.find({ Post_id: req.params.id })
+    .populate("Creator")
+    .populate("comments.Creator")
+    .exec((err, comments) => {
+      res.json(comments);
+    });
 });
+
 // Deleting a comment
 router.get("/delete/:id", (req, res, next) => {
   Comment.findOneAndRemove(
@@ -80,8 +82,13 @@ router.post("/post/:id/comment", async (req, res, next) => {
   const comment = new Comment({
     Body: req.body.Body,
     Post_id: id,
+    Creator: req.body.Creator,
   });
-  await comment.save();
+  await comment.save().then((newcomment) => {
+    Comment.populate(newcomment, "Creator", (err, populatedcomment) => {
+      res.json(populatedcomment);
+    });
+  });
   // get the post
   const Relatedpost = await Post.findOneAndUpdate(
     { _id: req.params.id },
@@ -91,14 +98,14 @@ router.post("/post/:id/comment", async (req, res, next) => {
   //push the comment to the post.comments array
 
   Relatedpost.comments.push(comment);
-
   //save
   await Relatedpost.save((err) => {
     if (err) {
       console.log(err);
     }
-    res.json(Relatedpost);
+    //  res.json(Relatedpost);
   });
+  // res.json(comment);
 });
 
 // A comment replayed to an other comment
@@ -109,16 +116,18 @@ router.post("/post/:idpost/comment/:idcomment", async (req, res, next) => {
   const commentmodel = new Comment({
     Body: req.body.Body,
     Post_id: idpost,
+    Creator: req.body.Creator,
   });
 
   const comment = await Comment.findOne({ _id: req.params.idcomment });
 
   comment.comments.push(commentmodel);
-  await comment.save((err) => {
+  await comment.save();
+  Comment.populate(commentmodel, "Creator", (err, populatedcomment) => {
     if (err) {
-      console.log(err);
+      res.json(err);
     }
-    res.json(comment);
+    res.json(populatedcomment);
   });
 });
 
