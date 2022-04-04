@@ -8,7 +8,6 @@ import Messages from "./components/timeline/messages";
 import React, { Suspense, lazy } from "react";
 import "./App.css";
 import Acceuil from "./components/Acceuil";
-import Test from "./components/Test";
 import Donationbystate from "./components/Donation/Donationbystate";
 import Articles from "./components/Article/Articles";
 import { BrowserRouter, Routes, Router, Route } from "react-router-dom";
@@ -49,7 +48,6 @@ function App() {
     >
       <BrowserRouter>
         <Routes>
-        <Route path="/test" element={<Test />} />
           <Route path="/timeline" element={<Timeline />} />
           <Route path="/timelinefriends" element={<Timelinefriends />} />
           <Route path="/timelinegroups" element={<Timelinegroups />} />
