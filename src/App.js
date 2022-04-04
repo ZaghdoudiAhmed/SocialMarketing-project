@@ -22,6 +22,13 @@ import Donationdetails from "./components/Donation/Donationdetails";
 import Donationbycategorie from "./components/Donation/Donationbycategorie";
 import CircularProgress from "@mui/material/CircularProgress";
 import Mapaffiche from "./components/Donation/Mapaffiche";
+import Shop from "./components/EcommerceComponent/Shop";
+import AddProduct from "./components/EcommerceComponent/AddProduct";
+import DetailProduct from "./components/EcommerceComponent/DetailProduct";
+import Category from "./components/EcommerceComponent/Category";
+import EditProduct from "./components/EcommerceComponent/EditProduct";
+import Cart from "./components/EcommerceComponent/Cart";
+import CheckoutCart from "./components/EcommerceComponent/CheckoutCart";
 function App() {
   const Donations = React.lazy(
     () =>
@@ -39,6 +46,7 @@ function App() {
       )
   );
   return (
+
     <Suspense
       fallback={
         <div className="positionprogress">
@@ -70,10 +78,22 @@ function App() {
           <Route path="/Blogdetail" element={<Blogdetail />} />
           <Route path="/Addblog" element={<Addblog />}></Route>
           {/* <Route path="/company" element={<Indexcompany />} /> */}
+
           <Route path="/messages" element={<Messages />} />
+
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/detailProduct/:id" element={<DetailProduct />} />
+          <Route path="/addProd" element={<AddProduct />} />
+          <Route path="/categories" element={<Category />} />
+          <Route path="/updateProd/:id" element={<EditProduct />} />
+
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout/:prix" element={<CheckoutCart />} />
         </Routes>
       </BrowserRouter>
     </Suspense>
+
+
   );
 }
 

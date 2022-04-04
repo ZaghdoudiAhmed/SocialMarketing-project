@@ -37,7 +37,7 @@ socket.on("message", (message) => {
   socket.broadcast.to(roomId).emit('user-disconnected', userId)
  });
     });
-    
+
 socket.on('chat',(msg)=>{
     io.emit('new message',msg)
 
@@ -47,8 +47,15 @@ socket.on('chat',(msg)=>{
 
 const cors = require('cors');
 const bodyparser = require('body-parser');
+const fileUpload = require('express-fileupload')
+var indexRouter = require("./routes/index");
+var usersRouter = require("./routes/users");
 
-const port = 8080;
+//configuration la cnx à la base
+var config = require('./database/mongodb.json');
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser')
+//const port = 8080;
 
 
 
@@ -60,6 +67,8 @@ mongoose.connect(
   },
   () => console.log("Connected to DB !")
 );
+var app = express();
+
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -68,6 +77,9 @@ app.set("view engine", "jade");
 app.use(logger("dev"));
 
 app.use(cookieParser());
+app.use(fileUpload({
+  useTempFiles: true
+}))
 app.use(express.static(path.join(__dirname, "public")));
 
 
@@ -81,6 +93,10 @@ app.use("/users", usersRouter);
 app.use('/',DonationRouter);
 app.use('/',blogRouter);
 app.use('/',CompaignRouter);
+app.use('/api', require('./routes/categoryRouter'))
+app.use('/api', require('./routes/productRouter'))
+app.use('/api', require('./routes/filterRouter'))
+app.use('/api',require('./routes/paymentRouter'))
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
