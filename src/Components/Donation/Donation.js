@@ -1,41 +1,41 @@
-import React, { useEffect, useState, Suspense, lazy } from "react";
+import React, { useEffect, useState, Suspense} from "react";
 import DonationCard from "./DonationCard";
-import TunisiaMap from "./TunisiaMap";
 import axios from "axios";
 import Card from "@mui/material/Card";
-import CardContent from '@mui/material/CardContent';
-import { Outlet, Link, route, Routes, useLocation,useNavigate } from "react-router-dom";
+import CardContent from "@mui/material/CardContent";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import TextField from "@mui/material/TextField";
 import Mapaffiche from "./Mapaffiche";
-import Calendar from "../Donation/Calendar";
-import Swal from 'sweetalert2';
-import uuid from 'react-uuid';
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import Anime, { anime } from 'react-anime';
-const Tunisiamap = React.lazy(() =>  new Promise((resolve, reject) =>
-setTimeout(() => resolve(import("./TunisiaMap")), 1000)
-));
-function Donation(props) {
+import Swal from "sweetalert2";
+import uuid from "react-uuid";
+import { anime } from "react-anime";
+const Tunisiamap = React.lazy(
+  () =>
+    new Promise((resolve, reject) =>
+      setTimeout(() => resolve(import("./TunisiaMap")), 1000)
+    )
+);
+function Donation() {
   const [totaldoantions, settotaldoantions] = useState(0);
   const [listdoantionsbylocation, setlistdonationsbylocation] = useState([]);
   const [currentPage, setcurrentPage] = useState(1);
-  const [itemsPerPage, setitemsPerPage] = useState(3);
+  const [itemsPerPage, setitemsPerPage] = useState(4);
   const [pageNumberLimit, setpageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
   const [listdoantions, setlistdonations] = useState([]);
-  const [listnewdonations, setlistnewdonations] = useState([]);
   const [state, setstate] = useState(true);
   let navigate = useNavigate();
-
   const change = async (e) => {
     const response = await axios.get(
       "http://localhost:2600/donation/listdonations"
     );
-    console.log(response.data);
     setlistdonations(response.data);
     const searchelement = e.target.value;
     if (searchelement != "") {
@@ -46,15 +46,11 @@ function Donation(props) {
           setstate(false);
         }
       });
-      console.log(m);
       setlistdonations(m);
-      console.log(totaldoantions);
     } else {
       setlistdonations(response.data);
-      console.log(totaldoantions);
     }
   };
- 
   const fetchdonations1 = async () => {
     try {
       const response = await axios.get(
@@ -81,17 +77,13 @@ function Donation(props) {
         "http://localhost:2600/donation/listdonations"
       );
       setlistdonations(response.data);
-
       const counters = document.querySelectorAll(".counter");
-      ///console.log(counters);
       counters.forEach((counter) => {
         counter.innerText = "0";
-
         const updateCounter = () => {
           const target = counter.getAttribute("data-target");
           const c = +counter.innerText;
           const increment = target / 500;
-
           if (c < target) {
             counter.innerText = `${Math.ceil(c + increment)}`;
             setTimeout(updateCounter, 100);
@@ -104,53 +96,59 @@ function Donation(props) {
     }
   };
   useEffect(() => {
-    var textWrapper = document.querySelector('.ml2');
-    textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
-    
-    anime.timeline({loop: true})
+    var textWrapper = document.querySelector(".ml2");
+    textWrapper.innerHTML = textWrapper.textContent.replace(
+      /\S/g,
+      "<span class='letter'>$&</span>"
+    );
+    anime
+      .timeline({ loop: true })
       .add({
-        targets: '.ml2 .letter',
-        scale: [4,1],
-        opacity: [0,1],
+        targets: ".ml2 .letter",
+        scale: [4, 1],
+        opacity: [0, 1],
         translateZ: 0,
         easing: "easeOutExpo",
         duration: 950,
-        delay: (el, i) => 70*i
-      }).add({
-        targets: '.ml2',
+        delay: (el, i) => 70 * i,
+      })
+      .add({
+        targets: ".ml2",
         opacity: 0,
         duration: 1000,
         easing: "easeOutExpo",
-        delay: 1000
+        delay: 1000,
       });
-      var textWrapper = document.querySelector('.ml1');
-      textWrapper.innerHTML = textWrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
-      
-      anime.timeline({loop: true})
-        .add({
-          targets: '.ml1 .letter',
-          scale: [4,1],
-          opacity: [0,1],
-          translateZ: 0,
-          easing: "easeOutExpo",
-          duration: 950,
-          delay: (el, i) => 70*i
-        }).add({
-          targets: '.ml1',
-          opacity: 0,
-          duration: 1000,
-          easing: "easeOutExpo",
-          delay: 1000
-        });
+    var textWrapper = document.querySelector(".ml1");
+    textWrapper.innerHTML = textWrapper.textContent.replace(
+      /\S/g,
+      "<span class='letter'>$&</span>"
+    );
+    anime
+      .timeline({ loop: true })
+      .add({
+        targets: ".ml1 .letter",
+        scale: [4, 1],
+        opacity: [0, 1],
+        translateZ: 0,
+        easing: "easeOutExpo",
+        duration: 950,
+        delay: (el, i) => 70 * i,
+      })
+      .add({
+        targets: ".ml1",
+        opacity: 0,
+        duration: 1000,
+        easing: "easeOutExpo",
+        delay: 1000,
+      });
     fetchsumdonnation();
     fetchdonations();
     fetchdonations1();
   }, []);
-
   const handleClick = (event) => {
     setcurrentPage(Number(event.target.id));
   };
-
   const pages = [];
   for (let i = 1; i <= Math.ceil(listdoantions.length / itemsPerPage); i++) {
     pages.push(i);
@@ -167,8 +165,7 @@ function Donation(props) {
           id={number}
           onClick={handleClick}
           className={currentPage == number ? "active" : null}
-          style={{  borderColor:"grey",
-            color: "grey"}}
+          style={{ borderColor: "grey", color: "grey" }}
         >
           {number}
         </Button>
@@ -179,32 +176,26 @@ function Donation(props) {
   });
   const handleNextbtn = () => {
     setcurrentPage(currentPage + 1);
-
     if (currentPage + 1 > maxPageNumberLimit) {
       setmaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
       setminPageNumberLimit(minPageNumberLimit + pageNumberLimit);
     }
   };
-
   const handlePrevbtn = () => {
     setcurrentPage(currentPage - 1);
-
     if ((currentPage - 1) % pageNumberLimit == 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
       setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
   };
-
   let pageIncrementBtn = null;
   if (pages.length > maxPageNumberLimit) {
     pageIncrementBtn = <Button onClick={handleNextbtn}> &hellip; </Button>;
   }
-
   let pageDecrementBtn = null;
   if (minPageNumberLimit >= 1) {
     pageDecrementBtn = <Button onClick={handlePrevbtn}> &hellip; </Button>;
   }
-
   return (
     <div>
       <div className="theme-layout">
@@ -692,7 +683,6 @@ function Donation(props) {
         </div>
         {/* responsive header */}
         <div className="topbar transparent">
-  
           <div className="overlay" id="overlay">
             <nav className="overlay-menu">
               <ul className="offcanvas-menu">
@@ -951,7 +941,6 @@ function Donation(props) {
                         label="Search"
                         variant="standard"
                       />
-
                       <div className="purify">
                         <Link to="/donatecrud" title="true">
                           Donate
@@ -961,11 +950,11 @@ function Donation(props) {
                     {listdoantions.length > 0 ? (
                       <div className="display">
                         <Suspense fallback={<CircularProgress />}>
-                          <Tunisiamap name={listdoantionsbylocation}></Tunisiamap>
-                      
-                        </Suspense>  
-                      
-                        <div style={{height: '15%'}}>
+                          <Tunisiamap
+                            name={listdoantionsbylocation}
+                          ></Tunisiamap>
+                        </Suspense>
+                        <div style={{ height: "500px" }}>
                           {currentItems.map((donation) => {
                             return (
                               <DonationCard
@@ -976,7 +965,7 @@ function Donation(props) {
                           })}
                           <ul className="pageNumbers">
                             <Button
-                            className="btnn"
+                              className="btnn"
                               variant="outlined"
                               onClick={handlePrevbtn}
                               disabled={currentPage == pages[0] ? true : false}
@@ -986,7 +975,6 @@ function Donation(props) {
                             {pageDecrementBtn}
                             {renderPageNumbers}
                             {pageIncrementBtn}
-
                             <Button
                               className="btnn"
                               variant="outlined"
@@ -1000,160 +988,201 @@ function Donation(props) {
                               Next
                             </Button>
                           </ul>
-                          
                         </div>
-       
-                        <Card className="paddd" sx={{ minWidth: 180, height: 400 }}>
+                        <Card
+                          className="paddd"
+                          sx={{ minWidth: 180, height: 400 }}
+                        >
                           <div className="contents">
                             <VolunteerActivismIcon className="form1"></VolunteerActivismIcon>
-                            <div className="counter-container">  
+                            <div className="counter-container">
                               <span className="counter1">Total Donations</span>
                               <div
                                 className="counter"
                                 data-target={totaldoantions}
                               >
-                               {totaldoantions}
-                              items
+                                {totaldoantions}
+                                items
                               </div>
-    
                             </div>
                           </div>
-                          <img className="charity-image"src="images/charity.jpg"></img>
+                          <img
+                            className="charity-image"
+                            src="images/charity.jpg"
+                          ></img>
                         </Card>
-    
                       </div>
                     ) : state == false ? (
-                      <div> not found</div>
+                      <div className="display">
+                        <Suspense fallback={<CircularProgress />}>
+                          <Tunisiamap
+                            name={listdoantionsbylocation}
+                          ></Tunisiamap>
+                        </Suspense>
+                        <div style={{ height: "500px" }}>
+                          {" "}
+                          <div className="l-post">
+                            <div className="l-post-meta">
+                              {" "}
+                              <h4>Item not found</h4>
+                            </div>
+                          </div>
+                        </div>
+                        <Card
+                          className="paddd"
+                          sx={{ minWidth: 180, height: 400 }}
+                        >
+                          <div className="contents">
+                            <VolunteerActivismIcon className="form1"></VolunteerActivismIcon>
+                            <div className="counter-container">
+                              <span className="counter1">Total Donations</span>
+                              <div
+                                className="counter"
+                                data-target={totaldoantions}
+                              >
+                                {totaldoantions}
+                                items
+                              </div>
+                            </div>
+                          </div>
+                          <img
+                            className="charity-image"
+                            src="images/charity.jpg"
+                          ></img>
+                        </Card>
+                      </div>
                     ) : (
                       <div className="positionprogress">
                         <CircularProgress />
                       </div>
                     )}
-                     <div data-aos="fade-down-left">
-                    <Card >
-         
-      <CardContent >
-      <div className="display1">
-        <div>  
-          <div className="display1">
- <img className="im" src="images/gg.jpg"></img> 
-<img className="ono"src="images/newimg.png"></img>
-          </div>
-    <div className="ce ft">
-        <h1 className="co ml2">Time To Participate !</h1>
-        <h4 className="co ml1">Here is the most important compaigns to donate</h4></div>
-      </div>       
-   
-
-    <div className="st">
-    
-        <img className="pli"src="images/spec.jpg"></img>  
-         
-   </div>
-      </div>
-    
-      <Mapaffiche ></Mapaffiche>
-
-      </CardContent>
-      
-    </Card>
-    <br></br>
-    <section className="site-title">
-    <div className="site-background" data-aos="fade-up" data-aos-delay={100}>
-
-      <h1 style={{color:"white"}} >Plant a seed in someone’s garden 🌱</h1>
-      <button    onClick={async () => {
-           const { value: user } = await Swal.fire({
-            title: 'Input Your name',
-            input: 'text',
-            inputLabel: 'Your name',
-            inputPlaceholder: 'Enter your name',
-            inputValidator: (value) => {
-              if (!value) {
-                return 'You need to write name!'
-              }
-            }
-          })
-          console.log(user);
-           const { value: accept } = await Swal.fire({
-            title: 
-          "Terms and conditions",
-          html:
-    ' <h4> 1. Listen - Actively and Humbly </h4>'+ 
-    '<p> While others are speaking, be present and attentive. Avoid mentally imposing your own biases, thoughts, or opinions onto what someone else is sharing</p>'+
-    '<h4> 2. Share the air Be mindful of how much you and those around you are speaking</h4>'+
-    '<p> If you find yourself dominating the conversation, please step back; if you have not spoken much, feel encouraged to step up.</p> '+
-    '<h4>3. Be aware of privilege and power</h4>'+
-    ' <p>Think about how your identity and status affect how you speak and listen to others</p>',
-            input: 'checkbox',
-            inputValue: 1,
-            inputPlaceholder:
-              'I agree with the terms and conditions',
-            confirmButtonText:
-              'Continue <i class="fa fa-arrow-right"></i>',
-            inputValidator: (result) => {
-              return !result && 'You need to agree with T&C'
-            }
-          })
-          
-          if (accept) {  
-              
-               
-     await Swal.fire({
-      title: 'Are you invited?',
-      showDenyButton: true,
-  confirmButtonText: 'yes'
-     }).then(async (result) => {
-
-          if (result.isConfirmed) {
-            const { value: id } =  await Swal.fire({
-              input: 'text',
-              inputLabel: 'Enter your room Id',
-              inputValue: '',
-              confirmButtonText:'Join',
-              showCancelButton: true,
-              inputValidator: (value) => {
-                if (!value) {
-                  return 'You need to enter your romm Id!'
-                }
-              }
-            })
-
-              navigate(`/test/${id}`,{ state: {user,id}});
-          } 
-          else if (result.isDenied) {
-                  const id= uuid();
-             await Swal.fire({
-              input: 'text',
-              inputLabel: 'This is your room Id',
-              inputValue: id,
-              cancelButtonColor: '#d33',
-              showCancelButton: true,
-              confirmButtonText:
-              'Create',
-            }).then(async (result) => {
-              if(result.isConfirmed){
-                  navigate(`/test/${id}`,{ state: {user,id}});
-              }
-            })
-        
-        
-          }
-         
-         })
-          
-          }
-        
-         
-      
-          }} className="btn">Chat Room</button>
-    </div>
-  </section>
-                             </div>
-                             <br></br>
+                    <div data-aos="fade-down-left">
+                      <Card>
+                        <CardContent>
+                          <div className="display1">
+                            <div>
+                              <div className="display1">
+                                <img className="im" src="images/gg.jpg"></img>
+                                <img
+                                  className="ono"
+                                  src="images/newimg.png"
+                                ></img>
+                              </div>
+                              <div className="ce ft">
+                                <h1 className="co ml2">
+                                  Time To Participate !
+                                </h1>
+                                <h4 className="co ml1">
+                                  Here is the most important compaigns to donate
+                                </h4>
+                              </div>
+                            </div>
+                            <div className="st">
+                              <img className="pli" src="images/spec.jpg"></img>
+                            </div>
+                          </div>
+                          <div>
+                            <Mapaffiche></Mapaffiche>{" "}
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <br></br>
+                      <section className="site-title">
+                        <div
+                          className="site-background"
+                          data-aos="fade-up"
+                          data-aos-delay={100}
+                        >
+                          <h1 style={{ color: "white" }}>
+                            Plant a seed in someone’s garden
+                          </h1>
+                          <button
+                            onClick={async () => {
+                              const { value: user } = await Swal.fire({
+                                title: "Input Your name",
+                                input: "text",
+                                inputLabel: "Your name",
+                                inputPlaceholder: "Enter your name",
+                                inputValidator: (value) => {
+                                  if (!value) {
+                                    return "You need to write name!";
+                                  }
+                                },
+                              });
+                              const { value: accept } = await Swal.fire({
+                                title: "Terms and conditions",
+                                html:
+                                  " <h4> 1. Listen - Actively and Humbly </h4>" +
+                                  "<p> While others are speaking, be present and attentive. Avoid mentally imposing your own biases, thoughts, or opinions onto what someone else is sharing</p>" +
+                                  "<h4> 2. Share the air Be mindful of how much you and those around you are speaking</h4>" +
+                                  "<p> If you find yourself dominating the conversation, please step back; if you have not spoken much, feel encouraged to step up.</p> " +
+                                  "<h4>3. Be aware of privilege and power</h4>" +
+                                  " <p>Think about how your identity and status affect how you speak and listen to others</p>",
+                                input: "checkbox",
+                                inputValue: 1,
+                                inputPlaceholder:
+                                  "I agree with the terms and conditions",
+                                confirmButtonText:
+                                  'Continue <i class="fa fa-arrow-right"></i>',
+                                inputValidator: (result) => {
+                                  return (
+                                    !result && "You need to agree with T&C"
+                                  );
+                                },
+                              });
+                              if (accept) {
+                                await Swal.fire({
+                                  title: "Are you invited?",
+                                  showDenyButton: true,
+                                  confirmButtonText: "yes",
+                                }).then(async (result) => {
+                                  if (result.isConfirmed) {
+                                    const { value: id } = await Swal.fire({
+                                      input: "text",
+                                      inputLabel: "Enter your room Id",
+                                      inputValue: "",
+                                      confirmButtonText: "Join",
+                                      showCancelButton: true,
+                                      inputValidator: (value) => {
+                                        if (!value) {
+                                          return "You need to enter your romm Id!";
+                                        }
+                                      },
+                                    });
+                                    navigate(`/test/${id}`, {
+                                      state: { user, id },
+                                    });
+                                  } else if (result.isDenied) {
+                                    const id = uuid();
+                                    await Swal.fire({
+                                      input: "text",
+                                      inputLabel: "This is your room Id",
+                                      inputValue: id,
+                                      cancelButtonColor: "#d33",
+                                      showCancelButton: true,
+                                      confirmButtonText: "Create",
+                                    }).then(async (result) => {
+                                      if (result.isConfirmed) {
+                                        navigate(`/test/${id}`, {
+                                          state: { user, id },
+                                        });
+                                      }
+                                    });
+                                  }
+                                });
+                              }
+                            }}
+                            className="btn"
+                          >
+                            Chat Room
+                          </button>
+                        </div>
+                      </section>
+                    </div>
+                    <br></br>
                     <div>
-                      <h2 className="pos">List of Categories </h2>
                       <section>
+                        <h2 className="positt">List of Categories </h2>
                         <div className="gap">
                           <div className="container">
                             <div className="row" id="page-contents">
@@ -1168,29 +1197,23 @@ function Donation(props) {
                                       <div className="overlinks">
                                         <h4>
                                           <a
-                                            href="portfolio-detail.html"
                                             title="true"
+                                            onClick={async () => {
+                                              await axios
+                                                .get(
+                                                  "http://localhost:2600/donation/listdonationsbycategorie/Shoes"
+                                                )
+                                                .then((response) => {
+                                                  navigate(
+                                                    "/donationbycategorie",
+                                                    { state: response.data }
+                                                  );
+                                                });
+                                            }}
                                           >
-                                            Gents Shoes
+                                            Shoes
                                           </a>
                                         </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              Shoes
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
                                       </div>
                                     </div>
                                   </div>
@@ -1203,64 +1226,53 @@ function Donation(props) {
                                       <div className="overlinks">
                                         <h4>
                                           <a
-                                            href="portfolio-detail.html"
+                                            onClick={async () => {
+                                              await axios
+                                                .get(
+                                                  "http://localhost:2600/donation/listdonationsbycategorie/Furniture"
+                                                )
+                                                .then((response) => {
+                                                  navigate(
+                                                    "/donationbycategorie",
+                                                    { state: response.data }
+                                                  );
+                                                });
+                                            }}
                                             title="true"
                                           >
-                                            Travel Mini Bag
+                                            Furniture
                                           </a>
                                         </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              Shoes
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
                                       </div>
                                     </div>
                                   </div>
                                   <div className="accessory col-lg-3 col-sm-6">
                                     <div className="portfolio-box">
                                       <img
-                                        src="images/resources/folio-detail3.jpg"
+                                        style={{ height: "292px" }}
+                                        src="images/book.jpeg"
                                         alt="true"
                                       />
                                       <div className="overlinks">
                                         <h4>
                                           <a
-                                            href="portfolio-detail.html"
+                                            onClick={async () => {
+                                              await axios
+                                                .get(
+                                                  "http://localhost:2600/donation/listdonationsbycategorie/Books"
+                                                )
+                                                .then((response) => {
+                                                  navigate(
+                                                    "/donationbycategorie",
+                                                    { state: response.data }
+                                                  );
+                                                });
+                                            }}
                                             title="true"
                                           >
-                                            Head Phone Gsound
+                                            Books
                                           </a>
                                         </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              accessoires
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
                                       </div>
                                     </div>
                                   </div>
@@ -1273,138 +1285,57 @@ function Donation(props) {
                                       <div className="overlinks">
                                         <h4>
                                           <a
-                                            href="portfolio-detail.html"
+                                            onClick={async () => {
+                                              await axios
+                                                .get(
+                                                  "http://localhost:2600/donation/listdonationsbycategorie/Clothes"
+                                                )
+                                                .then((response) => {
+                                                  navigate(
+                                                    "/donationbycategorie",
+                                                    { state: response.data }
+                                                  );
+                                                });
+                                            }}
                                             title="true"
                                           >
-                                            Men's Cap
+                                            Clothes
                                           </a>
                                         </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              Shoes
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
                                       </div>
                                     </div>
                                   </div>
                                   <div className="cloth col-lg-3 col-sm-6">
                                     <div className="portfolio-box">
                                       <img
-                                        src="images/resources/folio-detail5.jpg"
+                                        style={{ height: "292px" }}
+                                        src="images/phone1.jpg"
                                         alt="true"
                                       />
                                       <div className="overlinks">
                                         <h4>
                                           <a
-                                            href="portfolio-detail.html"
+                                            onClick={async () => {
+                                              await axios
+                                                .get(
+                                                  "http://localhost:2600/donation/listdonationsbycategorie/Phones"
+                                                )
+                                                .then((response) => {
+                                                  navigate(
+                                                    "/donationbycategorie",
+                                                    { state: response.data }
+                                                  );
+                                                });
+                                            }}
                                             title="true"
                                           >
-                                            Travel Bags
+                                            Phones
                                           </a>
                                         </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              accessoires
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="hand col-lg-3 col-sm-6">
-                                    <div className="portfolio-box">
-                                      <img
-                                        src="images/resources/folio-detail6.jpg"
-                                        alt="true"
-                                      />
-                                      <div className="overlinks">
-                                        <h4>
-                                          <a
-                                            href="portfolio-detail.html"
-                                            title="true"
-                                          >
-                                            Winter Cap
-                                          </a>
-                                        </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              Shoes
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="accessory col-lg-3 col-sm-6">
-                                    <div className="portfolio-box">
-                                      <img
-                                        src="images/resources/folio-detail7.jpg"
-                                        alt="true"
-                                      />
-                                      <div className="overlinks">
-                                        <h4>
-                                          <a
-                                            href="portfolio-detail.html"
-                                            title="true"
-                                          >
-                                            Stylo Shoes
-                                          </a>
-                                        </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              Pents
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="jewl col-lg-3 col-sm-6">
+                                  <div className="jewl col-lg-3 col-sm-7">
                                     <div className="portfolio-box">
                                       <img
                                         src="images/resources/folio-detail8.jpg"
@@ -1413,29 +1344,23 @@ function Donation(props) {
                                       <div className="overlinks">
                                         <h4>
                                           <a
-                                            href="portfolio-detail.html"
+                                            onClick={async () => {
+                                              await axios
+                                                .get(
+                                                  "http://localhost:2600/donation/listdonationsbycategorie/Appliances"
+                                                )
+                                                .then((response) => {
+                                                  navigate(
+                                                    "/donationbycategorie",
+                                                    { state: response.data }
+                                                  );
+                                                });
+                                            }}
                                             title="true"
                                           >
-                                            JBL Headphone
+                                            Appliances
                                           </a>
                                         </h4>
-                                        <ul className="cate">
-                                          <li>
-                                            <a href="#" title="true">
-                                              Shoes
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              home made
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <a href="#" title="true">
-                                              clothes
-                                            </a>
-                                          </li>
-                                        </ul>
                                       </div>
                                     </div>
                                   </div>
@@ -1446,14 +1371,12 @@ function Donation(props) {
                         </div>
                       </section>
                     </div>
-          
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-
         <footer>
           <div className="container">
             <div className="row">
@@ -1730,5 +1653,4 @@ function Donation(props) {
     </div>
   );
 }
-
 export default Donation;

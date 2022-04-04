@@ -1,77 +1,69 @@
-import React, { useState, useEffect } from "react";
-import {useForm,useFormState} from "react-hook-form";
+import React, { useState } from "react";
+import { useForm, useFormState } from "react-hook-form";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 import axios from "axios";
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
-import Button from '@mui/material/Button';
-import CloseIcon from '@mui/icons-material/Close';
+import Alert from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
+import CloseIcon from "@mui/icons-material/Close";
 function Donatecrud(props) {
   const [imgFile, imgFileSet] = useState([]);
-  const {register,handleSubmit,reset,formState: { errors },control }=useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    control,
+  } = useForm();
   const { isValid } = useFormState({
-    control
+    control,
   });
   const [open, setOpen] = React.useState(true);
-  const [age, setAge] = React.useState('');
-const[istrue,setistrue]=useState(true)
-const[isupload,setisupload]=useState(true)
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-   const onSubmit =  (e) => {
-     console.log(imgFile);
-     if(imgFile.length==0){
+  const [age, setAge] = React.useState("");
+  const [istrue, setistrue] = useState(true);
+  const [isupload, setisupload] = useState(true);
+  const onSubmit = async (e) => {
+    if (imgFile.length == 0) {
       setisupload(false);
-     }
-     else{
-         var result = [];
-    result.push(e);
-    result.push({"image":imgFile});
-    console.log(result);
-    axios.post("http://localhost:2600/donation/adddonation",result).catch((err) => {console.log(err);});
-   setistrue(false);
-   reset();
-   imgFileSet([]);
-     }
-  
+    } else {
+      var result = [];
+      result.push(e);
+      result.push({ image: imgFile });
+      await axios
+        .post("http://localhost:2600/donation/adddonation", result)
+        .catch((err) => {});
+      setistrue(false);
+      reset();
+      imgFileSet([]);
+    }
   };
-  
-  const onImageChange=(i) =>{
-
+  const onImageChange = (i) => {
     const reader = new FileReader();
-
     if (i.target.files && i.target.files.length) {
       const [file] = i.target.files;
       reader.readAsDataURL(file);
-
       reader.onload = () => {
         imgFileSet(reader.result);
-    
-      }; 
-      ////////  console.log(imgFile);
-      setisupload(true)
-     
+      };
+      setisupload(true);
     }
-  }
+  };
   return (
     <div className="theme-layout">
       <div className="responsive-header">
         <div className="mh-head first Sticky">
           <span className="mh-btns-left">
-            <a className="true"href="#menu">
+            <a className="true" href="#menu">
               <i className="fa fa-align-justify" />
             </a>
           </span>
           <span className="mh-text">
             <a href="newsfeed.html" title="true">
-              <img src="images/logo2.png" alt="true"/>
+              <img src="images/logo2.png" alt="true" />
             </a>
           </span>
           <span className="mh-btns-right">
@@ -548,7 +540,7 @@ const[isupload,setisupload]=useState(true)
       <div className="topbar transparent">
         <div className="logo">
           <a title="true" href="newsfeed.html">
-            <img src="images/logo2.png" alt="true"/>
+            <img src="images/logo2.png" alt="true" />
           </a>
         </div>
         <div className="overlay" id="overlay">
@@ -804,102 +796,158 @@ const[isupload,setisupload]=useState(true)
                   </h5>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
-                      <input type="text" name="title" id="input" {...register('title',{required:{value:true,message:"Title is required"}})}  />
+                      <input
+                        type="text"
+                        name="title"
+                        id="input"
+                        {...register("title", {
+                          required: {
+                            value: true,
+                            message: "Title is required",
+                          },
+                        })}
+                      />
                       <label className="control-label" htmlFor="input">
                         Title
                       </label>
-                      <i className="mtrl-select" />   
-                       <i className="colorred">{errors?.title && errors.title.message }</i>
-                       {console.log(errors)}
+                      <i className="mtrl-select" />
+                      <i className="colorred">
+                        {errors?.title && errors.title.message}
+                      </i>
                     </div>
-          
+
                     <div className="form-group">
                       <textarea
                         rows={4}
                         id="textarea"
                         defaultValue={""}
                         name="description"
-                        {...register('description',{required:{value:true,message:"Description is required"}})}
+                        {...register("description", {
+                          required: {
+                            value: true,
+                            message: "Description is required",
+                          },
+                        })}
                       />
                       <label className="control-label" htmlFor="textarea">
                         description
                       </label>
-                      <i className="colorred">{errors?.description && errors.description.message }</i>
+                      <i className="colorred">
+                        {errors?.description && errors.description.message}
+                      </i>
                       <i className="mtrl-select" />
                     </div>
                     <div>
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-standard-label">Categorie</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          name="category"
-          id="demo-simple-select-standard"
-          defaultValue=""
-          {...register('categeory',{required:{value:true,message:"Category is required"}})}
-          label="Categorie"
-        >
-          <MenuItem value={"Shoes"}>Shoes</MenuItem>
-          <MenuItem value={"Products"}>Products</MenuItem>
-          <MenuItem value={"Electromenager"}>Electromenager</MenuItem>
-        </Select>
-        <i className="colorred">{errors?.categeory && errors.categeory.message }</i>
-      </FormControl>
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-standard-label">State</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          name="state"
-          defaultValue=""
-          {...register('state',{required:{value:true,message:"State is required"}})}
-          label="State"
-        >
-          
-       <MenuItem  value={"Good"}>good</MenuItem >
-       <MenuItem  value={"Need restoration"}>Need restoration</MenuItem >
-        </Select>
-        <i className="colorred">{errors?.state && errors.state.message }</i>
-      </FormControl>
-
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-standard-label">Location</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          name="location"
-          {...register('location',{required:{value:true,message:"Location is required"}})}
-         defaultValue=""
-          label="location"
-        >
-       <MenuItem  value={"Gafsa"}>Gafsa</MenuItem >
-       <MenuItem  value={"Nabeul"}>Nabeul</MenuItem >
-       <MenuItem  value={"Sfax"}>Sfax</MenuItem >
-       <MenuItem  value={"Mednine"}>Mednine</MenuItem >
-       <MenuItem  value={"Tunis"}>Tunis</MenuItem >
-       <MenuItem  value={"Ariana"}>Ariana</MenuItem >
-       <MenuItem  value={"Mahdia"}>Mahdia</MenuItem >
-       <MenuItem  value={"Sousse"}>Sousse</MenuItem >
-       <MenuItem  value={"Kasserine"}>Kasserine</MenuItem >
-       <MenuItem  value={"Tozeur"}>Tozeur</MenuItem >
-       <MenuItem  value={"Kairawen"}>Kairawen</MenuItem >
-       <MenuItem  value={"Zaghwen"}>Zaghwen</MenuItem >
-       <MenuItem  value={"SidiBouzid"}>SidiBouzid</MenuItem >
-       <MenuItem  value={"Gendouba"}>Gendouba</MenuItem >
-       <MenuItem  value={"Monastir"}>Monastir</MenuItem >
-       <MenuItem  value={"Gabes"}>Gabes</MenuItem >
-       <MenuItem  value={"Siliana"}>Siliana</MenuItem >
-       <MenuItem  value={"Kef"}>Kef</MenuItem >
-       <MenuItem  value={"Manouba"}>Manouba</MenuItem >
-       <MenuItem  value={"BenArous"}>BenArous</MenuItem >
-       <MenuItem  value={"Beja"}>Beja</MenuItem >
-       <MenuItem  value={"Bizerte"}>Bizerte</MenuItem >
-       <MenuItem  value={"Kbeli"}>Kbeli</MenuItem >
-       <MenuItem  value={"Tatouin"}>Tatouin</MenuItem >
-        </Select>
-        <i className="colorred">{errors?.location && errors.location.message }</i>
-      </FormControl>
-    
-    </div>
+                      <FormControl
+                        variant="standard"
+                        sx={{ m: 1, minWidth: 120 }}
+                      >
+                        <InputLabel id="demo-simple-select-standard-label">
+                          Categorie
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          name="category"
+                          id="demo-simple-select-standard"
+                          defaultValue=""
+                          {...register("category", {
+                            required: {
+                              value: true,
+                              message: "Category is required",
+                            },
+                          })}
+                          label="Categorie"
+                        >
+                          <MenuItem value={"Books"}>Books</MenuItem>
+                          <MenuItem value={"Shoes"}>Shoes</MenuItem>
+                          <MenuItem value={"Clothes"}>Clothes</MenuItem>
+                          <MenuItem value={"Appliances"}>Appliances</MenuItem>
+                          <MenuItem value={"Phones"}>Phones</MenuItem>
+                          <MenuItem value={"Furniture "}>Furniture</MenuItem>
+                        </Select>
+                        <i className="colorred">
+                          {errors?.categeory && errors.categeory.message}
+                        </i>
+                      </FormControl>
+                      <FormControl
+                        variant="standard"
+                        sx={{ m: 1, minWidth: 120 }}
+                      >
+                        <InputLabel id="demo-simple-select-standard-label">
+                          State
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          name="state"
+                          defaultValue=""
+                          {...register("state", {
+                            required: {
+                              value: true,
+                              message: "State is required",
+                            },
+                          })}
+                          label="State"
+                        >
+                          <MenuItem value={"Good"}>good</MenuItem>
+                          <MenuItem value={"Need restoration"}>
+                            Need restoration
+                          </MenuItem>
+                        </Select>
+                        <i className="colorred">
+                          {errors?.state && errors.state.message}
+                        </i>
+                      </FormControl>
+                      <FormControl
+                        variant="standard"
+                        sx={{ m: 1, minWidth: 120 }}
+                      >
+                        <InputLabel id="demo-simple-select-standard-label">
+                          Location
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-standard-label"
+                          id="demo-simple-select-standard"
+                          name="location"
+                          {...register("location", {
+                            required: {
+                              value: true,
+                              message: "Location is required",
+                            },
+                          })}
+                          defaultValue=""
+                          label="location"
+                        >
+                          <MenuItem value={"Gafsa"}>Gafsa</MenuItem>
+                          <MenuItem value={"Nabeul"}>Nabeul</MenuItem>
+                          <MenuItem value={"Sfax"}>Sfax</MenuItem>
+                          <MenuItem value={"Mednine"}>Mednine</MenuItem>
+                          <MenuItem value={"Tunis"}>Tunis</MenuItem>
+                          <MenuItem value={"Ariana"}>Ariana</MenuItem>
+                          <MenuItem value={"Mahdia"}>Mahdia</MenuItem>
+                          <MenuItem value={"Sousse"}>Sousse</MenuItem>
+                          <MenuItem value={"Kasserine"}>Kasserine</MenuItem>
+                          <MenuItem value={"Tozeur"}>Tozeur</MenuItem>
+                          <MenuItem value={"Kairawen"}>Kairawen</MenuItem>
+                          <MenuItem value={"Zaghwen"}>Zaghwen</MenuItem>
+                          <MenuItem value={"SidiBouzid"}>SidiBouzid</MenuItem>
+                          <MenuItem value={"Gendouba"}>Gendouba</MenuItem>
+                          <MenuItem value={"Monastir"}>Monastir</MenuItem>
+                          <MenuItem value={"Gabes"}>Gabes</MenuItem>
+                          <MenuItem value={"Siliana"}>Siliana</MenuItem>
+                          <MenuItem value={"Kef"}>Kef</MenuItem>
+                          <MenuItem value={"Manouba"}>Manouba</MenuItem>
+                          <MenuItem value={"BenArous"}>BenArous</MenuItem>
+                          <MenuItem value={"Beja"}>Beja</MenuItem>
+                          <MenuItem value={"Bizerte"}>Bizerte</MenuItem>
+                          <MenuItem value={"Kbeli"}>Kbeli</MenuItem>
+                          <MenuItem value={"Tatouin"}>Tatouin</MenuItem>
+                        </Select>
+                        <i className="colorred">
+                          {errors?.location && errors.location.message}
+                        </i>
+                      </FormControl>
+                    </div>
                     <div>
                       <div className="mb-3">
                         <div>
@@ -918,11 +966,9 @@ const[isupload,setisupload]=useState(true)
                             type="file"
                             name="file"
                           />
-                          {isupload==false &&(
-                             <i className="colorred">image is not uploaded</i>
-                          )
-                          }
-                          
+                          {isupload == false && (
+                            <i className="colorred">image is not uploaded</i>
+                          )}
                           <div className="col-md-4"></div>
                         </div>
                       </div>
@@ -943,40 +989,36 @@ const[isupload,setisupload]=useState(true)
                         </div>
                       )}
                     </div>
-
                     <div className="submit-btns">
                       <button type="reset" className="mtr-btn">
                         <span>Cancel</span>
                       </button>
-                      <button  type="submit" className="mtr-btn">
+                      <button type="submit" className="mtr-btn">
                         <span>Post Donation</span>
-                </button>
+                      </button>
                     </div>
-                    {  istrue==false &&(
-    <Collapse in={open}>
-    <Alert
-      action={
-        <IconButton
-          aria-label="close"
-          color="inherit"
-          size="small"
-          onClick={() => {
-            setOpen(false);
-          }}
-        >
-          <CloseIcon fontSize="inherit" />
-        </IconButton>
-      }
-      sx={{ mb: 2 }}
-    >
-      Close me!
-    </Alert>
-    </Collapse>
-    )
-  }
-
-                  </form>  
-                 
+                    {istrue == false && (
+                      <Collapse in={open}>
+                        <Alert
+                          action={
+                            <IconButton
+                              aria-label="close"
+                              color="inherit"
+                              size="small"
+                              onClick={() => {
+                                setOpen(false);
+                              }}
+                            >
+                              <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                          }
+                          sx={{ mb: 2 }}
+                        >
+                          Close me!
+                        </Alert>
+                      </Collapse>
+                    )}
+                  </form>
                 </div>
               </div>
               <div className="col-lg-3">
@@ -1066,7 +1108,7 @@ const[isupload,setisupload]=useState(true)
                 <div className="foot-logo">
                   <div className="logo">
                     <a href="index-2.html" title="true">
-                      <img src="images/logo.png" alt="true"/>
+                      <img src="images/logo.png" alt="true" />
                     </a>
                   </div>
                   <p>
@@ -1206,7 +1248,10 @@ const[isupload,setisupload]=useState(true)
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.apple.com/lae/ios/app-store/" title="true">
+                    <a
+                      href="https://www.apple.com/lae/ios/app-store/"
+                      title="true"
+                    >
                       <i className="ti-apple" />
                       iPhone
                     </a>
@@ -1234,7 +1279,7 @@ const[isupload,setisupload]=useState(true)
                 </a>
               </span>
               <i>
-                <img src="images/credit-cards.png" alt="true"/>
+                <img src="images/credit-cards.png" alt="true" />
               </i>
             </div>
           </div>
@@ -1243,5 +1288,4 @@ const[isupload,setisupload]=useState(true)
     </div>
   );
 }
-
 export default Donatecrud;

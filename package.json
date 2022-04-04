@@ -10,9 +10,7 @@
     "@mui/icons-material": "^5.5.1",
     "@mui/lab": "^5.0.0-alpha.75",
     "@mui/material": "^5.5.3",
-    "@syncfusion/ej2-base": "^19.4.52",
-    "@syncfusion/ej2-data": "^19.4.54",
-    "@syncfusion/ej2-react-schedule": "^19.4.55",
+    "@syncfusion/ej2-react-schedule": "^18.1.46",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -38,6 +36,7 @@
     "react-uuid": "^1.0.2",
     "socket.io-client": "^4.4.1",
     "sweetalert2": "^11.4.8",
+    "timeago.js": "^4.0.2",
     "web-vitals": "^2.1.4",
     "words-to-numbers": "^1.5.1"
   },
@@ -64,5 +63,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

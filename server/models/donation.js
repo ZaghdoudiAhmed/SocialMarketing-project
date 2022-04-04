@@ -7,6 +7,6 @@ const donation = mongoose.Schema({
   state: String,
   image: String,
   category: String,
-  date :Date,
+  datecre :Date,
 });
 module.exports = mongoose.model("donations", donation);

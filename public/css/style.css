@@ -6352,14 +6352,19 @@ form.filter-form input {
 /*--- blog kitkat style ---*/
 .pos{
     text-align:center;
+
+}
+.positt{
+    text-align:center;
+    margin-top:15px;
 }
 .pageNumbers {
     list-style: none;
     display: flex;
     margin-top: 10px;
     height: 40px;
-  }
-  
+    margin-left: 10px;
+}
   .pageNumbers li {
     padding: 10px;
     border: 1px solid white;

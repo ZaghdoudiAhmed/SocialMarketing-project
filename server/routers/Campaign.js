@@ -18,7 +18,8 @@ router.post('/compaign/add',async (req, res) =>
      date_fin :data[3].time[1],
     }
 );  
-   await compaign1.save(); 
+
+  await compaign1.save(); 
  }
 );
 router.get('/compaign/getcompaign',async (req, res) => {
@@ -35,7 +36,7 @@ router.post('/compaign/GetData', async (req, res) =>{
           compaign1[i].date_debut = (new Date(+sdate - (sdate.getTimezoneOffset() * 60000)));
           compaign1[i].date_fin = (new Date(+edate - (edate.getTimezoneOffset() * 60000)));
        var o ={
-         "Id":compaign1[i].Id,
+         "Id":compaign1[i]._id,
          "Subject":compaign1[i].title,
          "StartTime": compaign1[i].date_debut,
          "EndTime": compaign1[i].date_fin,
@@ -48,11 +49,10 @@ router.post('/compaign/GetData', async (req, res) =>{
 
 });
 router.post("/compaign/BatchData", async (req, res) =>{
-  console.log(req.body.added)
   var eventData = [];
   if (req.body.action === "insert" || (req.body.action === "batch" && req.body.added.length > 0)) {
       (req.body.action === "insert") ? eventData.push(req.body.value) : eventData = req.body.added;
-     /// console.log(eventData)
+     //// console.log(eventData)
       for (var a = 0; a < eventData.length; a++) {
           eventData[a].StartTime = new Date(eventData[a].StartTime);
           eventData[a].EndTime = new Date(eventData[a].EndTime);
@@ -71,20 +71,21 @@ router.post("/compaign/BatchData", async (req, res) =>{
             "date_debut" :eventData[b].startTime,
              "date_fin":eventData[b].EndTime,
           }
-       await compaign.updateOne({ "Id": eventData[b].Id }, { $set: data });
+       await compaign.updateOne({ "_id": eventData[b].Id }, { $set: data });
       }
   }
   if (req.body.action === "remove" || (req.body.action === "batch" && req.body.deleted.length > 0)) {
 
       (req.body.action === "remove") ? eventData.push({ Id: req.body.key }) : eventData = req.body.deleted;
-      ////console.log(eventData);
+      console.log(eventData);
       for (var c = 0; c < eventData.length; c++) {
         //// dbo.collection('ScheduleData').deleteOne({ "Id": eventData[c].Id });
-       //// console.log(eventData[c].Id)
-       await compaign.deleteOne({ Id: eventData[c].Id});
+       ///// delete eventData[b].Id
+        console.log(eventData[c].Id)
+       await compaign.deleteOne({ "_id": eventData[c].Id});
      
    } }
-   console.log(req.body);
+  /// console.log(req.body);
    res.send(req.body);
   });
 module.exports = router;

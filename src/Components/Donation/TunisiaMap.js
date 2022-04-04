@@ -4,27 +4,26 @@ import axios from "axios";
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { useNavigate } from "react-router-dom";
 import Calendar from "../Donation/Calendar";
 
 function TunisiaMap(props) {
 	const [bool,setbool]= useState('false');
-	const [open, setOpen] = useState(false);
 
-	  
+	let navigate = useNavigate();
 	const handleClickOpen = () => {
-		setOpen(true);
+	navigate('/calendar');
 	  };
-	
-	  const handleClose = () => {
-		setOpen(false);
-	  };
-  let navigate = useNavigate();
   let nbrGafsa=0;
   let nbrNabeul = 0;
   let nbrSfax = 0;
@@ -51,7 +50,6 @@ function TunisiaMap(props) {
   let nbrKbeli = 0;
   const charge =async ()=>{
 	var map = anychart.map();
-
 var dataSet = anychart.data.set([
 { id: "TN.4431", value: 0 },
 { id: "TN.TO", value: 1, donation: nbrTozeur },
@@ -78,7 +76,6 @@ var dataSet = anychart.data.set([
 { id: "TN.KB", value: 22, donation: nbrKbeli },
 { id: "TN.TA", value: 23, donation: nbrTatouin },
 ]);
-
 var series = map.choropleth(dataSet);
 // enable the tooltips and format them at once
 series.tooltip().format(function (e) {
@@ -99,85 +96,85 @@ let response;
 switch (pi) {
   case 1:
 	response = await axios.get(
-	  "http://localhost:2600/donation/0listdonationbylocation/Tozeur"
+	  "http://localhost:2600/donation/listdonationbylocation/Tozeur"
 	);
-	navigate("/home", { state: response.data });
+	navigate("/donationbystate", { state: response.data });
 	break;
   case 2:
-	console.log("Manouba");
+	///console.log("Manouba");
 	break;
   case 3:
-	console.log("Beja");
+	//console.log("Beja");
 	break;
   case 4:
-	console.log("BenArous");
+	///console.log("BenArous");
 	break;
   case 5:
-	console.log("Bizerte");
+	///console.log("Bizerte");
 	break;
   case 6:
-	console.log("Gendouba");
+	////console.log("Gendouba");
 	break;
   case 7:
 	response = await axios.get(
 	  "http://localhost:2600/donation/listdonationbylocation/Nabeul"
 	);
-	navigate("/home", { state: response.data });
+	navigate("/donationbystate", { state: response.data });
 	break;
   case 8:
-	console.log("Tunis");
+	///console.log("Tunis");
 	break;
   case 9:
-	console.log("Kef");
+///	console.log("Kef");
 	break;
   case 10:
-	console.log("Kasserine");
+	//console.log("Kasserine");
 	break;
   case 11:
-	console.log("Gabes");
+	///console.log("Gabes");
 	break;
   case 12:
 	response = await axios.get(
 	  "http://localhost:2600/donation/listdonationbylocation/Gafsa"
 	);
-	navigate("/home", { state: response.data });
+	navigate("/donationbystate", { state: response.data });
 	break;
   case 13:
-	console.log("SidiBouzid");
+	/////console.log("SidiBouzid");
 	break;
   case 14:
 	response = await axios.get(
 	  "http://localhost:2600/donation/listdonationbylocation/Sfax"
 	);
-	console.log(response.data);
-	navigate("/home", { state: response.data });
+	/////console.log(response.data);
+	navigate("/donationbystate", { state: response.data });
 	break;
   case 15:
-	console.log("Siliana");
+	///console.log("Siliana");
 	break;
   case 16:
-	console.log("Mahdia");
+	////console.log("Mahdia");
 	break;
   case 17:
-	console.log("Monastir");
+	///console.log("Monastir");
 	break;
   case 18:
-	console.log("Kairawen");
+////	console.log("Kairawen");
 	break;
   case 19:
-	console.log("Sousse");
+////	console.log("Sousse");
 	break;
   case 20:
-	console.log("Zaghwen");
+////	console.log("Zaghwen");
 	break;
   case 21:
-	console.log("Mednine");
+	////console.log("Mednine");
 	break;
   case 22:
-	console.log("Kbeli");
+	////console.log("Kbeli");
 	break;
   case 23:
-	console.log("Tatouin");
+	////console.log("Tatouin");
 	break;
 }
 };
@@ -187,22 +184,22 @@ const pi = e.pointIndex;
 let response;
 switch (pi) {
   case 1:
-	console.log("Tozeur");
+	////console.log("Tozeur");
 	break;
   case 2:
-	console.log("Manouba");
+	////console.log("Manouba");
 	break;
   case 3:
-	console.log("Beja");
+	////console.log("Beja");
 	break;
   case 4:
-	console.log("BenArous");
+	////console.log("BenArous");
 	break;
   case 5:
-	console.log("Bizerte");
+	////console.log("Bizerte");
 	break;
   case 6:
-	console.log("Gendouba");
+	////console.log("Gendouba");
 	break;
   case 7:
 	response = await axios.get(
@@ -210,16 +207,16 @@ switch (pi) {
 	);
 	break;
   case 8:
-	console.log("Tunis");
+	///console.log("Tunis");
 	break;
   case 9:
-	console.log("Kef");
+	////console.log("Kef");
 	break;
   case 10:
-	console.log("Kasserine");
+	////console.log("Kasserine");
 	break;
   case 11:
-	console.log("Gabes");
+	///console.log("Gabes");
 	break;
   case 12:
 	response = await axios.get(
@@ -227,37 +224,37 @@ switch (pi) {
 	);
 	break;
   case 13:
-	console.log("SidiBouzid");
+///	console.log("SidiBouzid");
 	break;
   case 14:
-	console.log("Sfax");
+////	console.log("Sfax");
 	break;
   case 15:
-	console.log("Siliana");
+///	console.log("Siliana");
 	break;
   case 16:
-	console.log("Mahdia");
+///	console.log("Mahdia");
 	break;
   case 17:
-	console.log("Monastir");
+	///console.log("Monastir");
 	break;
   case 18:
-	console.log("Kairawen");
+////	console.log("Kairawen");
 	break;
   case 19:
-	console.log("Sousse");
+	////console.log("Sousse");
 	break;
   case 20:
-	console.log("Zaghwen");
+	///console.log("Zaghwen");
 	break;
   case 21:
-	console.log("Mednine");
+	////console.log("Mednine");
 	break;
   case 22:
-	console.log("Kbeli");
+	////console.log("Kbeli");
 	break;
   case 23:
-	console.log("Tatouin");
+	/////console.log("Tatouin");
 	break;
 }
 };
@@ -268,7 +265,7 @@ map.listen("mouseOver", func_listen1);
   useEffect( () => {
    	anychart.onDocumentReady(function () {
 		props.name.map((region) => {
-		  console.log(region);
+		 //// console.log(region);
 		  switch (region._id) {
 			case "Gafsa":
 				nbrGafsa = region.nbr_donation;
@@ -359,23 +356,7 @@ map.listen("mouseOver", func_listen1);
 
 	  }
 	    <Card className="posu"> <img className="calendar"src="images/calendar2.png" onClick={handleClickOpen} ></img></Card>  
-		  <Dialog
-	  open={open}
-	  keepMounted
-	  onClose={handleClose}
-	  aria-describedby="alert-dialog-slide-description"
-	>
-	  <DialogTitle style={{color:"grey"}} >{"Here is your Calendar compaigns"}</DialogTitle>
-	  <DialogContent>
-		<DialogContentText id="alert-dialog-slide-description">
-		<Calendar></Calendar>
-		</DialogContentText>
-	  </DialogContent>
-	  <DialogActions>
-		<Button onClick={handleClose}>Ok</Button>
-	  </DialogActions>
-	</Dialog>
-
+	
   </div>
   );
 }
