@@ -1,5 +1,4 @@
 import { useState, React } from "react";
-import { MentionsInput, Mention } from "react-mentions";
 
 import axios from "axios";
 
@@ -27,9 +26,7 @@ function CommentForm({ post, handleComment, currentUser, friends }) {
             onChange={(e) => setBodyComment(e.target.value)}
             value={bodycomment}
             markup="@[__name__](___id__)"
-          >
-            <Mention trigger="@" data={friends} />
-          </textarea>
+          ></textarea>
           <button
             className="btn btn-outline-primary"
             type="button"

@@ -54,7 +54,6 @@ function Comment({ comment, replies, currentUser }) {
       )
       .then((res) => {
         setReplyBody("");
-        console.log(res.data);
         setReplies([...repliies, res.data]);
         Toast.fire({
           icon: "success",
@@ -143,6 +142,7 @@ function Comment({ comment, replies, currentUser }) {
                   reply
                 </button>
               </div>
+              <i className="del fa fa-close" />
             </div>
           </li>
         )}

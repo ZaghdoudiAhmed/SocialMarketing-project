@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Shortcuts from "./shortcuts";
 import Timelineinfo from "./timeline-info";
 
+import Loading from "../loading";
 import Header from "../header";
 import axios from "axios";
 
@@ -42,10 +43,37 @@ function Usertimeline(props) {
   };
 
   useEffect(() => {
-    getPosts();
-    getFriends();
     axios.get(`http://localhost:3000/api/users/${userid}`).then((res) => {
       setProfile(res.data);
+      try {
+        axios.get(url + "/all/" + res.data._id).then((res) => {
+          setPostData(res.data);
+        });
+
+        axios
+          .get("http://localhost:3000/api/users/friends/" + res.data._id)
+          .then((res) => {
+            setFriends(res.data);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    //  console.log(yourFriend);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        currentUserId,
+      }),
+    }).then(async (res) => {
+      const data = await res.json();
+      setCurrentUser(data.user);
     });
   }, []);
 
@@ -54,13 +82,13 @@ function Usertimeline(props) {
       {userProfile ? (
         <div>
           <div className="theme-layout">
-            <Header currentUser={currentUser} />
+            <Header currentUserId={currentUserId} />
             {/* topbar */}
             <section>
               {/* <Timelineinfo friends={friends} setFriends={setFriends} /> */}
               <div className="feature-photo">
                 <figure>
-                  <img src="images/resources/timeline-1.jpg" alt />
+                  <img src="/images/resources/timeline-1.jpg" alt />
                 </figure>
                 <div className="add-btn">
                   <span>{friends.length} followers</span>
@@ -80,7 +108,7 @@ function Usertimeline(props) {
                     <div className="col-lg-2 col-sm-3">
                       <div className="user-avatar">
                         <figure>
-                          <img src="images/resources/user-avatar.jpg" alt />
+                          <img src="/images/resources/user-avatar.jpg" alt />
                           <form className="edit-phto">
                             <i className="fa fa-camera-retro" />
                             <label className="fileContainer">
@@ -245,7 +273,7 @@ function Usertimeline(props) {
                                 <li>
                                   <figure>
                                     <img
-                                      src="images/resources/friend-avatar2.jpg"
+                                      src="/images/resources/friend-avatar2.jpg"
                                       alt
                                     />
                                   </figure>
@@ -263,7 +291,7 @@ function Usertimeline(props) {
                                 <li>
                                   <figure>
                                     <img
-                                      src="images/resources/friend-avatar4.jpg"
+                                      src="/images/resources/friend-avatar4.jpg"
                                       alt
                                     />
                                   </figure>
@@ -281,7 +309,7 @@ function Usertimeline(props) {
                                 <li>
                                   <figure>
                                     <img
-                                      src="images/resources/friend-avatar6.jpg"
+                                      src="/images/resources/friend-avatar6.jpg"
                                       alt
                                     />
                                   </figure>
@@ -299,7 +327,7 @@ function Usertimeline(props) {
                                 <li>
                                   <figure>
                                     <img
-                                      src="images/resources/friend-avatar8.jpg"
+                                      src="/images/resources/friend-avatar8.jpg"
                                       alt
                                     />
                                   </figure>
@@ -317,7 +345,7 @@ function Usertimeline(props) {
                                 <li>
                                   <figure>
                                     <img
-                                      src="images/resources/friend-avatar3.jpg"
+                                      src="/images/resources/friend-avatar3.jpg"
                                       alt
                                     />
                                   </figure>
@@ -343,7 +371,7 @@ function Usertimeline(props) {
                             <div className="central-meta item">
                               <div className="new-postbox">
                                 <figure>
-                                  <img src="images/resources/admin2.jpg" alt />
+                                  <img src="/images/resources/admin2.jpg" alt />
                                 </figure>
                                 <div className="newpst-input">
                                   {/* <form method="post">
@@ -414,13 +442,13 @@ function Usertimeline(props) {
                                 <div
                                   style={{
                                     backgroundImage:
-                                      "url(images/resources/baner-widgetbg.jpg)",
+                                      "url(/images/resources/baner-widgetbg.jpg)",
                                   }}
                                   className="bg-image"
                                 />
                                 <div className="baner-top">
                                   <span>
-                                    <img src="images/book-icon.png" alt />
+                                    <img src="/images/book-icon.png" alt />
                                   </span>
                                   <i className="fa fa-ellipsis-h" />
                                 </div>
@@ -441,7 +469,7 @@ function Usertimeline(props) {
                                   <li>
                                     <figure>
                                       <img
-                                        src="images/resources/friend-avatar.jpg"
+                                        src="/images/resources/friend-avatar.jpg"
                                         alt
                                       />
                                       <span className="status f-online" />
@@ -453,9 +481,7 @@ function Usertimeline(props) {
                                           href="https://wpkixx.com/cdn-cgi/l/email-protection"
                                           className="__cf_email__"
                                           data-cfemail="4136282f352433322e2d25243301262c20282d6f222e2c"
-                                        >
-                                          [email&nbsp;protected]
-                                        </a>
+                                        ></a>
                                       </i>
                                     </div>
                                   </li>
@@ -479,7 +505,7 @@ function Usertimeline(props) {
                                     <li className="me">
                                       <div className="chat-thumb">
                                         <img
-                                          src="images/resources/chatlist1.jpg"
+                                          src="/images/resources/chatlist1.jpg"
                                           alt
                                         />
                                       </div>
@@ -887,7 +913,7 @@ function Usertimeline(props) {
           </div>
         </div>
       ) : (
-        <h2>Loading ....</h2>
+        <Loading />
       )}
     </>
   );

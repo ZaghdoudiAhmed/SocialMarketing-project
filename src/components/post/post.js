@@ -58,15 +58,15 @@ function Post({ post, socket, currentUser, friends }) {
             receiver: post.Creator._id,
           };
 
-          if (notification.sender !== notification.receiver) {
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== post.Creator._id
+          ) {
             const notif = axios.post(
               "http://localhost:3000/notifications",
               notification
             );
-          }
-
-          if (currentUser._id !== post.Creator._id) {
-            socket.emit("sendNotification", {
+            socket?.emit("sendNotification", {
               senderId: currentUser._id,
               receiverId: post.Creator._id,
               text: text,
@@ -85,15 +85,15 @@ function Post({ post, socket, currentUser, friends }) {
             receiver: post.Creator._id,
           };
 
-          if (notification.sender !== notification.receiver) {
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== post.Creator._id
+          ) {
             const notif = axios.post(
               "http://localhost:3000/notifications",
               notification
             );
-          }
-
-          if (currentUser._id !== post.Creator._id) {
-            socket.emit("sendNotification", {
+            socket?.emit("sendNotification", {
               senderId: currentUser._id,
               receiverId: post.Creator._id,
               text: text,
@@ -141,14 +141,14 @@ function Post({ post, socket, currentUser, friends }) {
             receiver: post.Creator._id,
           };
 
-          if (notification.sender !== notification.receiver) {
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== post.Creator._id
+          ) {
             const notif = axios.post(
               "http://localhost:3000/notifications",
               notification
             );
-          }
-
-          if (currentUser._id !== post.Creator._id) {
             socket.emit("sendNotification", {
               senderId: currentUser._id,
               receiverId: post.Creator._id,
@@ -167,14 +167,14 @@ function Post({ post, socket, currentUser, friends }) {
             receiver: post.Creator._id,
           };
 
-          if (notification.sender !== notification.receiver) {
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== post.Creator._id
+          ) {
             const notif = axios.post(
               "http://localhost:3000/notifications",
               notification
             );
-          }
-
-          if (currentUser._id !== post.Creator._id) {
             socket.emit("sendNotification", {
               senderId: currentUser._id,
               receiverId: post.Creator._id,
@@ -215,20 +215,22 @@ function Post({ post, socket, currentUser, friends }) {
           sender: currentUser._id,
           receiver: post.Creator._id,
         };
-        if (notification.sender !== notification.receiver) {
+
+        if (
+          notification.sender !== notification.receiver &&
+          currentUser._id !== post.Creator._id
+        ) {
           const notif = axios.post(
             "http://localhost:3000/notifications",
             notification
           );
-        }
-
-        if (currentUser._id !== post.Creator._id) {
           socket.emit("sendNotification", {
             senderId: currentUser._id,
             receiverId: post.Creator._id,
             text: text,
           });
         }
+
         Toast.fire({
           icon: "success",
           title: "Your comment a post ",
@@ -266,13 +268,12 @@ function Post({ post, socket, currentUser, friends }) {
   }, []);
 
   return (
-
     <>
       <div className="central-meta post item">
         <div className="user-post">
           <div className="friend-info ">
             <figure>
-              <img src="images/resources/friend-avatar10.jpg" alt />
+              <img src="/images/resources/friend-avatar10.jpg" alt />
             </figure>
             <div className="friend-name">
               <ins>{post.Creator.name}</ins>

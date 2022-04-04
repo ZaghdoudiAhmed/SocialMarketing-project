@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import Header from "../header";
 import Timelineinfo from "./timeline-info";
 import axios from "axios";
+import { format } from "timeago.js";
+import moment from "moment";
 
 function Notification(props) {
   const [currentUser, setCurrentUser] = useState("");
+
   const currentUserId = localStorage.getItem("currentUser");
   const [friends, setFriends] = useState([]);
+  const [allnotifications, setAllNotifications] = useState([]);
 
   const getFriends = async () => {
     try {
@@ -19,8 +23,17 @@ function Notification(props) {
     }
   };
 
+  const getAllNotif = async () => {
+    axios
+      .get("http://localhost:3000/notifications/" + currentUserId)
+      .then((res) => {
+        setAllNotifications(res.data);
+      });
+  };
+
   useEffect(() => {
     getFriends();
+    getAllNotif();
   }, [currentUserId]);
 
   useEffect(() => {
@@ -223,6 +236,21 @@ function Notification(props) {
                           </h5>
                           <div className="notification-box">
                             <ul>
+                              {allnotifications.map((n) => (
+                                <li key={n._id}>
+                                  <figure>
+                                    <img
+                                      src="images/resources/friend-avatar.jpg"
+                                      alt
+                                    />
+                                  </figure>
+                                  <div className="notifi-meta">
+                                    <p>{n.text}</p>
+                                    <span> {format(n.Date_creation)}</span>
+                                  </div>
+                                  <i className="del fa fa-close" />
+                                </li>
+                              ))}
                               <li>
                                 <figure>
                                   <img

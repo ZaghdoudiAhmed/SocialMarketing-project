@@ -5,12 +5,11 @@ import axios from "axios";
 
 function Header({ socket, currentUserId, friends }) {
   const [notifications, setNotifications] = useState([]);
-  const [allnotifications, setAllNotifications] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
     socket?.on("getNotification", (data) => {
-      setAllNotifications((prev) => [...prev, data]);
+      setNotifications((prev) => [...prev, data]);
     });
   }, [socket]);
 
@@ -27,31 +26,7 @@ function Header({ socket, currentUserId, friends }) {
       const data = await res.json();
       setCurrentUser(data.user);
     });
-    getAllNotif();
   }, []);
-
-  const getAllNotif = async () => {
-    axios
-      .get("http://localhost:3000/notifications/" + currentUserId)
-      .then((res) => {
-        setAllNotifications(res.data);
-      });
-  };
-  // const handleRead = async (e) => {
-  //   e.preventDefault();
-  //   console.log("test2");
-
-  //   try {
-  //     await axios
-  //       .delete("http://localhost:3000/notifications/" + currentUserId)
-  //       .then(() => {
-  //         setAllNotifications([]);
-  //         console.log("test");
-  //       });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   return (
     <>
@@ -192,7 +167,7 @@ function Header({ socket, currentUserId, friends }) {
       <div className="topbar stick">
         <div className="logo">
           <Link to="/" title>
-            <img src="images/logo.png" alt />
+            <img src="/images/logo.png" alt />
           </Link>
         </div>
         <div className="top-area">
@@ -411,15 +386,15 @@ function Header({ socket, currentUserId, friends }) {
                 )}
               </a>
               <div className="dropdowns">
-                <span>{allnotifications.length} Notifications</span>
+                <span>{notifications.length} New Notifications</span>
                 <ul className="drops-menu">
-                  {allnotifications.map((n) => (
-                    <li>
+                  {notifications.map((n) => (
+                    <li key={n._id}>
                       <a href="notifications.html" title>
-                        <img src="images/resources/thumb-3.jpg" alt />
+                        <img src="/images/resources/thumb-3.jpg" alt />
                         <div className="mesg-meta">
-                          <h6>{n.sender.name}</h6>
-                          <p className="notification">{n.text}</p>
+                          <h6>{n?.sender?.name}</h6>
+                          <p className="notification">{n?.text}</p>
                         </div>
                       </a>
                       <span className="tag green">seen</span>
@@ -444,7 +419,7 @@ function Header({ socket, currentUserId, friends }) {
                 <ul className="drops-menu">
                   <li>
                     <a href="notifications.html" title>
-                      <img src="images/resources/thumb-1.jpg" alt />
+                      <img src="/images/resources/thumb-1.jpg" alt />
                       <div className="mesg-meta">
                         <h6>sarah Loren</h6>
                         <span>Hi, how r u dear ...?</span>
@@ -455,7 +430,7 @@ function Header({ socket, currentUserId, friends }) {
                   </li>
                   <li>
                     <a href="notifications.html" title>
-                      <img src="images/resources/thumb-2.jpg" alt />
+                      <img src="/images/resources/thumb-2.jpg" alt />
                       <div className="mesg-meta">
                         <h6>Jhon doe</h6>
                         <span>Hi, how r u dear ...?</span>
@@ -466,7 +441,7 @@ function Header({ socket, currentUserId, friends }) {
                   </li>
                   <li>
                     <a href="notifications.html" title>
-                      <img src="images/resources/thumb-3.jpg" alt />
+                      <img src="/images/resources/thumb-3.jpg" alt />
                       <div className="mesg-meta">
                         <h6>Andrew</h6>
                         <span>Hi, how r u dear ...?</span>
@@ -477,7 +452,7 @@ function Header({ socket, currentUserId, friends }) {
                   </li>
                   <li>
                     <a href="notifications.html" title>
-                      <img src="images/resources/thumb-4.jpg" alt />
+                      <img src="/images/resources/thumb-4.jpg" alt />
                       <div className="mesg-meta">
                         <h6>Tom cruse</h6>
                         <span>Hi, how r u dear ...?</span>
@@ -488,7 +463,7 @@ function Header({ socket, currentUserId, friends }) {
                   </li>
                   <li>
                     <a href="notifications.html" title>
-                      <img src="images/resources/thumb-5.jpg" alt />
+                      <img src="/images/resources/thumb-5.jpg" alt />
                       <div className="mesg-meta">
                         <h6>Amy</h6>
                         <span>Hi, how r u dear ...?</span>
@@ -525,7 +500,7 @@ function Header({ socket, currentUserId, friends }) {
             </li>
           </ul>
           <div className="user-img">
-            <img src="images/resources/admin.jpg" alt />
+            <img src="/images/resources/admin.jpg" alt />
             <span className="status f-online" />
             <div className="user-setting">
               <a href="#" title>

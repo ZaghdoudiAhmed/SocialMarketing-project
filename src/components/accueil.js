@@ -8,7 +8,7 @@ import Post from "./post/post";
 import Header from "./header";
 import Shortcuts from "./timeline/shortcuts";
 import Loading from "./loading";
-import { MentionsInput, Mention } from "react-mentions";
+import Mentions from "rc-mentions";
 
 function Accueil() {
   const url = "http://localhost:3000/posts";
@@ -34,6 +34,8 @@ function Accueil() {
     },
   ];
 
+  const { Option } = Mentions;
+
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
 
@@ -54,6 +56,8 @@ function Accueil() {
 
     const post = new FormData();
 
+    const text = currentUser.name + " posted a post";
+
     post.append("Photo", file);
     post.append("Description", newDescription);
     post.append("Private", true);
@@ -68,8 +72,7 @@ function Accueil() {
         socket.emit("sendNotification", {
           senderId: res.data.Creator._id,
           receiverId: currentUserId,
-          senderName: res.data.Creator.name,
-          type: 4,
+          text: text,
         });
 
         setPostData([res.data, ...postData]);
@@ -521,8 +524,6 @@ function Accueil() {
                     {/* sidebar */}
 
                     <div className="col-lg-6">
-                      {/* <ReactPlayer url="https://www.youtube.com/watch?v=ipwiaaRXZp4" /> */}
-
                       <div className="central-meta">
                         <div className="new-postbox">
                           <figure>
@@ -530,17 +531,14 @@ function Accueil() {
                           </figure>
                           <div className="newpst-input">
                             <form>
-                              <MentionsInput
+                              <textarea
                                 rows={2}
                                 placeholder="..."
                                 onChange={(e) =>
                                   setNewDescription(e.target.value)
                                 }
                                 value={newDescription}
-                                markup="@[__name__](___id__)"
-                              >
-                                <Mention trigger="@" data={friends} />
-                              </MentionsInput>
+                              ></textarea>
 
                               <div className="attachments">
                                 <ul>
@@ -584,6 +582,7 @@ function Accueil() {
                                 </ul>
                               </div>
                             </form>
+                            <br />
                           </div>
                         </div>
                       </div>
