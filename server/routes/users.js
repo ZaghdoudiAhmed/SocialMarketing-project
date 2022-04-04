@@ -1186,7 +1186,7 @@ router.post('/makeAdmin', (req,res)=>{
             user.role='admin'
             user.save()
             res.status(200)
-            res.send()
+            res.send({ok : true})
         }
     )
 })
