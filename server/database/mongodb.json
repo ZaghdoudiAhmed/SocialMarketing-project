@@ -1,0 +1,6 @@
+{
+    "mongo":{
+        "uri":"mongodb+srv://rimabensalah:password12345@commerce.nwvoe.mongodb.net/ecommerce?retryWrites=true&w=majority"
+        
+    }
+}
