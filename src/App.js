@@ -9,17 +9,34 @@ import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
 import About from "./components/timeline/about";
 import Messages from "./components/timeline/messages";
+import Shop from "./components/EcommerceComponent/Shop";
+import AddProduct from "./components/EcommerceComponent/AddProduct";
 
+import DetailProduct from "./components/EcommerceComponent/DetailProduct";
+import Category from "./components/EcommerceComponent/Category";
+import EditProduct from "./components/EcommerceComponent/EditProduct";
+import Cart from "./components/EcommerceComponent/Cart";
+import CheckoutCart from "./components/EcommerceComponent/CheckoutCart";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Accueil />} />
+      <Route path="/" element={<Accueil />} />
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/timelinefriends" element={<Timelinefriends />} />
         <Route path="/timelinegroups" element={<Timelinegroups />} />
         <Route path="/timelinephotos" element={<Timelinephotos />} />
         <Route path="/timelinevideos" element={<Timelinevideos />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/detailProduct/:id" element={<DetailProduct />} />
+        <Route path="/addProd" element={<AddProduct />} />
+        <Route path="/categories" element={<Category />} />
+        <Route path="/updateProd/:id" element={<EditProduct />} />
+        
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout/:prix" element={<CheckoutCart />} />
+
+
 
         {/* <Route path="/company" element={<Indexcompany />} /> */}
         <Route path="/messages" element={<Messages />} />
