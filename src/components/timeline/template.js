@@ -11,13 +11,40 @@ function Template(props) {
     const [propicPath, setProPicPath] = useState('')
     const currentUserId = localStorage.getItem('currentUser')
     const [listOfUsers, setListOfUsers] = useState([])
-    const [listOfUsersPagin, setListOfUsersPagin] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [usersPerPage, setUsersPerPage] = useState(6)
     const indexOfLastUser = currentPage * usersPerPage
     const indexOfFirstUser = indexOfLastUser - usersPerPage
     const currentUsers = listOfUsers.slice(indexOfFirstUser, indexOfLastUser)
     const pageNumbers= []
+
+    useEffect(() => {
+        if(!currentUserId){
+            navigate('/login')
+        }else{
+            fetch("http://localhost:3000/api/users/me", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify({
+                    currentUserId
+                })
+            }).then(async response => {
+                    if (response.ok) {
+                        const data = await response.json()
+                        setCurrentUser(data.user)
+
+                        setCoverPath('uploads/users/'+data.user.coverpic[data.user.coverpic.length - 1])
+                        setProPicPath('uploads/users/'+data.user.profilepic[data.user.profilepic.length - 1])
+                        if (response.status === 401) {
+                            window.location.reload()
+                        }
+                    }
+                }
+            )}
+    },[])
+
     for(let i=1;i<=Math.ceil(listOfUsers.length/usersPerPage);i++){
         pageNumbers.push(i)
     }
@@ -368,7 +395,7 @@ function Template(props) {
 
                     <section>
                         <div className="feature-photo">
-                            <figure><img src="images/resources/timeline-1.jpg" alt=""/></figure>
+                            <figure><img src={coverPath} style={{height:400+'px'}} alt={"cover pic"} /></figure>
                             <div className="add-btn">
                                 <span>1205 followers</span>
                                 <a href="#" title="" data-ripple="">Add Friend</a>
@@ -385,7 +412,7 @@ function Template(props) {
                                     <div className="col-lg-2 col-sm-3">
                                         <div className="user-avatar">
                                             <figure>
-                                                <img src="images/resources/user-avatar.jpg" alt=""/>
+                                                <img src={propicPath} alt={"profile picture"} />
                                                 <form className="edit-phto">
                                                     <i className="fa fa-camera-retro"></i>
                                                     <label className="fileContainer">
@@ -400,7 +427,7 @@ function Template(props) {
                                         <div className="timeline-info">
                                             <ul>
                                                 <li className="admin-name">
-                                                    <h5>Janice Griffith</h5>
+                                                    <h5>{currentUser.name+' '+currentUser.lastName}</h5>
                                                     <span>Group Admin</span>
                                                 </li>
                                                 <li>

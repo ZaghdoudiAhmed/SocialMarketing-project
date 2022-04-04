@@ -945,7 +945,7 @@ function About(props) {
           <div className="feature-photo">
             <figure>
 
-              <img src={coverPath} alt />
+              <img src={coverPath} style={{height:400+'px'}} alt />
 
               {/*<img src="uploads/users/1648378727337.png" alt />*/}
             </figure>
@@ -982,8 +982,7 @@ function About(props) {
                   <div className="timeline-info">
                     <ul>
                       <li className="admin-name">
-                        <h5>{currentUser.name}</h5>
-                        <span>Group Admin</span>
+                        <h5>{currentUser.name+' '+currentUser.lastName}</h5>
                       </li>
                       <li>
                         <a className href="time-line.html" title data-ripple>

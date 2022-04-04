@@ -13,6 +13,8 @@ function EditProfile(props) {
     const [address, setAddress]= useState('')
     const [bio, setBio]= useState('')
     const [birthday, setBirthday]= useState('')
+    const [coverPath, setCoverPath] = useState('')
+    const [propicPath, setProPicPath] = useState('')
     useEffect(() => {
         if(!currentUserId){
             navigate('/login')
@@ -35,32 +37,8 @@ function EditProfile(props) {
                         setBio(data.user.bio)
                         setPhone(data.user.phone)
                         setBirthday(data.user.birthday)
-                        /* if (data.user.firstTime.toString()==='true'){
-                           if(data.user.verified.toString()==='false'){
-                             setShow(true)
-                             var code           = '';
-                             var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                             var charactersLength = characters.length;
-                             for ( var i = 0; i < 8; i++ ) {
-                               code += characters.charAt(Math.floor(Math.random() *
-                                   charactersLength));
-                             }
-                             await fetch("http://localhost:3000/api/users/mail", {
-                               method: "POST",
-                               headers: {
-                                 "Content-Type": "application/json"
-                               },
-                               body:JSON.stringify({
-                                 code : code,
-                                 id : data.user._id,
-                                 mail : data.user.email
-                               })
-                             })
-                           }
-                           else {
-                             setShowProPic(true)
-                           }
-                         } else {*/
+                        setCoverPath('uploads/users/'+data.user.coverpic[data.user.coverpic.length - 1])
+                        setProPicPath('uploads/users/'+data.user.profilepic[data.user.profilepic.length - 1])
                         if (response.status === 401) {
                             window.location.reload()
                         }
@@ -517,7 +495,7 @@ function EditProfile(props) {
                 </div>
                 <section>
                     <div className="feature-photo">
-                        <figure><img src="images/resources/timeline-1.jpg" alt=""/></figure>
+                        <figure><img src={coverPath} style={{height:400+'px'}} alt={"cover pic"} /></figure>
                         <div className="add-btn">
                             <span>1205 followers</span>
                             <a href="#" title="" data-ripple="">Add Friend</a>
@@ -534,7 +512,7 @@ function EditProfile(props) {
                                 <div className="col-lg-2 col-sm-3">
                                     <div className="user-avatar">
                                         <figure>
-                                            <img src="images/resources/user-avatar.jpg" alt=""/>
+                                            <img src={propicPath} alt={"profile picture"} />
                                                 <form className="edit-phto">
                                                     <i className="fa fa-camera-retro"></i>
                                                     <label className="fileContainer">
@@ -549,8 +527,7 @@ function EditProfile(props) {
                                     <div className="timeline-info">
                                         <ul>
                                             <li className="admin-name">
-                                                <h5>Janice Griffith</h5>
-                                                <span>Group Admin</span>
+                                                <h5>{currentUser.name+' '+currentUser.lastname}</h5>
                                             </li>
                                             <li>
                                                 <a className="" href="time-line.html" title="" data-ripple="">time

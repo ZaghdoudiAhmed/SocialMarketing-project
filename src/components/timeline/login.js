@@ -20,6 +20,7 @@ function Login(props) {
     const[gender, setGender] = useState('')
     const[password, setPassword] = useState('')
     const[errors,setErrors]= useState('')
+    const[loginErrors,setLoginErrors]= useState('')
     const[robot,isRobot]= useState(true)
     const[registered,isRegistered]= useState(false)
 
@@ -88,11 +89,11 @@ function Login(props) {
                     setIsSubmitting(false)
                     if(!response.ok) {
                         if (response.status === 400) {
-                            setErrors('Please fill all the fields correctly!')
+                            setLoginErrors('Please fill all the fields correctly!')
                         } else if (response.status === 401) {
-                            setErrors('Invalid email and password combination.')
+                            setLoginErrors('Invalid email and password combination.')
                         } else {
-                            setErrors('Something went wrong! please try again later!')
+                            setLoginErrors('Something went wrong! please try again later!')
                         }
                     }
                     else{
@@ -186,7 +187,7 @@ function Login(props) {
                         reset===true ? (
                             <div className="col-md-6">
                                 <div className="log-reg-area login_form">
-                                    <h2 className="log-title">Reset pwd</h2>
+                                    <h2 className="log-title">Reset password</h2>
                                     <form method="post">
                                         <div className="form-group">
                                             <input type="text" id="input" required="required" value={resetEmail} onChange={(e)=>{setResetEmail(e.target.value)}}/>
@@ -240,6 +241,9 @@ function Login(props) {
                                 Don’t use Winku Yet? <a href="#" title="">Take the tour</a> or <a href="#" title="">Join
                                 now</a>
                             </p>
+                            { loginErrors ? <div className="alert alert-danger" role="alert" >
+                                {loginErrors}
+                            </div> : null }
                             <form method="post">
                                 <div className="form-group">
                                     <input type="text" id="input" required="required" value={loginemail} onChange={(e)=>{setLoginEmail(e.target.value)}}/>
@@ -283,6 +287,7 @@ function Login(props) {
                                 Don’t use 2nd Chance Yet? <a href="#" title="">Take the tour</a> or <a href="#" title="">Join
                                 now</a>
                             </p>
+
                             <form method="post">
                                 <div className="form-group">
                                     <input type="text" required="required" value={name} onChange={(e)=>setName(e.target.value)}/>
