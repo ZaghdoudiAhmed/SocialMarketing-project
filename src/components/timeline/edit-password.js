@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {NotificationContainer, NotificationManager} from "react-notifications";
 
 function EditPassword(props) {
@@ -506,7 +506,7 @@ function EditPassword(props) {
                                     <a href="#" title=""><span className="status f-online"></span>online</a>
                                     <a href="#" title=""><span className="status f-away"></span>away</a>
                                     <a href="#" title=""><span className="status f-off"></span>offline</a>
-                                    <a href="#" title=""><i className="ti-user"></i> view profile</a>
+                                    <Link to={'/about'}><i className="ti-user"></i> view profile</Link>
                                     <a href="#" title=""><i className="ti-pencil-alt"></i>edit profile</a>
                                     <a href="#" title=""><i className="ti-target"></i>activity log</a>
                                     <a href="#" title=""><i className="ti-settings"></i>account setting</a>

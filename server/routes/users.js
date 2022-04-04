@@ -1171,5 +1171,54 @@ router.post('/sms',(req,res)=>{
     res.send({success:true})
 })
 
-
+//get All
+router.get('/getAllUsers', (req,res)=>{
+    User.find({}).then(
+        users=>{
+            res.send({users})
+        }
+    )
+})
+//make admin
+router.post('/makeAdmin', (req,res)=>{
+    User.findById(req.body.id).then(
+        user=>{
+            user.role='admin'
+            user.save()
+            res.status(200)
+            res.send()
+        }
+    )
+})
+//make user
+router.post('/makeUser', (req,res)=>{
+    User.findById(req.body.id).then(
+        user=>{
+            user.role='user'
+            user.save()
+            res.status(200)
+            res.send()
+        }
+    )
+})
+//block user
+router.post('/blockAccount',(req,res)=>{
+    User.findById(req.body.id).then(
+        user=>{
+            user.status='blocked'
+            user.save()
+            res.status(200)
+            res.send()
+    })
+})
+//unblock user
+router.post('/unblockAccount',(req,res)=>{
+    User.findById(req.body.id).then(
+        user=>{
+            user.status='active'
+            user.save()
+            res.status(200)
+            res.send()
+    })
+})
 module.exports = router;

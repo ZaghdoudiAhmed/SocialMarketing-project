@@ -166,19 +166,23 @@ function Test() {
                             <div className="stepper-wrapper">
                                 <div className="stepper-item active">
                                     <div className="step-counter">1</div>
-                                    <div className="step-name">First</div>
+                                    <div className="step-name">Email verification</div>
                                 </div>
-                                <div className="stepper-item ">
+                                <div className="stepper-item">
                                     <div className="step-counter">2</div>
-                                    <div className="step-name">Second</div>
+                                    <div className="step-name">Profile picture</div>
                                 </div>
                                 <div className="stepper-item ">
                                     <div className="step-counter">3</div>
-                                    <div className="step-name">Third</div>
+                                    <div className="step-name">Cover picture</div>
+                                </div>
+                                <div className="stepper-item ">
+                                    <div className="step-counter">4</div>
+                                    <div className="step-name">Personal Information</div>
                                 </div>
                                 <div className="stepper-item">
-                                    <div className="step-counter">4</div>
-                                    <div className="step-name">Forth</div>
+                                    <div className="step-counter">5</div>
+                                    <div className="step-name">Become premium</div>
                                 </div>
                             </div>
                         </>
@@ -221,28 +225,28 @@ function Test() {
                         <Modal.Body>
                             <div className="offset-xs-1 offset-md-1">
                                 <>
-                                <div className="stepper-wrapper">
-                                <div className="stepper-item completed">
-                                    <div className="step-counter">1</div>
-                                    <div className="step-name">Email verification</div>
-                                </div>
-                                <div className="stepper-item active">
-                                    <div className="step-counter">2</div>
-                                    <div className="step-name">Profile picture</div>
-                                </div>
-                                <div className="stepper-item">
-                                    <div className="step-counter">3</div>
-                                    <div className="step-name">Third</div>
-                                </div>
-                                <div className="stepper-item">
-                                    <div className="step-counter">4</div>
-                                    <div className="step-name">Forth</div>
-                                </div>
-                                <div className="stepper-item">
-                                    <div className="step-counter">5</div>
-                                    <div className="step-name">fifth</div>
-                                </div>
-                            </div>
+                                    <div className="stepper-wrapper">
+                                        <div className="stepper-item completed">
+                                            <div className="step-counter">1</div>
+                                            <div className="step-name">Email verification</div>
+                                        </div>
+                                        <div className="stepper-item active">
+                                            <div className="step-counter">2</div>
+                                            <div className="step-name">Profile picture</div>
+                                        </div>
+                                        <div className="stepper-item">
+                                            <div className="step-counter">3</div>
+                                            <div className="step-name">Cover picture</div>
+                                        </div>
+                                        <div className="stepper-item ">
+                                            <div className="step-counter">4</div>
+                                            <div className="step-name">Personal Information</div>
+                                        </div>
+                                        <div className="stepper-item">
+                                            <div className="step-counter">5</div>
+                                            <div className="step-name">Become premium</div>
+                                        </div>
+                                    </div>
                                 </>
                                 <form method={'POST'} action={'http://localhost:3000/api/users/updateprofilepic'} encType="multipart/form-data" target="hidden-form">
                                     <label>pp picker</label>
@@ -298,13 +302,13 @@ function Test() {
                                         <div className="step-counter">3</div>
                                         <div className="step-name">Cover picture</div>
                                     </div>
-                                    <div className="stepper-item">
+                                    <div className="stepper-item ">
                                         <div className="step-counter">4</div>
-                                        <div className="step-name">Forth</div>
+                                        <div className="step-name">Personal Information</div>
                                     </div>
-                                    <div className="stepper-item">
+                                    <div className="stepper-item ">
                                         <div className="step-counter">5</div>
-                                        <div className="step-name">fifth</div>
+                                        <div className="step-name">Become premium</div>
                                     </div>
                                 </div>
                             </>
@@ -315,7 +319,7 @@ function Test() {
                                             setCover(URL.createObjectURL(e.target.files[0]))
                                         }} />
                                 <br/>
-                                <input type={'text'} value={currentUser.email} name={'email'} readOnly/>
+                                <input type={'text'} value={currentUser.email} name={'email'} hidden readOnly/>
                                 <input type={'submit'}  value={"submit"}/>
                             </form >
                             <iframe style={{display: 'none'}} name="hidden-form"/>
@@ -371,11 +375,11 @@ function Test() {
                                     </div>
                                     <div className="stepper-item active">
                                         <div className="step-counter">4</div>
-                                        <div className="step-name" style={{textAlign: 'center'}}>Personal Information</div>
+                                        <div className="step-name" style={{textAlign:'center'}}>Personal Information</div>
                                     </div>
                                     <div className="stepper-item">
                                         <div className="step-counter">5</div>
-                                        <div className="step-name">fifth</div>
+                                        <div className="step-name">Become premium</div>
                                     </div>
                                 </div>
                             </>
@@ -425,17 +429,16 @@ function Test() {
                                     <div className={'row my-1'}>
                                         <label htmlFor="address" className="col-sm-2 col-form-label">Facebook</label>
                                         <div className="col-sm-8">
-                                            <input type="text" className="form-control" id="inputEmail3" placeholder="address" value={fblink} onChange={(e)=>{setFbLink(e.target.value)}}/>
+                                            <input type="text" className="form-control" id="inputEmail3" placeholder="Facebook account" value={fblink} onChange={(e)=>{setFbLink(e.target.value)}}/>
                                         </div>
                                     </div>
                                     <div className={'row my-1'}>
                                         <label htmlFor="address" className="col-sm-2 col-form-label">LinkedIn</label>
                                         <div className="col-sm-8">
-                                            <input type="text" className="form-control" id="inputEmail3" placeholder="address" value={lilink} onChange={(e)=>{setLiLink(e.target.value)}}/>
+                                            <input type="text" className="form-control" id="inputEmail3" placeholder="linkedin Account" value={lilink} onChange={(e)=>{setLiLink(e.target.value)}}/>
                                         </div>
                                     </div>
                                 </form>
-                                <button onClick={handleChange}>test</button>
                             </div>
                         </div>
                     </Modal.Body>
@@ -480,7 +483,7 @@ function Test() {
                                     </div>
                                     <div className="stepper-item completed">
                                         <div className="step-counter">4</div>
-                                        <div className="step-name">Personal Information</div>
+                                        <div className="step-name" style={{textAlign:'center'}}>Personal Information</div>
                                     </div>
                                     <div className="stepper-item active">
                                         <div className="step-counter">5</div>

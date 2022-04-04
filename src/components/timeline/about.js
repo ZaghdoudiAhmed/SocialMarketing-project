@@ -9,7 +9,7 @@ function About(props) {
   const [coverPath, setCoverPath] = useState('')
   const [propicPath, setProPicPath] = useState('')
   const currentUserId = localStorage.getItem('currentUser')
-  const interests = []
+
 
   useEffect(() => {
     if(!currentUserId){
@@ -30,33 +30,6 @@ function About(props) {
 
          setCoverPath('uploads/users/'+data.user.coverpic[data.user.coverpic.length - 1])
          setProPicPath('uploads/users/'+data.user.profilepic[data.user.profilepic.length - 1])
-
-        /* if (data.user.firstTime.toString()==='true'){
-           if(data.user.verified.toString()==='false'){
-             setShow(true)
-             var code           = '';
-             var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-             var charactersLength = characters.length;
-             for ( var i = 0; i < 8; i++ ) {
-               code += characters.charAt(Math.floor(Math.random() *
-                   charactersLength));
-             }
-             await fetch("http://localhost:3000/api/users/mail", {
-               method: "POST",
-               headers: {
-                 "Content-Type": "application/json"
-               },
-               body:JSON.stringify({
-                 code : code,
-                 id : data.user._id,
-                 mail : data.user.email
-               })
-             })
-           }
-           else {
-             setShowProPic(true)
-           }
-         } else {*/
           if (response.status === 401) {
             window.location.reload()
           }

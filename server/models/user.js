@@ -12,6 +12,10 @@ const Session = new Schema({
 var User = new Schema(
     {
         name : String,
+        status : {
+            type: String,
+            default : 'active'
+        },
         lastname : String,
         email : {
             type: String,
