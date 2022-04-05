@@ -18,6 +18,10 @@ import Messanger from "./components/timeline/messages/messanger";
 import Indexcompany from "./components/company/index-company";
 import Usertimeline from "./components/timeline/usertimeline";
 import Notification from "./components/timeline/notification";
+import TestElyes from "./components/Test-elyes";
+import Template from "./components/timeline/template";
+import EditProfile from "./components/timeline/edit-profile";
+import EditPassword from "./components/timeline/edit-password";
 
 import Login from "./components/timeline/login";
 import Test from "./components/Test";
@@ -54,6 +58,11 @@ function App() {
           path="/login"
           element={currentUserId ? <Navigate replace to="/" /> : <Login />}
         />
+
+        <Route path="/test" element={<TestElyes />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/edit-password" element={<EditPassword />} />
+        <Route path="/user-management" element={<Template />} />
 
         <Route
           path="/company"

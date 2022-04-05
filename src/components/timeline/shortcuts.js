@@ -69,6 +69,14 @@ function Shortcuts(props) {
           <Link to="/company">Company</Link>
         </li>
         <li>
+          <i className="ti-direction" />
+          <Link to="/company">Ahmed</Link>
+        </li>
+        <li>
+          <i className="ti-direction" />
+          <Link to="/company">Ryma</Link>
+        </li>
+        <li>
           <i className="ti-power-off" />
           <a href="landing.html" title>
             Logout

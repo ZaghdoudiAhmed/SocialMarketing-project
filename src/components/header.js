@@ -270,19 +270,19 @@ function Header({ socket, currentUserId, friends }) {
               </a>
               <ul>
                 <li>
-                  <a href="create-fav-page.html" title>
-                    create fav page
-                  </a>
+                  <Link to="/edit-profile" title>
+                    Edit profile
+                  </Link>
                 </li>
                 <li>
-                  <a href="edit-account-setting.html" title>
-                    edit account setting
-                  </a>
+                  <Link to="/edit-password" title>
+                    edit password
+                  </Link>
                 </li>
                 <li>
-                  <a href="edit-interest.html" title>
-                    edit-interest
-                  </a>
+                  <Link to="/user-management" title>
+                    user management
+                  </Link>
                 </li>
                 <li>
                   <a href="edit-password.html" title>
