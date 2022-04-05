@@ -9,8 +9,8 @@ import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 export default function AddProduct() {
     const [selectedFile, setSelectedFile] = useState(null);
-    const initialProductState={
-       
+    const [imgFile, imgFileSet] = useState([]);
+    const initialProductState={  
         productName:"",
         productDesc:"",
        
@@ -27,17 +27,26 @@ export default function AddProduct() {
     const handleInputChange = event => {
         const { name, value } = event.target;
         setProduct({ ...product, [name]: value });
-        console.log(name)
+        ///console.log(name)
       };
-    
-    let state1 = {data: { CoverImage: "" }}
-    let handleImageCoverChange = ({ currentTarget: input }) => {
-      console.log("here we goo ");
-        const data = state1.data;
-        data[input.name] = input.files[0];
-        state1.data = data;
-        
+      const onImageChange = (i) => {
+        const reader = new FileReader();
+        if (i.target.files && i.target.files.length) {
+          const [file] = i.target.files;
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            imgFileSet(reader.result);
+          };
         }
+      };
+    //let state1 = {data: { CoverImage: "" }}
+    //let handleImageCoverChange = ({ currentTarget: input }) => {
+     /// console.log("here we goo ");
+      //  const data = state1.data;
+      //  data[input.name] = input.files[0];
+      //  state1.data = data;
+        
+      ///  }
 
       
        let state = {data: []}
@@ -53,29 +62,29 @@ export default function AddProduct() {
          
       // }
     const saveProduct = async () => {
-      const FD = new FormData()
+      const FD = []
       let productName = document.getElementById('productName').value
       let productCatg =document.getElementById('productCategory').value
-      console.log(productCatg)
-      console.log(state1.data);
-      console.log(state.data);
+      //console.log(productCatg)
+     // console.log(state1.data);
+     // console.log(state.data);
      
      
    
     
-      FD.append('productName',productName)
-      FD.append('productDesc',product.productDesc)
+      FD.push({'productName': productName})
+      FD.push({'productDesc':product.productDesc})
       
-      FD.append('productPrice',product.productPrice)
-      FD.append('productCategory',productCatg)
-      FD.append('productQty',product.productQty)
-    
-      FD.append('ProductImage' , state1.data.CoverImage)
+      FD.push({'productPrice':product.productPrice})
+      FD.push({'productCategory':productCatg})
+      FD.push({'productQty':product.productQty})
+    console.log(imgFile);
+      FD.push({'ProductImage':imgFile})
     //   state.data.forEach((element) => {
     //     FD.append(element.name, element)
     //  });
     for (var pair of FD.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
+     ///// console.log(pair[0] + ', ' + pair[1]);
   }
   
   //     //  var data={
@@ -85,6 +94,7 @@ export default function AddProduct() {
   //     //    price:product.price,
   //     //    category:product.category,
   //     //    quantity:product.quantity};
+  console.log(FD)
        ProductDataService.createProduct(FD)
         .then(response =>{
           
@@ -202,17 +212,11 @@ export default function AddProduct() {
                 
                 </div>	
                 	
-                <div className="form-group">	
-                  <input type="text" id="productCategory" required="required"  
-                   value={product.productCategory} 
-                   onChange={handleInputChange}
-                   name="productCategory" />
-                  <label className="control-label" htmlFor="input">Category </label><i className="mtrl-select" />
-                </div>			
+             
                 
                 <div className="form-group">
                     <label htmlFor="CoverImage">Product Cover Image</label>
-                    <input name="CoverImage" id="imageCover" required type="file" className="form-control" onChange={handleImageCoverChange} />
+                    <input required type="file"    onChange={onImageChange} className="ddd"/>
                 </div>			
                 {/* <div className="form-group">	
                   <select>

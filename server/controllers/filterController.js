@@ -44,7 +44,7 @@ exports.searchByQueryType =asyncHandler( async (req, res) => {
         query = query.sort("-productPrice");
       }
     const products = await query;
-    console.log(products)
+    ////console.log(products)
     const maxPrice = await Product.find()
     .sort({ productPrice: -1 })
     .limit(1)

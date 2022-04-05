@@ -83,12 +83,12 @@ const productCtrl = {
                 if(!data){
                     return res.status(404).json({msg:'product is not found !'})
                 }else{
-                    console.log(data)
+                    ///console.log(data)
                  
                      prodID = data
                     
                     category = data.category
-                    console.log(category);
+                   //// console.log(category);
                     
                     return res.json({data})
                 }
@@ -115,7 +115,7 @@ const productCtrl = {
                    
                     //console.log(data.category)
                     let result = res.json({data})
-                    console.log(data)
+                    ////console.log(data)
                     return result
                 }
             })
@@ -126,49 +126,20 @@ const productCtrl = {
 
     },
     createProduct: async(req, res) =>{
-        console.log(req.body);
-        console.log(req.files);
-	    const {
-		productName,
-		productDesc,
-		productPrice,
-		productCategory,
-		productQty
-	    } = req.body;
+        ////console.log(req.body);
         try {
         let product = new Product();
-		product.productName = productName;
-		product.productDesc = productDesc;
-		product.productPrice = productPrice;
-		product.productCategory = productCategory;
-		product.productQty = productQty;
+		product.productName = req.body[0].productName;
+		product.productDesc = req.body[1].productDesc;
+		product.productPrice = req.body[2].productPrice;
+		product.productCategory = req.body[3].productCategory;
+		product.productQty = req.body[4].productQty;
+        product.ProductImage=req.body[5].ProductImage;
         await product.save();
-        var files = []
-        
-        var filekeys = Object.keys(req.files)
-        filekeys.forEach(function(key){
-            files.push(req.files[key])
-        })
-        let productPictures = []
-        files.forEach((element) => {
-            console.log(element.name);
-            productPictures.push(element.name)
-            product.ProductPath = 'images/'+product._id+'_'+element.name
-            element.mv('public/images/'+product._id+'_'+element.name , function(err){
-                if(err){
-                    res.json({
-                        "status" :"file not upload"
-                    })
-                }   
-            })
-        })
-       
-        product.ProductImage = productPictures;
-		await product.save();
-        console.log(product);
+       //// console.log(product);
 
 		res.json({
-			successMessage: `${productName} was created`,
+			successMessage: `${req.body[0].productName} was created`,
 			product,
 		});
         } catch (err) {
@@ -221,7 +192,7 @@ const productCtrl = {
                     return res.status(404).json({msg:'product is not found !'})
                 }else{
                     console.log("data here");
-                    console.log(data)
+                    ///console.log(data)
                     let img =data.ProductImage
                    // return res.json({img});
                     //const path='public/'+data.product_id+data.images.name
@@ -253,61 +224,15 @@ const productCtrl = {
     },
     updateProduct: async(req, res) =>{
             const id =req.params.id
-            
-            await Product.findById(id)
-            .then(data =>{
-                if(!data){
-                    return res.status(404).json({msg:'product is not found !'})
-                }else{
-                    if (req.files){
-                        const path='public/'+data.ProductPath
-                        console.log(path);
-                        fs.unlink(path, (err) => {
-                            if(err && err.code == 'ENOENT') {
-                                console.info("File doesn't exist, won't remove it.");
-                            } else if (err) {
-                                console.error("Error occurred while trying to remove file");
-                            } else {
-                                console.info(`removed`);
-                            }
-                          })
-                        var files = []
-            
-                        var filekeys = Object.keys(req.files)
-                        filekeys.forEach(function(key){
-                            files.push(req.files[key])
-                        })
-                
-                        let productPictures = []
-                        let patho = ''
-                        files.forEach((element) => {
-                            console.log(element.name);
-                            productPictures.push(element.name)
-                            data.ProductPath = 'images/'+data._id+'_'+element.name
-                           
-                            element.mv('public/images/'+data._id+'_'+element.name , function(err){
-                                if(err){
-                                    res.json({
-                                        "status" :"file not upload"
-                                    })
-                                }   
-                            })
-                        })
-                        console.log(productPictures);
-                
-                        Product.updateOne(
-                            { _id : id },
-                            { $set : { "ProductImage" : productPictures ,'ProductPath' : patho}}
-                        );
-                    }
-                    console.log("data here");
-                    console.log(data) 
-             
+                 var data ={
+                "productName": req.body[0].productName,
+                "productDesc":req.body[1].productDesc,
+                "productPrice":req.body[2].productPrice,
+                "productCategory":req.body[3].productCategory,
+                "productQty":req.body[4].productQty,
+                "ProductImage":req.body[5].ProductImage,
                 }
-                })
-                console.log("i ll update here ");
-               
-                await Product.findOneAndUpdate(id,req.body)
+                await Product.updateOne({ "_id": id },{ $set: data })
                 res.json({
                     successMessage: 'Product successfully updated',
                 }); 

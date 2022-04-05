@@ -1,5 +1,6 @@
 import http from "../../http-common";
 
+
     const getAllProducts =()=>{
         return http.get('/products');
     };

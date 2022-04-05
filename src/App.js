@@ -6,7 +6,6 @@ import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
 import Messages from "./components/timeline/messages";
 import React, { Suspense, lazy } from "react";
-import "./App.css";
 import Acceuil from "./components/Acceuil";
 import Donationbystate from "./components/Donation/Donationbystate";
 import Articles from "./components/Article/Articles";
@@ -46,7 +45,6 @@ function App() {
       )
   );
   return (
-
     <Suspense
       fallback={
         <div className="positionprogress">
@@ -78,15 +76,12 @@ function App() {
           <Route path="/Blogdetail" element={<Blogdetail />} />
           <Route path="/Addblog" element={<Addblog />}></Route>
           {/* <Route path="/company" element={<Indexcompany />} /> */}
-
           <Route path="/messages" element={<Messages />} />
-
           <Route path="/shop" element={<Shop />} />
           <Route path="/detailProduct/:id" element={<DetailProduct />} />
           <Route path="/addProd" element={<AddProduct />} />
           <Route path="/categories" element={<Category />} />
           <Route path="/updateProd/:id" element={<EditProduct />} />
-
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout/:prix" element={<CheckoutCart />} />
         </Routes>

@@ -117,7 +117,7 @@ let deleteItemFromcart = async(product) => {
                     onClick={(event) => deleteItemFromcart(item?.product)}
                     ><i className="ti-close" /></a>
                     <div className="cart-avatar">
-                      <img src={`http://localhost:3000//images/${item?.product._id+`_`+item?.product.ProductImage}`} alt width={60} height={60} />
+                      <img src={item?.product.ProductImage} alt width={60} height={60} />
                     </div>
                     <div className="cart-meta">
                       <span>{item?.product.productName}</span>

@@ -5,7 +5,7 @@ export default function Header() {
     <>
     <section>
       <div className="ext-gap bluesh high-opacity">
-        <div className="content-bg-wrap" style={{background: 'url(images/resources/animated-bg2.png)'}} />
+        <div className="content-bg-wrap"   style={{ background: "url(images/resources/animated-bg2.png)" }} />
         <div className="container-fluid">
           <div className="row">
             <div className="col-lg-12">

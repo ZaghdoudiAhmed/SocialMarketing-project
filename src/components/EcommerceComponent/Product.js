@@ -330,7 +330,7 @@ export default function Product(props) {
               <figure>
                 <span className="new">New</span>
                    <img 
-                   src={`http://localhost:3000//images/${item?._id+`_`+item?.ProductImage}`} width={100} height={100}  /> 
+                   src={item?.ProductImage} width={200} height={200} /> 
                 
                 
                 <ul className="cart-optionz">

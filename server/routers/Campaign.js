@@ -5,6 +5,7 @@ const compaign = require('../models/compaign')
 router.post('/compaign/add',async (req, res) =>
  {
    const data = req.body;
+  
    const compaign1 = new compaign(
     {
      title: data[0].title,

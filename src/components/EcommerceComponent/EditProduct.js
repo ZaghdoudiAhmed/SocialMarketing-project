@@ -15,7 +15,7 @@ export default function EditProduct(props) {
 	const [productQty, setProductQty] = useState('');
   const[categories,setCategories]=useState();
   const [loadCategories , setLoadCategories] = useState("")
-  
+  const [imgFile, imgFileSet] = useState([]);
 let handleNameChange=(e) =>{
   setProductName(e.target.value)
  
@@ -93,25 +93,33 @@ let handleImageCoverChange = ({ currentTarget: input }) => {
       }
       state.data = data;
      
-  }
+  }   
+    const onImageChange = (i) => {
+      const reader = new FileReader();
+      if (i.target.files && i.target.files.length) {
+        const [file] = i.target.files;
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          imgFileSet(reader.result);
+        };
+      }
+    };
   const saveProduct = async () => {
-    
-		const formData = new FormData();
-	 formData.append('productImage', productImage);
-
-		formData.append('productName', productName);
-		formData.append('productDesc', productDesc);
-		formData.append('productPrice', productPrice);
-		formData.append('productCategory', productCategory);
-		formData.append('productQty', productQty);
-  
-  for (var pair of formData.entries()) {
-    console.log(pair[0] + ', ' + pair[1]);
-}
-
-ProductDataService.updateProduct(params.id , formData )
+ 
+    const FD = []
+    FD.push({'productName': productName})
+      FD.push({'productDesc':productDesc})
+      
+      FD.push({'productPrice':productPrice})
+      FD.push({'productCategory':productCategory})
+      FD.push({'productQty':productQty})
+    console.log(imgFile);
+      FD.push({'ProductImage':imgFile})
+ 
+console.log(FD)
+ProductDataService.updateProduct(params.id , FD )
 .then(response =>{
-  console.log(response);
+ console.log(response);
   navigate("/shop");
 })
 .catch(e => {
@@ -209,9 +217,9 @@ ProductDataService.updateProduct(params.id , formData )
                 </div> */}
                 <div className="form-group">
 
-                <img src={`http://localhost:3000/images/${params.id+`_`+productImage}`}  />  
+                <img src={productImage} width={200} height={200} />  
               
-                <input name="CoverImage" id="imageCover" required type="file" className="form-control" onChange={handleImageCoverChange} />
+                <input name="CoverImage" id="imageCover" required type="file" className="ddd" onChange={onImageChange} />
                     <label htmlFor="CoverImage">Product Cover Image</label>
                     
                 </div>			

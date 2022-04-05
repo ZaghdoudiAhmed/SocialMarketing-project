@@ -68,7 +68,7 @@ export default function DetailProduct() {
                                                 <div className="prod-avatar">
 
                                                     <ul className="slider-for-gold">
-                                                        <li><img src={`http://localhost:3000/images/${detailProduct?.data._id +`_`+ detailProduct?.data.ProductImage}`} alt /></li>
+                                                        <li><img src={detailProduct?.data.ProductImage} alt /></li>
 
                                                     </ul>
                                                     

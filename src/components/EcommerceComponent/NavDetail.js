@@ -193,10 +193,7 @@ export default function NavDetail() {
     <div className="logo">
       <a title href="newsfeed.html"><img src="images/logo2.png" alt /></a>
     </div>
-    <div className="menu-container" id="toggle">
-      <a href="#" className="canvas-menu">
-        <i className="fa fa-times fa-bars" aria-hidden="true" /></a>
-    </div>
+ 
     <div className="overlay" id="overlay">
       <nav className="overlay-menu">
         <ul className="offcanvas-menu">

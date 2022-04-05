@@ -44,17 +44,35 @@ socket.on('chat',(msg)=>{
 })
   });
 
+  app.use(function (req, res, next) {
 
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the A
+
+// to the API (e.g. in case you use sessions)
+res.setHeader('Access-Control-Allow-Credentials', true);
+
+// Pass to next layer of middleware
+next();
+});
+  
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const fileUpload = require('express-fileupload')
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+var indexRouter = require("./routers/index");
+var usersRouter = require("./routers/users");
 
 //configuration la cnx à la base
-var config = require('./database/mongodb.json');
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser')
 //const port = 8080;
 
 
@@ -67,7 +85,6 @@ mongoose.connect(
   },
   () => console.log("Connected to DB !")
 );
-var app = express();
 
 
 // view engine setup
@@ -93,10 +110,10 @@ app.use("/users", usersRouter);
 app.use('/',DonationRouter);
 app.use('/',blogRouter);
 app.use('/',CompaignRouter);
-app.use('/api', require('./routes/categoryRouter'))
-app.use('/api', require('./routes/productRouter'))
-app.use('/api', require('./routes/filterRouter'))
-app.use('/api',require('./routes/paymentRouter'))
+app.use('/api', require('./routers/categoryRouter'))
+app.use('/api', require('./routers/productRouter'))
+app.use('/api', require('./routers/filterRouter'))
+app.use('/api',require('./routers/paymentRouter'))
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
