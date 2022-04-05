@@ -24,7 +24,6 @@ import EditProfile from "./components/timeline/edit-profile";
 import EditPassword from "./components/timeline/edit-password";
 
 import Login from "./components/timeline/login";
-import Test from "./components/Test";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "./Context/UserContext";
 function App() {

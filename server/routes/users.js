@@ -1050,8 +1050,8 @@ router.post("/me", (req, res, next) => {
   );
 });
 
-router.get("/logout", verifyUser, (req, res, next) => {
-  const { signedCookies = {} } = req;
+router.get("/logout", (req, res, next) => {
+/*  const { signedCookies = {} } = req;
   const { refreshToken } = signedCookies;
   User.findById(req.user._id).then(
     (user) => {
@@ -1073,7 +1073,7 @@ router.get("/logout", verifyUser, (req, res, next) => {
       });
     },
     (err) => next(err)
-  );
+  );*/
   localStorage.clear();
 });
 
