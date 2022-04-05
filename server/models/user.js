@@ -11,9 +11,18 @@ const Session = new Schema({
 
 var User = new Schema({
   name: String,
+  status: {
+    type: String,
+    default: "active",
+  },
+  lastname: String,
   email: {
     type: String,
     allowNull: false,
+  },
+  role: {
+    type: String,
+    default: "user",
   },
   verified: {
     type: Boolean,
@@ -29,7 +38,30 @@ var User = new Schema({
   },
   profilepic: {
     type: Array,
-    //allowNull: false
+  },
+  coverpic: {
+    type: Array,
+  },
+  interests: {
+    type: Array,
+  },
+  phone: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
+  fblink: {
+    type: String,
+  },
+  lilink: {
+    type: String,
+  },
+  birthday: {
+    type: Date,
   },
   confirmation: {
     code: {
@@ -41,7 +73,6 @@ var User = new Schema({
     },
   },
   //auth & session
-
   authStrategy: {
     type: String,
     default: "local",
