@@ -1,0 +1,12 @@
+.user-comment-box {
+  display: none;
+}
+
+.react-comments {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.post {
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+}

@@ -1,4 +1,12 @@
 import "./App.css";
+import {
+  Router,
+  Routes,
+  Route,
+  BrowserRouter,
+  Navigate,
+} from "react-router-dom";
+import Accueil from "./components/accueil";
 import Timeline from "./components/timeline/time-line";
 import Timelinefriends from "./components/timeline/timeline-friends";
 import Timelinegroups from "./components/timeline/timeline-groups";
@@ -28,6 +36,16 @@ import Category from "./components/EcommerceComponent/Category";
 import EditProduct from "./components/EcommerceComponent/EditProduct";
 import Cart from "./components/EcommerceComponent/Cart";
 import CheckoutCart from "./components/EcommerceComponent/CheckoutCart";
+import Login from "./components/timeline/login";
+import Usertimeline from "./components/timeline/usertimeline";
+import TestElyes from "./components/Test-elyes";
+import EditProfile from "./components/timeline/edit-profile";
+import EditPassword from "./components/timeline/edit-password";
+import Template from "./components/timeline/template";
+import Indexcompany from "./components/company/index-company";
+import Messanger from "./components/timeline/messages/messanger";
+import Notification from "./components/timeline/notification";
+import About from "./components/timeline/about";
 function App() {
   const Donations = React.lazy(
     () =>
@@ -84,9 +102,53 @@ function App() {
           <Route path="/updateProd/:id" element={<EditProduct />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout/:prix" element={<CheckoutCart />} />
+          <Route path="/" element={currentUserId ? <Accueil /> : <Login />} />
+          <Route exact path="/timeline" element={<Timeline />} />
+          <Route path="/timeline/:userid" element={<Usertimeline />} />
+
+          <Route
+              path="/timelinefriends"
+              element={currentUserId ? <Timelinefriends /> : <Login />}
+          />
+          <Route
+              path="/timelinegroups"
+              element={currentUserId ? <Timelinegroups /> : <Login />}
+          />
+          <Route
+              path="/timelinephotos"
+              element={currentUserId ? <Timelinephotos /> : <Login />}
+          />
+          <Route
+              path="/timelinevideos"
+              element={currentUserId ? <Timelinevideos /> : <Login />}
+          />
+          <Route
+              path="/login"
+              element={currentUserId ? <Navigate replace to="/" /> : <Login />}
+          />
+
+          <Route path="/test" element={<TestElyes />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/edit-password" element={<EditPassword />} />
+          <Route path="/user-management" element={<Template />} />
+
+          <Route
+              path="/company"
+              element={currentUserId ? <Indexcompany /> : <Login />}
+          />
+          <Route
+              path="/messages"
+              element={currentUserId ? <Messanger /> : <Login />}
+          />
+          <Route
+              path="/notification"
+              element={currentUserId ? <Notification /> : <Login />}
+          />
+          <Route path="/about" element={currentUserId ? <About /> : <Login />} />
         </Routes>
       </BrowserRouter>
     </Suspense>
+
 
 
   );
