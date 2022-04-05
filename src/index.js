@@ -12,7 +12,7 @@ import Timelinefriends from "./components/timeline/timeline-friends";
 import Timelinegroups from "./components/timeline/timeline-groups";
 import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
-import Test from "./components/Test";
+import TestElyes from "./components/Test-elyes";
 import Login from "./components/timeline/login";
 import Messages from "./components/timeline/messages";
 

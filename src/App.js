@@ -10,7 +10,7 @@ import Timelinevideos from "./components/timeline/timeline-videos";
 import About from "./components/timeline/about";
 import Login from "./components/timeline/login";
 import Messages from "./components/timeline/messages";
-import Test from "./components/Test";
+import TestElyes from "./components/Test-elyes";
 import Template from "./components/timeline/template";
 import EditProfile from "./components/timeline/edit-profile";
 import EditPassword from "./components/timeline/edit-password";
@@ -27,7 +27,7 @@ function App() {
               <Route path="/timelinegroups" element={<Timelinegroups/>}/>
               <Route path="/timelinephotos" element={<Timelinephotos/>}/>
               <Route path="/timelinevideos" element={<Timelinevideos/>}/>
-              <Route path="/test" element={<Test/>}/>
+              <Route path="/test" element={<TestElyes/>}/>
               <Route path="/edit-profile" element={<EditProfile/>}/>
               <Route path="/login" element={<Login/>}/>
               <Route path="/about" element={<About/>}/>
