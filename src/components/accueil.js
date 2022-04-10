@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Link, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { Link, Routes, Route, useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/UserContext";
+
 import axios from "axios";
 import Swal from "sweetalert2";
 import { io } from "socket.io-client";
@@ -19,25 +21,61 @@ function Accueil() {
   const [file, setFile] = useState(null);
   const [socket, setSocket] = useState(null);
   const [friends, setFriends] = useState([]);
-  const users = [
-    {
-      id: "1",
-      display: "Jimmy",
-    },
-    {
-      id: "2",
-      display: "Ketut",
-    },
-    {
-      id: "3",
-      display: "Gede",
-    },
-  ];
+  const [files, setFiles] = useState();
 
-  const { Option } = Mentions;
+  const navigate = useNavigate();
+  const [userContext, setUserContext] = useContext(UserContext);
+  const [show, setShow] = useState(false);
+  const [showpropic, setShowProPic] = useState(false);
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
+  const [show3, setShow3] = useState(false);
+  const [show4, setShow4] = useState(false);
+  const [btnClass, setBtnClass] = useState(null);
+
+  const [verif, setVerify] = useState("");
+  const [result, setResult] = useState(null);
+  const [fblink, setFbLink] = useState("");
+  const [lilink, setLiLink] = useState("");
+  const inputEl = useRef(null);
+  const [interests, setInterests] = useState();
+
+  function handleChange() {
+    /*setBtnClass(selectedOption)*/
+    console.log(`Option selected:`, inputEl.current.getValue());
+    setInterests(inputEl.current.getValue());
+    console.log(interests);
+  }
+  const [value, setValue] = useState();
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const onMenuOpen = () => setIsMenuOpen(true);
+  const onMenuClose = () => setIsMenuOpen(false);
+  //user infos
+  const [profilePic, setProfilePic] = useState();
+  const [cover, setCover] = useState("images/cover-preview.jpg");
+
+  const [birthday, setBirthday] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [bio, setBio] = useState("");
+
+  const handleClose = () => setShow1(false);
+
+  const options = [
+    {
+      value: "Exercising",
+      label: "Exercising " + <i className="bi bi-heart-pulse" />,
+    },
+    { value: "Cooking", label: "Cooking" },
+    { value: "Reading", label: "Reading" },
+    { value: "Coding", label: "Coding" },
+    { value: "Gaming", label: "Gaming" },
+  ];
 
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
+  const [allUsers, setAllUsers] = useState([]);
 
   const Toast = Swal.mixin({
     toast: true,
@@ -106,6 +144,16 @@ function Accueil() {
     }
   };
 
+  const getAllUsers = async () => {
+    try {
+      axios.get("http://localhost:3000/api/users/getAllUsers").then((res) => {
+        setAllUsers(res.data.users);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     setSocket(io("http://localhost:8900"));
   }, []);
@@ -117,6 +165,7 @@ function Accueil() {
   useEffect(() => {
     getPosts();
     getFriends();
+    getAllUsers();
   }, []);
 
   useEffect(() => {
@@ -368,8 +417,478 @@ function Accueil() {
               </li>
             </ul>
           </div>
+          {/* left sidebar menu */}
+          <section>
+            <div className="gap2 gray-bg">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div className="row merged20" id="page-contents">
+                      <div className="col-lg-3">
+                        <aside className="sidebar static left">
+                          <Shortcuts />
+                          {/* Shortcuts */}
+                          <div className="widget">
+                            <h4 className="widget-title">Recent Activity</h4>
+                            <ul className="activitiez">
+                              <li>
+                                <div className="activity-meta">
+                                  <i>10 hours Ago</i>
+                                  <span>
+                                    <a href="#" title>
+                                      Commented on Video posted{" "}
+                                    </a>
+                                  </span>
+                                  <h6>
+                                    by <a href="time-line.html">black demon.</a>
+                                  </h6>
+                                </div>
+                              </li>
+                              <li>
+                                <div className="activity-meta">
+                                  <i>30 Days Ago</i>
+                                  <span>
+                                    <a href="#" title>
+                                      Posted your status. “Hello guys, how are
+                                      you?”
+                                    </a>
+                                  </span>
+                                </div>
+                              </li>
+                              <li>
+                                <div className="activity-meta">
+                                  <i>2 Years Ago</i>
+                                  <span>
+                                    <a href="#" title>
+                                      Share a video on her timeline.
+                                    </a>
+                                  </span>
+                                  <h6>
+                                    "<a href="#">you are so funny mr.been.</a>"
+                                  </h6>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          {/* recent activites */}
+                          <div className="widget stick-widget">
+                            <h4 className="widget-title">Who's follownig</h4>
+                            <ul className="followers">
+                              {allUsers.map((u) => {
+                                <li>
+                                  <figure>
+                                    <img
+                                      src="images/resources/friend-avatar2.jpg"
+                                      alt
+                                    />
+                                  </figure>
+                                  <div className="friend-meta">
+                                    <h4>
+                                      <a href="time-line.html" title>
+                                        {u.name}
+                                      </a>
+                                    </h4>
+                                    <a href="#" title className="underline">
+                                      Add Friend
+                                    </a>
+                                  </div>
+                                </li>;
+                              })}
+                            </ul>
+                          </div>
+                          {/* who's following */}
+                        </aside>
+                      </div>
+                      {/* sidebar */}
+
+                      <div className="col-lg-6">
+                        {show4 ? (
+                          <div>
+                            <p>aaaaa</p>
+                          </div>
+                        ) : null}
+
+                        <div className="central-meta">
+                          <div className="new-postbox">
+                            <figure>
+                              <img src="images/resources/admin2.jpg" alt />
+                            </figure>
+                            <div className="newpst-input">
+                              <form>
+                                <textarea
+                                  rows={2}
+                                  placeholder="..."
+                                  onChange={(e) =>
+                                    setNewDescription(e.target.value)
+                                  }
+                                  value={newDescription}
+                                ></textarea>
+                                >>>>>>> Stashed changes
+                                <div className="attachments">
+                                  <ul>
+                                    <li>
+                                      <i className="fa fa-image" />
+                                      <label className="fileContainer">
+                                        <input
+                                          type="file"
+                                          onChange={(e) => {
+                                            setFile(e.target.files[0]);
+                                          }}
+                                          id="file"
+                                        />
+                                      </label>
+                                    </li>
+                                    <li>
+                                      <i className="fa fa-video-camera" />
+                                      <label className="fileContainer">
+                                        <input type="file" />
+                                      </label>
+                                    </li>
+
+                                    <li>
+                                      <button
+                                        onClick={handleSubmit}
+                                        type="submit"
+                                      >
+                                        Share
+                                      </button>
+                                    </li>
+                                    <br />
+                                    {file && (
+                                      <div className="center">
+                                        <img
+                                          style={{ position: "center" }}
+                                          alt=""
+                                          src={URL.createObjectURL(file)}
+                                        />
+                                      </div>
+                                    )}
+                                  </ul>
+                                </div>
+                              </form>
+                              <br />
+                            </div>
+                          </div>
+                        </div>
+                        {/* add post new box */}
+                        {loading ? (
+                          <div className="loadMore">
+                            {postData
+                              .sort(
+                                (a, b) =>
+                                  new Date(b.Date_creation) -
+                                  new Date(a.Date_creation)
+                              )
+                              .map((p) => (
+                                <Post
+                                  key={p._id}
+                                  post={p}
+                                  socket={socket}
+                                  currentUser={currentUser}
+                                  friends={friends}
+                                />
+                              ))}
+                          </div>
+                        ) : (
+                          <Loading />
+                        )}
+                      </div>
+                      {/* centerl meta */}
+                      <div className="col-lg-3">
+                        <aside className="sidebar static right">
+                          <div className="widget">
+                            <h4 className="widget-title">Your page</h4>
+                            <div className="your-page">
+                              <figure>
+                                <a href="#" title>
+                                  <img
+                                    src="images/resources/friend-avatar9.jpg"
+                                    alt
+                                  />
+                                </a>
+                              </figure>
+                              <div className="page-meta">
+                                <a href="#" title className="underline">
+                                  My page
+                                </a>
+                                <span>
+                                  <i className="ti-comment" />
+                                  <a href="insight.html">
+                                    Messages <em>9</em>
+                                  </a>
+                                </span>
+                                <span>
+                                  <i className="ti-bell" />
+                                  <a href="insight.html">
+                                    Notifications <em>2</em>
+                                  </a>
+                                </span>
+                              </div>
+                              <div className="page-likes">
+                                <ul className="nav nav-tabs likes-btn">
+                                  <li className="nav-item">
+                                    <a
+                                      className="active"
+                                      href="#link1"
+                                      data-toggle="tab"
+                                    >
+                                      likes
+                                    </a>
+                                  </li>
+                                  <li className="nav-item">
+                                    <a
+                                      className
+                                      href="#link2"
+                                      data-toggle="tab"
+                                    >
+                                      views
+                                    </a>
+                                  </li>
+                                </ul>
+                                {/* Tab panes */}
+                                <div className="tab-content">
+                                  <div
+                                    className="tab-pane active fade show "
+                                    id="link1"
+                                  >
+                                    <span>
+                                      <i className="ti-heart" />
+                                      884
+                                    </span>
+                                    <a href="#" title="weekly-likes">
+                                      35 new likes this week
+                                    </a>
+                                    <div className="users-thumb-list">
+                                      <a
+                                        href="#"
+                                        title="Anderw"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-1.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="frank"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-2.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Sara"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-3.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Amy"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-4.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Ema"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-5.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Sophie"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-6.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Maria"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-7.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                    </div>
+                                  </div>
+                                  <div className="tab-pane fade" id="link2">
+                                    <span>
+                                      <i className="ti-eye" />
+                                      440
+                                    </span>
+                                    <a href="#" title="weekly-likes">
+                                      440 new views this week
+                                    </a>
+                                    <div className="users-thumb-list">
+                                      <a
+                                        href="#"
+                                        title="Anderw"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-1.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="frank"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-2.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Sara"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-3.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Amy"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-4.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Ema"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-5.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Sophie"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-6.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                      <a
+                                        href="#"
+                                        title="Maria"
+                                        data-toggle="tooltip"
+                                      >
+                                        <img
+                                          src="images/resources/userlist-7.jpg"
+                                          alt
+                                        />
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {/* page like widget */}
+                          <div className="widget">
+                            <div className="banner medium-opacity bluesh">
+                              <div
+                                className="bg-image"
+                                style={{
+                                  backgroundImage:
+                                    "url(images/resources/baner-widgetbg.jpg)",
+                                }}
+                              />
+                              <div className="baner-top">
+                                <span>
+                                  <img alt src="images/book-icon.png" />
+                                </span>
+                                <i className="fa fa-ellipsis-h" />
+                              </div>
+                              <div className="banermeta">
+                                <p>create your own favourit page.</p>
+                                <span>like them all</span>
+                                <a data-ripple title href="#">
+                                  start now!
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="widget stick-widget">
+                            <h4 className="widget-title">Profile intro</h4>
+                            <ul className="short-profile">
+                              <li>
+                                <span>about</span>
+                                <p>
+                                  Hi, i am jhon kates, i am 32 years old and
+                                  worked as a web developer in microsoft{" "}
+                                </p>
+                              </li>
+                              <li>
+                                <span>fav tv show</span>
+                                <p>
+                                  Sacred Games, Spartcus Blood, Games of Theron{" "}
+                                </p>
+                              </li>
+                              <li>
+                                <span>favourit music</span>
+                                <p>Justin Biber, Shakira, Nati Natasah</p>
+                              </li>
+                            </ul>
+                          </div>
+                        </aside>
+                      </div>
+                      {/* sidebar */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div className="bottombar">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-12">
+                  <span className="copyright">
+                    <a target="_blank" href="https://www.templateshub.net">
+                      Templates Hub
+                    </a>
+                  </span>
+                  <i>
+                    <img src="images/credit-cards.png" alt />
+                  </i>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        {/* left sidebar menu */}
         <section>
           <div className="gap2 gray-bg">
             <div className="container-fluid">
@@ -548,7 +1067,7 @@ function Accueil() {
                                       <input
                                         type="file"
                                         onChange={(e) => {
-                                          setFile(e.target.files[0]);
+                                          setFiles(e.target.files[0]);
                                         }}
                                         id="file"
                                       />
@@ -570,12 +1089,12 @@ function Accueil() {
                                     </button>
                                   </li>
                                   <br />
-                                  {file && (
+                                  {files && (
                                     <div className="center">
                                       <img
                                         style={{ position: "center" }}
                                         alt=""
-                                        src={URL.createObjectURL(file)}
+                                        src={URL.createObjectURL(files)}
                                       />
                                     </div>
                                   )}
@@ -884,97 +1403,114 @@ function Accueil() {
             </div>
           </div>
         </section>
-        <div className="bottombar">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <span className="copyright">
-                  <a target="_blank" href="https://www.templateshub.net">
-                    Templates Hub
-                  </a>
-                </span>
-                <i>
-                  <img src="images/credit-cards.png" alt />
-                </i>
-              </div>
+
+        <div className="side-panel">
+          <h4 className="panel-title">General Setting</h4>
+          <form method="post">
+            <div className="setting-row">
+              <span>use night mode</span>
+              <input type="checkbox" id="nightmode1" />
+              <label
+                htmlFor="nightmode1"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
             </div>
-          </div>
+            <div className="setting-row">
+              <span>Notifications</span>
+              <input type="checkbox" id="switch22" />
+              <label
+                htmlFor="switch22"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>Notification sound</span>
+              <input type="checkbox" id="switch33" />
+              <label
+                htmlFor="switch33"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>My profile</span>
+              <input type="checkbox" id="switch44" />
+              <label
+                htmlFor="switch44"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>Show profile</span>
+              <input type="checkbox" id="switch55" />
+              <label
+                htmlFor="switch55"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+          </form>
+          <h4 className="panel-title">Account Setting</h4>
+          <form method="post">
+            <div className="setting-row">
+              <span>Sub users</span>
+              <input type="checkbox" id="switch66" />
+              <label
+                htmlFor="switch66"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>personal account</span>
+              <input type="checkbox" id="switch77" />
+              <label
+                htmlFor="switch77"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>Business account</span>
+              <input type="checkbox" id="switch88" />
+              <label
+                htmlFor="switch88"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>Show me online</span>
+              <input type="checkbox" id="switch99" />
+              <label
+                htmlFor="switch99"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>Delete history</span>
+              <input type="checkbox" id="switch101" />
+              <label
+                htmlFor="switch101"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+            <div className="setting-row">
+              <span>Expose author name</span>
+              <input type="checkbox" id="switch111" />
+              <label
+                htmlFor="switch111"
+                data-on-label="ON"
+                data-off-label="OFF"
+              />
+            </div>
+          </form>
         </div>
-      </div>
-      <div className="side-panel">
-        <h4 className="panel-title">General Setting</h4>
-        <form method="post">
-          <div className="setting-row">
-            <span>use night mode</span>
-            <input type="checkbox" id="nightmode1" />
-            <label
-              htmlFor="nightmode1"
-              data-on-label="ON"
-              data-off-label="OFF"
-            />
-          </div>
-          <div className="setting-row">
-            <span>Notifications</span>
-            <input type="checkbox" id="switch22" />
-            <label htmlFor="switch22" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>Notification sound</span>
-            <input type="checkbox" id="switch33" />
-            <label htmlFor="switch33" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>My profile</span>
-            <input type="checkbox" id="switch44" />
-            <label htmlFor="switch44" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>Show profile</span>
-            <input type="checkbox" id="switch55" />
-            <label htmlFor="switch55" data-on-label="ON" data-off-label="OFF" />
-          </div>
-        </form>
-        <h4 className="panel-title">Account Setting</h4>
-        <form method="post">
-          <div className="setting-row">
-            <span>Sub users</span>
-            <input type="checkbox" id="switch66" />
-            <label htmlFor="switch66" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>personal account</span>
-            <input type="checkbox" id="switch77" />
-            <label htmlFor="switch77" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>Business account</span>
-            <input type="checkbox" id="switch88" />
-            <label htmlFor="switch88" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>Show me online</span>
-            <input type="checkbox" id="switch99" />
-            <label htmlFor="switch99" data-on-label="ON" data-off-label="OFF" />
-          </div>
-          <div className="setting-row">
-            <span>Delete history</span>
-            <input type="checkbox" id="switch101" />
-            <label
-              htmlFor="switch101"
-              data-on-label="ON"
-              data-off-label="OFF"
-            />
-          </div>
-          <div className="setting-row">
-            <span>Expose author name</span>
-            <input type="checkbox" id="switch111" />
-            <label
-              htmlFor="switch111"
-              data-on-label="ON"
-              data-off-label="OFF"
-            />
-          </div>
-        </form>
       </div>
     </div>
   );

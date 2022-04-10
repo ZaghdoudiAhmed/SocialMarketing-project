@@ -2,6 +2,12 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
+import "react-notifications/lib/notifications.css";
+import ReCAPTCHA from "react-google-recaptcha";
 function Login(props) {
   const navigate = useNavigate();
 
@@ -13,19 +19,33 @@ function Login(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loginemail, setLoginEmail] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
   const [loginpassword, setLoginPassword] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState("");
+  const [loginErrors, setLoginErrors] = useState("");
+  const [robot, isRobot] = useState(true);
+  const [registered, isRegistered] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userContext, setUserContext] = useContext(UserContext);
 
+  const [reset, setReset] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [resetCode, setResetCode] = useState("");
+  const [resetPwd, setResetPwd] = useState(false);
+  const [pwd, setpwd] = useState("");
+  const [confPwd, setConfPwd] = useState("");
+
   async function registerUser(event) {
-    event.preventDefault();
+    console.log("reg user");
+    if (event) {
+      event.preventDefault();
+    }
     if (gender === "" || password === "" || name === "" || email === "") {
       setErrors("Please fill all fields!");
-    } else {
+    } else if (!robot) {
       const response = await fetch("http://localhost:3000/api/users/register", {
         method: "POST",
         headers: {
@@ -43,6 +63,10 @@ function Login(props) {
         setErrors(data.message);
       }
       if (data.success === true) {
+        NotificationManager.success(
+          "Welcome to 2nd Chance!",
+          "Your account has been created"
+        );
         setClassForLogin("slide-out");
         setLogoClass("spin-me-back");
       }
@@ -55,6 +79,50 @@ function Login(props) {
     fetch("http://localhost:3000/api/users/login", {
       method: "POST",
       withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: loginemail,
+        password: loginpassword,
+      }),
+    }).then(async (response) => {
+      setIsSubmitting(false);
+      if (!response.ok) {
+        if (response.status === 400) {
+          setLoginErrors("Please fill all the fields correctly!");
+        } else if (response.status === 401) {
+          setLoginErrors("Invalid email and password combination.");
+        } else {
+          setLoginErrors("Something went wrong! please try again later!");
+        }
+      } else {
+        const data = await response.json();
+        localStorage.setItem("currentUser", data.id);
+        setUserContext((oldValues) => {
+          return { ...oldValues, token: data.token };
+        });
+        navigate("/");
+        /* if(data.role==='admin'){
+                            navigate('/test')
+                        } else {
+                            navigate('/home')
+                        }*/
+      }
+    });
+  }
+
+  async function handleReset(e) {
+    // e.preventDefault()
+    var code = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < 10; i++) {
+      code += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    await fetch("http://localhost:3000/api/users/ResetMail", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -184,6 +252,7 @@ function Login(props) {
                   Join now
                 </a>
               </p>
+
               <form method="post">
                 <div className="form-group">
                   <input
@@ -259,11 +328,17 @@ function Login(props) {
                   </label>
                   <i className="mtrl-select"></i>
                 </div>
-                <div className="checkbox">
-                  <label>
-                    <input type="checkbox" defaultChecked={false} required />
-                    <i className="check-box"></i>Accept Terms & Conditions ?
-                  </label>
+
+                {/* <div className="checkbox">
+                                    <label>
+                                        <input type="checkbox" defaultChecked={false} required/><i className="check-box"></i>Accept
+                                        Terms & Conditions ?
+                                    </label>*/}
+                <div className="mx-5">
+                  {/* <ReCAPTCHA
+                    sitekey="6Ld-KAsfAAAAABrKh_MYB4borMQf3ditkWWsWx9I"
+                    onChange={reCaptchCB}
+                  /> */}
                 </div>
                 <a
                   onClick={() => {
@@ -287,26 +362,41 @@ function Login(props) {
                   </button>
                 </div>
               </form>
+              {/*
+                                </>)
+                        :
+                            (<>
+                                <ReCAPTCHA
+                                    sitekey='6Ld-KAsfAAAAABrKh_MYB4borMQf3ditkWWsWx9I'
+                                    onChange={reCaptchCB}
+                                />
+                            </>)}*/}
             </div>
           </div>
         </div>
       </div>
-      {/* <div className="container-fluid">
-                <div className={"login-banner "+classForLogin}>
-                    <div className="land-featurearea">
-                        <div className="land-meta">
-                            <h1>2nd Chance</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                            </p>
-                            <div className="second-chance-logo">
-                                <span><img className={"snd-chance-logo "+logoClass} src="images/2nd-Chance-Icon-sm.png"
-                                           alt="2nd chance logo" width="500px" height="250px" /></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
+
+      <div className="container-fluid">
+        <div className={"login-banner " + classForLogin}>
+          <div className="land-featurearea">
+            <div className="land-meta">
+              <h1>2nd Chance</h1>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              <div className="second-chance-logo">
+                <span>
+                  <img
+                    className={"snd-chance-logo " + logoClass}
+                    src="images/2nd-Chance-Icon-sm.png"
+                    alt="2nd chance logo"
+                    width="500px"
+                    height="250px"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -17,6 +17,7 @@ var commentsRouter = require("./routes/comments");
 var conversationRouter = require("./routes/conversations");
 var messageRouter = require("./routes/messages");
 var notificationRouter = require("./routes/notifications");
+var storiesRouter = require("./routes/stories");
 
 var passport = require("passport");
 var path = require("path");
@@ -64,6 +65,7 @@ app.use("/conversations", conversationRouter);
 app.use("/messages", messageRouter);
 app.use("/api/users", usersRouter);
 app.use("/notifications", notificationRouter);
+app.use("/stories", storiesRouter);
 
 app.use(express.urlencoded({ extended: false }));
 
