@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const user = require('../models/User')
-const comment = require('../models/Comment')
 const blog = mongoose.Schema({
     _id: Schema.Types.ObjectId,
     Id : String,
@@ -10,7 +8,7 @@ const blog = mongoose.Schema({
     image :String ,
     publisher: { type: Schema.Types.ObjectId, ref: 'user' },
     date_publish : Date,
-    comments : [{ type: Schema.Types.ObjectId, ref: 'comment' }],
+    comments : [{ type: Schema.Types.ObjectId, ref: 'commentaires' }],
     likes : Number
 });
 module.exports = mongoose.model("blog", blog);

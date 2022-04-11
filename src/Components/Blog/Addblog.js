@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
+const currentUserId = localStorage.getItem("currentUser");
 const Addblog = () => {
   const [imgFile, imgFileSet] = useState([]);
   const {
@@ -39,7 +40,7 @@ const Addblog = () => {
       result.push(e);
       result.push({ image: imgFile });
       console.log(result);
-      axios.post("http://localhost:2600/blog/addblog", result).catch((err) => {
+      axios.post("http://localhost:2600/blog/addblog/"+currentUserId, result).catch((err) => {
         console.log(err);
       });
       setistrue(false);

@@ -3,10 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import OneBlog from './OneBlog';
 const Blog = () => {
+  const currentUserId = localStorage.getItem("currentUser");
   const [data1, setdata1] = useState([]);
   let navigate = useNavigate();
   async function fetchdata() {
-    await axios.get('http://localhost:2600/blog').then(result => {
+    await axios.get('http://localhost:2600/blog/'+currentUserId).then(result => {
       console.log(result.data)
       setdata1(result.data);
     })
