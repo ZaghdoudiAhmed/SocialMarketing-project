@@ -9,7 +9,7 @@ import axios from "axios";
 
 import Post from "../post/post";
 function Usertimeline(props) {
-  const url = "http://localhost:3000/posts";
+  const url = "http://localhost:2600/posts";
 
   const [postData, setPostData] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -34,7 +34,7 @@ function Usertimeline(props) {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + userProfile._id
+        "http://localhost:2600/api/users/friends/" + userProfile._id
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -43,7 +43,7 @@ function Usertimeline(props) {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/users/${userid}`).then((res) => {
+    axios.get(`http://localhost:2600/api/users/${userid}`).then((res) => {
       setProfile(res.data);
       try {
         axios.get(url + "/all/" + res.data._id).then((res) => {
@@ -51,7 +51,7 @@ function Usertimeline(props) {
         });
 
         axios
-          .get("http://localhost:3000/api/users/friends/" + res.data._id)
+          .get("http://localhost:2600/api/users/friends/" + res.data._id)
           .then((res) => {
             setFriends(res.data);
           });
@@ -63,7 +63,7 @@ function Usertimeline(props) {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

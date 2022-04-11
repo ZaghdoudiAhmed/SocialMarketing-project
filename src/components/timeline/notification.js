@@ -15,7 +15,7 @@ function Notification(props) {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -25,7 +25,7 @@ function Notification(props) {
 
   const getAllNotif = async () => {
     axios
-      .get("http://localhost:3000/notifications/" + currentUserId)
+      .get("http://localhost:2600/notifications/" + currentUserId)
       .then((res) => {
         setAllNotifications(res.data);
       });
@@ -37,7 +37,7 @@ function Notification(props) {
   }, [currentUserId]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

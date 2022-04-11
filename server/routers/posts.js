@@ -46,12 +46,12 @@ router.get("/", function (req, res, next) {
 });
 
 // Creating post
-router.post("/", upload.single("Photo"), (req, res) => {
+router.post("/", (req, res) => {
   new Post({
     Description: req.body.Description,
     Private: req.body.Private,
     Creator: req.body.Creator,
-    Photo: req.file.originalname,
+    ////Photo: req.file.originalname,upload.single("Photo")
   })
     .save()
     .then((newpost) => {

@@ -24,7 +24,7 @@ import Loading from "./loading";
 import Mentions from "rc-mentions";
 
 function Accueil() {
-  const url = "http://localhost:3000/posts";
+  const url = "http://localhost:2600/posts";
   const [postData, setPostData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newDescription, setNewDescription] = useState("");
@@ -118,7 +118,7 @@ function Accueil() {
   async function verification(e) {
     e.preventDefault();
     const response = await fetch(
-      "http://localhost:3000/api/users/verifyEmail",
+      "http://localhost:2600/api/users/verifyEmail",
       {
         method: "POST",
         headers: {
@@ -140,7 +140,7 @@ function Accueil() {
 
   async function updateAccount() {
     const response = await fetch(
-      "http://localhost:3000/api/users/updateAccount",
+      "http://localhost:2600/api/users/updateAccount",
       {
         method: "POST",
         headers: {
@@ -208,7 +208,7 @@ function Accueil() {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -230,7 +230,7 @@ function Accueil() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -254,7 +254,7 @@ function Accueil() {
                 Math.floor(Math.random() * charactersLength)
               );
             }
-            await fetch("http://localhost:3000/api/users/mail", {
+            await fetch("http://localhost:2600/api/users/mail", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -400,7 +400,7 @@ function Accueil() {
               </>
               <form
                 method={"POST"}
-                action={"http://localhost:3000/api/users/updateprofilepic"}
+                action={"http://localhost:2600/api/users/updateprofilepic"}
                 encType="multipart/form-data"
                 target="hidden-form"
               >
@@ -498,7 +498,7 @@ function Accueil() {
               </>
               <form
                 method={"POST"}
-                action={"http://localhost:3000/api/users/updatecoverpic"}
+                action={"http://localhost:2600/api/users/updatecoverpic"}
                 encType="multipart/form-data"
                 target="hidden-form"
               >

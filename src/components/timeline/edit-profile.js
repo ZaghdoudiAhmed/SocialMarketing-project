@@ -19,7 +19,7 @@ function EditProfile(props) {
         if(!currentUserId){
             navigate('/login')
         }else{
-            fetch("http://localhost:3000/api/users/me", {
+            fetch("http://localhost:2600/api/users/me", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -48,7 +48,7 @@ function EditProfile(props) {
     },[])
     async function updateAccount(event){
         event.preventDefault()
-        const response = await fetch ('http://localhost:3000/api/users/updateAccount',
+        const response = await fetch ('http://localhost:2600/api/users/updateAccount',
             {
                 method: 'POST',
                 headers: {

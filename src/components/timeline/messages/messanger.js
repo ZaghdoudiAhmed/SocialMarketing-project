@@ -23,7 +23,7 @@ function Messanger(props) {
 
   const scrollRef = useRef();
   const socket = useRef();
-  const url = "http://localhost:3000/conversations/";
+  const url = "http://localhost:2600/conversations/";
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900");
@@ -54,7 +54,7 @@ function Messanger(props) {
   const getMessages = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/messages/" + currentChat?._id
+        "http://localhost:2600/messages/" + currentChat?._id
       );
       setMessages(res.data);
     } catch (err) {
@@ -64,7 +64,7 @@ function Messanger(props) {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -91,7 +91,7 @@ function Messanger(props) {
     });
 
     try {
-      const res = await axios.post("http://localhost:3000/messages", message);
+      const res = await axios.post("http://localhost:2600/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {
@@ -119,7 +119,7 @@ function Messanger(props) {
   }, [socket, currentUser]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

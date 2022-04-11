@@ -45,7 +45,7 @@ function Login(props) {
             setErrors("Please fill all fields!")
         }
         else if(!robot){
-            const response = await fetch('http://localhost:3000/api/users/register',
+            const response = await fetch('http://localhost:2600/api/users/register',
                 {
                     method: 'POST',
                     headers: {
@@ -73,7 +73,7 @@ function Login(props) {
     async function loginUser(event){
         event.preventDefault()
         console.log('password = ' +loginemail + 'email : '+loginpassword)
-        fetch('http://localhost:3000/api/users/login', {
+        fetch('http://localhost:2600/api/users/login', {
             method: 'POST',
             withCredentials: true,
             headers: {
@@ -102,7 +102,7 @@ function Login(props) {
                         setUserContext(oldValues=>{
                             return {...oldValues, token : data.token}
                         })
-                        navigate('/test')
+                       /// navigate('/')
                        /* if(data.role==='admin'){
                             navigate('/test')
                         } else {
@@ -122,7 +122,7 @@ function Login(props) {
             code += characters.charAt(Math.floor(Math.random() *
                 charactersLength));
         }
-        await fetch("http://localhost:3000/api/users/ResetMail", {
+        await fetch("http://localhost:2600/api/users/ResetMail", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -135,7 +135,7 @@ function Login(props) {
         setSent(true)
     }
     async function handleResetPwd(){
-        const response = await fetch("http://localhost:3000/api/users/ResetPwd", {
+        const response = await fetch("http://localhost:2600/api/users/ResetPwd", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -159,7 +159,7 @@ function Login(props) {
         }
     }
     async function handleResetPassword(){
-        const response = await fetch("http://localhost:3000/api/users/Resetpassword", {
+        const response = await fetch("http://localhost:2600/api/users/Resetpassword", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

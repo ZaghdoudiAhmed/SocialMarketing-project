@@ -22,7 +22,7 @@ function Template(props) {
         if(!currentUserId){
             navigate('/login')
         }else{
-            fetch("http://localhost:3000/api/users/me", {
+            fetch("http://localhost:2600/api/users/me", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -51,7 +51,7 @@ function Template(props) {
     const paginate=(n)=>setCurrentPage(n)
         function makeAdmin(e,id) {
         e.preventDefault()
-            fetch("http://localhost:3000/api/users/makeAdmin", {
+            fetch("http://localhost:2600/api/users/makeAdmin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -68,7 +68,7 @@ function Template(props) {
         }
         function makeUser(e,id) {
         e.preventDefault()
-            fetch("http://localhost:3000/api/users/makeUser", {
+            fetch("http://localhost:2600/api/users/makeUser", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -85,7 +85,7 @@ function Template(props) {
         }
         function blockAccount(e,id) {
         e.preventDefault()
-            fetch("http://localhost:3000/api/users/blockAccount", {
+            fetch("http://localhost:2600/api/users/blockAccount", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -102,7 +102,7 @@ function Template(props) {
         }
         function unblockAccount(e,id) {
         e.preventDefault()
-            fetch("http://localhost:3000/api/users/unblockAccount", {
+            fetch("http://localhost:2600/api/users/unblockAccount", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -123,7 +123,7 @@ function Template(props) {
             if (!currentUserId) {
                 navigate('/login')
             } else {
-                fetch("http://localhost:3000/api/users/me", {
+                fetch("http://localhost:2600/api/users/me", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -144,7 +144,7 @@ function Template(props) {
                         }
                     }
                 )
-                fetch("http://localhost:3000/api/users/getAllUsers", {
+                fetch("http://localhost:2600/api/users/getAllUsers", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"

@@ -1,9 +1,6 @@
 import "./App.css";
 import {
-  Router,
-  Routes,
-  Route,
-  BrowserRouter,
+
   Navigate,
 } from "react-router-dom";
 import Accueil from "./components/accueil";
@@ -12,7 +9,7 @@ import Timelinefriends from "./components/timeline/timeline-friends";
 import Timelinegroups from "./components/timeline/timeline-groups";
 import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
-import Messages from "./components/timeline/messages";
+
 import React, { Suspense, lazy } from "react";
 import Acceuil from "./components/Acceuil";
 import Donationbystate from "./components/Donation/Donationbystate";
@@ -47,6 +44,7 @@ import Messanger from "./components/timeline/messages/messanger";
 import Notification from "./components/timeline/notification";
 import About from "./components/timeline/about";
 function App() {
+  const currentUserId = localStorage.getItem("currentUser");
   const Donations = React.lazy(
     () =>
       new Promise((resolve, reject) =>
@@ -72,19 +70,13 @@ function App() {
     >
       <BrowserRouter>
         <Routes>
-          <Route path="/timeline" element={<Timeline />} />
-          <Route path="/timelinefriends" element={<Timelinefriends />} />
-          <Route path="/timelinegroups" element={<Timelinegroups />} />
-          <Route path="/timelinephotos" element={<Timelinephotos />} />
-          <Route path="/timelinevideos" element={<Timelinevideos />} />
-          <Route path="/*" element={<Donations />} />
+
+          <Route path="/donations" element={<Donations />} />
           <Route path="/donationbystate" element={<Donationbystate />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/donatecrud" element={<Donatecrud />} />
           <Route path="/Donationdetails" element={<Donationdetails />} />
           <Route path="/donationbycategorie" element={<Donationbycategorie />}/>
-          <Route path="/insta" element={<Acceuil />} />
-          <Route path="/acceuil" element={<Acceuil />} />
           <Route path="/test/:id1" element={<Room />} />
           <Route path="/map" element={<Maptun />} />
           <Route path="/courbe" element={<Courbe />} />
@@ -94,7 +86,6 @@ function App() {
           <Route path="/Blogdetail" element={<Blogdetail />} />
           <Route path="/Addblog" element={<Addblog />}></Route>
           {/* <Route path="/company" element={<Indexcompany />} /> */}
-          <Route path="/messages" element={<Messages />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/detailProduct/:id" element={<DetailProduct />} />
           <Route path="/addProd" element={<AddProduct />} />
@@ -103,7 +94,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout/:prix" element={<CheckoutCart />} />
           <Route path="/" element={currentUserId ? <Accueil /> : <Login />} />
-          <Route exact path="/timeline" element={<Timeline />} />
+          <Route  path="/timeline"   element={currentUserId ? <Timeline/> : <Login /> }/>
           <Route path="/timeline/:userid" element={<Usertimeline />} />
 
           <Route

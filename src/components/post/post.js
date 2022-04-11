@@ -41,7 +41,7 @@ function Post({ post, socket, currentUser, friends }) {
     const text = currentUser.name + " liked your post ";
 
     axios
-      .put("http://localhost:3000/posts/" + post._id + "/like", user)
+      .put("http://localhost:2600/posts/" + post._id + "/like", user)
       .then((res) => {
         if (hasLikedPost) {
           setLikes(post.Likes.filter((id) => id !== currentUser._id));
@@ -63,7 +63,7 @@ function Post({ post, socket, currentUser, friends }) {
             currentUser._id !== post.Creator._id
           ) {
             const notif = axios.post(
-              "http://localhost:3000/notifications",
+              "http://localhost:2600/notifications",
               notification
             );
             socket?.emit("sendNotification", {
@@ -90,7 +90,7 @@ function Post({ post, socket, currentUser, friends }) {
             currentUser._id !== post.Creator._id
           ) {
             const notif = axios.post(
-              "http://localhost:3000/notifications",
+              "http://localhost:2600/notifications",
               notification
             );
             socket?.emit("sendNotification", {
@@ -106,7 +106,7 @@ function Post({ post, socket, currentUser, friends }) {
   const getComments = async () => {
     try {
       await axios
-        .get("http://localhost:3000/comments/post/" + post._id)
+        .get("http://localhost:2600/comments/post/" + post._id)
         .then((res) => {
           setComments(res.data);
         });
@@ -123,7 +123,7 @@ function Post({ post, socket, currentUser, friends }) {
     const text = currentUser.name + " disliked your post ";
 
     axios
-      .put("http://localhost:3000/posts/" + post._id + "/dislike", user)
+      .put("http://localhost:2600/posts/" + post._id + "/dislike", user)
       .then((res) => {
         if (hasDislikedPost) {
           setDislike(post.Dislikes.filter((id) => id !== currentUser._id));
@@ -146,7 +146,7 @@ function Post({ post, socket, currentUser, friends }) {
             currentUser._id !== post.Creator._id
           ) {
             const notif = axios.post(
-              "http://localhost:3000/notifications",
+              "http://localhost:2600/notifications",
               notification
             );
             socket.emit("sendNotification", {
@@ -172,7 +172,7 @@ function Post({ post, socket, currentUser, friends }) {
             currentUser._id !== post.Creator._id
           ) {
             const notif = axios.post(
-              "http://localhost:3000/notifications",
+              "http://localhost:2600/notifications",
               notification
             );
             socket.emit("sendNotification", {
@@ -201,7 +201,7 @@ function Post({ post, socket, currentUser, friends }) {
     };
     axios
       .post(
-        "http://localhost:3000/comments/post/" + post._id + "/comment",
+        "http://localhost:2600/comments/post/" + post._id + "/comment",
         comment
       )
       .then((res) => {
@@ -221,7 +221,7 @@ function Post({ post, socket, currentUser, friends }) {
           currentUser._id !== post.Creator._id
         ) {
           const notif = axios.post(
-            "http://localhost:3000/notifications",
+            "http://localhost:2600/notifications",
             notification
           );
           socket.emit("sendNotification", {
@@ -253,7 +253,7 @@ function Post({ post, socket, currentUser, friends }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .get("http://localhost:3000/posts/delete/" + post._id)
+          .get("http://localhost:2600/posts/delete/" + post._id)
           .then((res) => {});
 
         Swal.fire("Deleted!", "Your post has been deleted.", "success");

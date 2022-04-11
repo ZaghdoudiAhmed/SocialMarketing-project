@@ -70,7 +70,7 @@ function TestElyes() {
     { value: "Gaming", label: "Gaming" },
   ];
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +94,7 @@ function TestElyes() {
                 Math.floor(Math.random() * charactersLength)
               );
             }
-            await fetch("http://localhost:3000/api/users/mail", {
+            await fetch("http://localhost:2600/api/users/mail", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -123,7 +123,7 @@ function TestElyes() {
   async function verification(e) {
     e.preventDefault();
     const response = await fetch(
-      "http://localhost:3000/api/users/verifyEmail",
+      "http://localhost:2600/api/users/verifyEmail",
       {
         method: "POST",
         headers: {
@@ -145,7 +145,7 @@ function TestElyes() {
 
   async function updateAccount() {
     const response = await fetch(
-      "http://localhost:3000/api/users/updateAccount",
+      "http://localhost:2600/api/users/updateAccount",
       {
         method: "POST",
         headers: {
@@ -286,7 +286,7 @@ function TestElyes() {
             </>
             <form
               method={"POST"}
-              action={"http://localhost:3000/api/users/updateprofilepic"}
+              action={"http://localhost:2600/api/users/updateprofilepic"}
               encType="multipart/form-data"
               target="hidden-form"
             >
@@ -384,7 +384,7 @@ function TestElyes() {
             </>
             <form
               method={"POST"}
-              action={"http://localhost:3000/api/users/updatecoverpic"}
+              action={"http://localhost:2600/api/users/updatecoverpic"}
               encType="multipart/form-data"
               target="hidden-form"
             >

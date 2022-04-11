@@ -12,7 +12,7 @@ function Timelineinfo({ friends, setFriends }) {
     if (!currentUserId) {
       navigate("/login");
     } else {
-      fetch("http://localhost:3000/api/users/me", {
+      fetch("http://localhost:2600/api/users/me", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

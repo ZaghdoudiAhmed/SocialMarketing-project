@@ -17,7 +17,7 @@ function EditPassword(props) {
         if(!currentUserId){
             navigate('/login')
         }else{
-            fetch("http://localhost:3000/api/users/me", {
+            fetch("http://localhost:2600/api/users/me", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -43,7 +43,7 @@ function EditPassword(props) {
         event.preventDefault()
         if(newPwd===confirmpwd) {
             setConfirm(false)
-            const response = await fetch('http://localhost:3000/api/users/Changepassword',
+            const response = await fetch('http://localhost:2600/api/users/Changepassword',
                 {
                     method: 'POST',
                     headers: {

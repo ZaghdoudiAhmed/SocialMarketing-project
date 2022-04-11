@@ -14,7 +14,7 @@ function Timelinefriends(props) {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -25,7 +25,7 @@ function Timelinefriends(props) {
   const handleClick = async (userid) => {
     try {
       await axios
-        .put("http://localhost:3000/api/users/" + userid + "/unfollow", {
+        .put("http://localhost:2600/api/users/" + userid + "/unfollow", {
           userId: currentUserId,
         })
         .then((res) => {
