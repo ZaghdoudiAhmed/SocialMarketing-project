@@ -1,22 +1,95 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
-const blog = require('../models/Blog')
-const reply = require('../models/reply')
-const comment = require('../models/Comment')
-const user = mongoose.Schema({
-    _id: Schema.Types.ObjectId,
-  name: String,
-  lastname: String,
-  blog : [ { type: Schema.Types.ObjectId, ref: 'blog' }],
-  Type: {
-    type:String, 
-    enum: ['user', 'specialist'],
-    default: 'user'
+
+const passportLocalMongoose = require("passport-local-mongoose");
+var Schema = mongoose.Schema;
+const Session = new Schema({
+  refreshToken: {
+    type: String,
+    default: "",
   },
-  reply :[{ type: Schema.Types.ObjectId, ref: 'reply' }],
-comments :[{ type: Schema.Types.ObjectId, ref: 'comment' }],
-  
-  
 });
 
-module.exports =mongoose.model("user", user);;
+var User = new Schema({
+  name: String,
+  status: {
+    type: String,
+    default: "active",
+  },
+  lastname: String,
+  email: {
+    type: String,
+    allowNull: false,
+  },
+  role: {
+    type: String,
+    default: "user",
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  gender: {
+    type: String,
+    allowNull: false,
+  },
+  firstTime: {
+    type: Boolean,
+    default: true,
+  },
+  profilepic: {
+    type: Array,
+  },
+  coverpic: {
+    type: Array,
+  },
+  interests: {
+    type: Array,
+  },
+  phone: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
+  fblink: {
+    type: String,
+  },
+  lilink: {
+    type: String,
+  },
+  birthday: {
+    type: Date,
+  },
+  confirmation: {
+    code: {
+      type: String,
+    },
+    date: {
+      type: Date,
+      default: new Date(),
+    },
+  },
+  //auth & session
+  authStrategy: {
+    type: String,
+    default: "local",
+  },
+  refreshToken: {
+    type: [Session],
+  },
+  followers: [{ type: Schema.Types.ObjectId, ref: "users" }],
+  followings: [{ type: Schema.Types.ObjectId, ref: "users" }],
+});
+//Remove refreshToken from the response
+User.set("toJSON", {
+  transform: function (doc, ret, options) {
+    delete ret.refreshToken;
+    return ret;
+  },
+});
+User.plugin(passportLocalMongoose, { usernameField: "email" });
+
+module.exports = mongoose.model("users", User);
