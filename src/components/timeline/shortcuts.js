@@ -70,15 +70,11 @@ function Shortcuts(props) {
         </li>
         <li>
           <i className="ti-direction" />
-          <Link to="/company">Company</Link>
+          <Link to="/donations">Donations</Link>
         </li>
         <li>
           <i className="ti-direction" />
-          <Link to="/company">Ahmed</Link>
-        </li>
-        <li>
-          <i className="ti-direction" />
-          <Link to="/company">Ryma</Link>
+          <Link to="/shop">Shop</Link>
         </li>
         <li>
           <i className="ti-power-off" />

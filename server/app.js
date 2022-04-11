@@ -192,11 +192,11 @@ app.use(express.static(path.join(__dirname, "uploads")));
 app.use(cors());
 app.use(passport.initialize());
 
-app.use(express.json());
+
 
 app.use(bodyparser.json({limit: "10mb"}));
 app.use(bodyparser.urlencoded({limit: "10mb", extended: true}));
-
+app.use(express.json());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

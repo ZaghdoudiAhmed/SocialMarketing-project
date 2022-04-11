@@ -99,7 +99,9 @@
     direction: rtl;
     text-align: right;
 }
-
+#js-licensing{
+    display: none;
+}
 .peoples-mesg-box > ul li.me p {
     margin-left: 0;
     margin-right: 10px;

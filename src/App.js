@@ -71,28 +71,28 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          <Route path="/donations" element={<Donations />} />
-          <Route path="/donationbystate" element={<Donationbystate />} />
-          <Route path="/articles" element={<Articles />} />
-          <Route path="/donatecrud" element={<Donatecrud />} />
-          <Route path="/Donationdetails" element={<Donationdetails />} />
-          <Route path="/donationbycategorie" element={<Donationbycategorie />}/>
-          <Route path="/test/:id1" element={<Room />} />
-          <Route path="/map" element={<Maptun />} />
-          <Route path="/courbe" element={<Courbe />} />
-          <Route path="/mapaffiche" element={<Mapaffiche />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/Blog" element={<Blog />} />
-          <Route path="/Blogdetail" element={<Blogdetail />} />
-          <Route path="/Addblog" element={<Addblog />}></Route>
+          <Route path="/donations"   element={currentUserId ? <Donations /> : <Login />}/>
+          <Route path="/donationbystate" element={currentUserId ? <Donationbystate />: <Login /> } />
+          <Route path="/articles" element={currentUserId ? <Articles />: <Login /> } />
+          <Route path="/donatecrud" element={currentUserId ? <Donatecrud/>: <Login /> } />
+          <Route path="/Donationdetails" element={currentUserId ? <Donationdetails />: <Login />} />
+          <Route path="/donationbycategorie" element={currentUserId ? <Donationbycategorie />: <Login />}/>
+          <Route path="/test/:id1" element={currentUserId ? <Room />: <Login />} />
+          <Route path="/map" element={currentUserId ? <Maptun />: <Login />} />
+          <Route path="/courbe" element={currentUserId ? <Courbe />: <Login />} />
+          <Route path="/mapaffiche" element={currentUserId ? <Mapaffiche />: <Login />} />
+          <Route path="/calendar" element={currentUserId ? <Calendar />: <Login />} />
+          <Route path="/Blog" element={currentUserId ? <Blog />: <Login />} />
+          <Route path="/Blogdetail" element={currentUserId ? <Blogdetail />: <Login />} />
+          <Route path="/Addblog" element={currentUserId ? <Addblog />: <Login />}></Route>
           {/* <Route path="/company" element={<Indexcompany />} /> */}
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/detailProduct/:id" element={<DetailProduct />} />
-          <Route path="/addProd" element={<AddProduct />} />
-          <Route path="/categories" element={<Category />} />
-          <Route path="/updateProd/:id" element={<EditProduct />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout/:prix" element={<CheckoutCart />} />
+          <Route path="/shop" element={currentUserId ? <Shop />: <Login />} />
+          <Route path="/detailProduct/:id" element={currentUserId ? <DetailProduct />: <Login />} />
+          <Route path="/addProd" element={currentUserId ? <AddProduct />: <Login />} />
+          <Route path="/categories" element={currentUserId ? <Category />: <Login />} />
+          <Route path="/updateProd/:id" element={currentUserId ? <EditProduct />: <Login />} />
+          <Route path="/cart" element={currentUserId ? <Cart />: <Login />} />
+          <Route path="/checkout/:prix" element={currentUserId ? <CheckoutCart />: <Login />} />
           <Route path="/" element={currentUserId ? <Accueil /> : <Login />} />
           <Route  path="/timeline"   element={currentUserId ? <Timeline/> : <Login /> }/>
           <Route path="/timeline/:userid" element={<Usertimeline />} />
