@@ -26,7 +26,7 @@ function Messanger(props) {
   const url = "http://localhost:2600/conversations/";
 
   useEffect(() => {
-    socket.current = io("ws://localhost:8900");
+    socket.current = io("http://localhost:2700");
     socket.current.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
@@ -37,6 +37,7 @@ function Messanger(props) {
   }, []);
 
   useEffect(() => {
+    console.log(currentChat);
     arrivalMessage &&
       currentChat?.members?.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
@@ -44,6 +45,7 @@ function Messanger(props) {
 
   const getConversations = async () => {
     try {
+
       const res = await axios.get(url + currentUserId);
       setConversations(res.data);
     } catch (err) {
@@ -56,6 +58,7 @@ function Messanger(props) {
       const res = await axios.get(
         "http://localhost:2600/messages/" + currentChat?._id
       );
+      console.log(res.data);
       setMessages(res.data);
     } catch (err) {
       console.log(err);
@@ -102,7 +105,7 @@ function Messanger(props) {
     getConversations();
     getMessages();
     getFriends();
-  }, [currentUserId]);
+  }, [currentUserId,currentChat]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });

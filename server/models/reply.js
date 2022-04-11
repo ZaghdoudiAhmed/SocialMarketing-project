@@ -6,7 +6,7 @@ const reply = mongoose.Schema({
     _id: Schema.Types.ObjectId,
   desciption: String,
   date :Date,
-  user :{ type: Schema.Types.ObjectId, ref: 'user' },
+  user :{ type: Schema.Types.ObjectId, ref: 'users' },
   comment :{ type: Schema.Types.ObjectId, ref: 'comment' },
 });
 

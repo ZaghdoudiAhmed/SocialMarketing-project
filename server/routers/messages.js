@@ -5,7 +5,11 @@ var Message = require("../models/message");
 
 //Adding a message
 router.post("/", async (req, res) => {
-  const newMessage = new Message(req.body);
+  const newMessage = new Message({
+    sender: req.body.sender,
+    text:req.body.text,
+    conversation_id:req.body.conversationId
+  });
 
   try {
     const savedMessage = await newMessage.save();
@@ -19,7 +23,7 @@ router.post("/", async (req, res) => {
 router.get("/:conversationId", async (req, res) => {
   try {
     const messages = await Message.find({
-      conversationId: req.params.conversationId,
+      conversation_id: req.params.conversationId,
     });
     res.status(200).json(messages);
   } catch (err) {
