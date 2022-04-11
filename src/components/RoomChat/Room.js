@@ -46,7 +46,7 @@ const Room = () => {
 
   const { id1 } = useParams();
   const affiche_msg = () => {
-    var msg = document.querySelector(".peoples-mesg-box");
+    var msg = document.querySelector(".peoples-mesg-box1");
     msg.style.visibility = "visible";
     var o = document.querySelector(".o");
     o.style.visibility = "hidden";
@@ -54,7 +54,7 @@ const Room = () => {
   const affiche_participant = () => {
     var o = document.querySelector(".o");
     o.style.visibility = "visible";
-    var msg = document.querySelector(".peoples-mesg-box");
+    var msg = document.querySelector(".peoples-mesg-box1");
     msg.style.visibility = "hidden";
   };
   const printDocument = () => {
@@ -266,7 +266,7 @@ const Room = () => {
                   </div>
                   <Divider sx={{ margin: 1 }} />
                   <div className="o"> here</div>
-                  <div className="peoples-mesg-box">
+                  <div className="peoples-mesg-box1">
                     <ul className="chatting-area"></ul>
                     <div className="message-text-container">
                       <span className="form">
