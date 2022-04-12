@@ -9,6 +9,7 @@ const Comment = (props) => {
     formState: { errors },
     control,
   } = useForm();
+  const currentUserId = localStorage.getItem("currentUser");
   const [replies, setreplies] = useState([]);
   const [state, setstate] = useState(false);
   const [statedelete, setstatedelete] = useState(false);
@@ -17,7 +18,7 @@ const Comment = (props) => {
     result.push(e);
     result.push(props.name._id);
     axios
-      .post("http://localhost:2600/reply/addreply/", result)
+      .post("http://localhost:2600/reply/addreply/"+currentUserId, result)
       .catch((err) => {
         console.log(err);
       })

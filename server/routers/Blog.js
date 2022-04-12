@@ -1,18 +1,20 @@
 var express = require('express');
 var router = express.Router();
 const blog = require('../models/Blog')
-const comment = require('../models/Comment')
+const comment = require('../models/commentah')
 const reply = require('../models/reply')
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 router.get('/blog',async (req, res) => {
-  const blog2=  await blog.find({publisher:"6239bb73cc42037e4de26409"}).populate('comments');
+
+  const blog2=  await blog.find().populate('comments');
     ////console.log(blog2);
     res.send(blog2);
 })
-
-router.post('/blog/addblog',async (req, res) =>
+///add blog
+router.post('/blog/addblog/:userid',async (req, res) =>
  {
+  const userid = req.params.userid;
    const data= req.body;
    console.log(data);
    const blog1 =new blog({
@@ -20,7 +22,7 @@ router.post('/blog/addblog',async (req, res) =>
     title: data[0].title,
     description: data[0].description,
     image :data[1].image ,
-    publisher:"6239bb73cc42037e4de26409",
+    publisher:userid,
     date_publish : new Date(),
     comments: [],
     likes:0,
@@ -29,15 +31,16 @@ router.post('/blog/addblog',async (req, res) =>
 
  }
 );
-router.post('/reply/addreply',async (req, res) =>
+router.post('/reply/addreply/:userid',async (req, res) =>
  {
+  const userid = req.params.userid;
    const x = req.body;
    console.log(x);
    const reply1 =new reply({
     _id: new mongoose.Types.ObjectId(),
     desciption: x[0].post,
     date :new Date(),
-    user :"623a6d5fcc42037e4de2644f",
+    user :userid,
     comment : x[1],
    });
    await reply1.save().then((reply1) => {res.json(reply1)}) 
@@ -53,8 +56,9 @@ router.get('/reply/getreply/:idcomment',async (req, res) =>
 
  }
 );
-router.post('/comment/addcomment',async (req, res) =>
+router.post('/comment/addcomment/:userid',async (req, res) =>
  {
+  const userid = req.params.userid;
    const data = req.body;
    const comment1 =new comment({
     _id: new mongoose.Types.ObjectId(),
@@ -62,7 +66,7 @@ router.post('/comment/addcomment',async (req, res) =>
   desciption: data[0].message,
   reply :[],
   blog :data[1],
-  publisher :"623a6d5fcc42037e4de2644f",
+  publisher :userid,
    });
  
    await comment1.save().then((blog1) => {res.json(comment1)}) 

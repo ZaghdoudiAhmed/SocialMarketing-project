@@ -27,6 +27,7 @@ const Addblog = () => {
   const [age, setAge] = React.useState("");
   const [istrue, setistrue] = useState(true);
   const [isupload, setisupload] = useState(true);
+  const currentUserId = localStorage.getItem("currentUser");
   const handleChange = (event) => {
     setAge(event.target.value);
   };
@@ -39,7 +40,7 @@ const Addblog = () => {
       result.push(e);
       result.push({ image: imgFile });
       console.log(result);
-      axios.post("http://localhost:2600/blog/addblog", result).catch((err) => {
+      axios.post("http://localhost:2600/blog/addblog/"+currentUserId, result).catch((err) => {
         console.log(err);
       });
       setistrue(false);
