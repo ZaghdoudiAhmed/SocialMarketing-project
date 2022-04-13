@@ -28,6 +28,7 @@ const Addblog = () => {
   const [age, setAge] = React.useState("");
   const [istrue, setistrue] = useState(true);
   const [isupload, setisupload] = useState(true);
+  const currentUserId = localStorage.getItem("currentUser");
   const handleChange = (event) => {
     setAge(event.target.value);
   };

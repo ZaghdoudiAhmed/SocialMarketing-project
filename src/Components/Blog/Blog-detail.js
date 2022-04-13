@@ -13,7 +13,6 @@ import Comment from "./Comment";
 import { useForm, useFormState } from "react-hook-form";
 const BlogDetail = () => {
   const currentUserId = localStorage.getItem("currentUser");
-
   const [comments, setcomments] = useState([]);
   const [replies, setreplies] = useState([]);
   const {
@@ -60,7 +59,7 @@ const BlogDetail = () => {
     result.push(e);
     result.push(state._id);
     axios
-      .post("http://localhost:2600/comment/addcomment"+currentUserId, result)
+      .post("http://localhost:2600/comment/addcomment/"+currentUserId, result)
       .catch((err) => {
         console.log(err);
       })

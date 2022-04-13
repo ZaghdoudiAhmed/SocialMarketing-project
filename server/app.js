@@ -67,8 +67,11 @@ console.log(user);
   ///////real time notification //////
 
   socket.on("sendNotification", ({ senderId, receiverId, text }) => {
+
     const receiver = getUser(receiverId);
-    iooo.to(receiver.socketId).emit("getNotification", {
+    console.log(text)
+    console.log(users)
+    iooo.to(receiver?.socketId).emit("getNotification", {
       senderId,
       receiverId,
       text,
@@ -78,7 +81,7 @@ console.log(user);
   ////////////////////////////////////////
   socket.on("sendText", ({ senderId, senderName, receiverId, text }) => {
     const receiver = getUser(receiverId);
-    iooo.to(receiver?.socketId).emit("getText", {
+    iooo.to(receiver?.userId).emit("getText", {
       senderId,
       senderName,
       text,

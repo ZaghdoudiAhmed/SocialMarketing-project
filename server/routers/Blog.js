@@ -5,18 +5,16 @@ const comment = require('../models/commentah')
 const reply = require('../models/reply')
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+router.get('/blog',async (req, res) => {
 
-router.get('/blog/:userid',async (req, res) => {
-const currentUserId=req.params.userid;
-console.log(currentUserId);
-  const blog2=  await blog.find({publisher:currentUserId}).populate('comments');
+  const blog2=  await blog.find().populate('comments');
     ////console.log(blog2);
     res.send(blog2);
 })
-
+///add blog
 router.post('/blog/addblog/:userid',async (req, res) =>
  {
-  const currentUserId=req.params.userid;
+  const userid = req.params.userid;
    const data= req.body;
    console.log(data);
    const blog1 =new blog({
@@ -24,28 +22,28 @@ router.post('/blog/addblog/:userid',async (req, res) =>
     title: data[0].title,
     description: data[0].description,
     image :data[1].image ,
-    publisher:currentUserId,
+    publisher:userid,
     date_publish : new Date(),
     comments: [],
     likes:0,
    });
-   await blog1.save().then((blog1) => {res.json(blog1)}) 
+   await blog1.save().then((blog1) => {res.json(blog1)})
 
  }
 );
 router.post('/reply/addreply/:userid',async (req, res) =>
  {
-  const currentUserId=req.params.userid;
+  const userid = req.params.userid;
    const x = req.body;
    console.log(x);
    const reply1 =new reply({
     _id: new mongoose.Types.ObjectId(),
     desciption: x[0].post,
     date :new Date(),
-    user :currentUserId,
+    user :userid,
     comment : x[1],
    });
-   await reply1.save().then((reply1) => {res.json(reply1)}) 
+   await reply1.save().then((reply1) => {res.json(reply1)})
 
  }
 );
@@ -58,10 +56,9 @@ router.get('/reply/getreply/:idcomment',async (req, res) =>
 
  }
 );
-router.post('/comment/addcomment/:idcomment/:userid',async (req, res) =>
+router.post('/comment/addcomment/:userid',async (req, res) =>
  {
-  const currentUserId=req.params.userid;
-  const x = req.params.idcomment;
+  const userid = req.params.userid;
    const data = req.body;
    const comment1 =new comment({
     _id: new mongoose.Types.ObjectId(),
@@ -69,10 +66,10 @@ router.post('/comment/addcomment/:idcomment/:userid',async (req, res) =>
   desciption: data[0].message,
   reply :[],
   blog :data[1],
-  publisher :currentUserId,
+  publisher :userid,
    });
- 
-   await comment1.save().then((blog1) => {res.json(comment1)}) 
+
+   await comment1.save().then((blog1) => {res.json(comment1)})
 
  }
 );
@@ -105,7 +102,7 @@ router.get('/comment/getcomment/:idblog',async (req, res) =>
  )
  router.get('/comment/totallikes/:idblog',async (req, res) =>
 
- { 
+ {
    const x = req.params.idblog
  const nbrlikes= await blog.find({_id:x},{likes:1,_id:0});
  /// console.log(nbrlikes);
@@ -114,7 +111,7 @@ router.get('/comment/getcomment/:idblog',async (req, res) =>
  );
  router.delete('/reply/deletecomment/:idcomment',async (req, res) =>
 
- { 
+ {
    const x = req.params.idcomment
   /// console.log(x);
 await comment.deleteOne({"_id":x});

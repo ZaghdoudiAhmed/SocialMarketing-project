@@ -10,6 +10,7 @@ const Comment = (props) => {
     formState: { errors },
     control,
   } = useForm();
+  const currentUserId = localStorage.getItem("currentUser");
   const [replies, setreplies] = useState([]);
   const [state, setstate] = useState(false);
   const [statedelete, setstatedelete] = useState(false);

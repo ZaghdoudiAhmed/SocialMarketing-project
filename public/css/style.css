@@ -177,7 +177,10 @@ span{
 .container1{
     margin: 0 5vw;
 }
-
+.container2{
+    padding:1rem 1rem 1rem!important;
+ 
+}
 .text-gray{
     color: var(--text-gray);
 }
@@ -650,6 +653,14 @@ section {
     flex-direction: column;
  
    
+}
+.gap101{
+
+        padding: 0;
+        position: relative;
+        float: left;
+        width: 100%;
+
 }
 .paddd{
     margin-left: 10px;
@@ -11086,3 +11097,7 @@ box-shadow: 0 15px 25px rgba(129, 124, 124, 0.2);
     -ms-user-select: none;      
     user-select: none;
     background-color: F3F2F3;}
+    .flip-container {
+        perspective: 1000px;
+    }
+   
