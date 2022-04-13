@@ -5,6 +5,7 @@ var Message = require("../models/message");
 
 //Adding a message
 router.post("/", async (req, res) => {
+  console.log(req.body)
   const newMessage = new Message({
     sender: req.body.sender,
     text:req.body.text,
