@@ -11,7 +11,6 @@ import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
 
 import React, { Suspense, lazy } from "react";
-import Acceuil from "./components/Acceuil";
 import Donationbystate from "./components/Donation/Donationbystate";
 import Articles from "./components/Article/Articles";
 import { BrowserRouter, Routes, Router, Route } from "react-router-dom";
