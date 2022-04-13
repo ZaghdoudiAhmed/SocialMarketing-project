@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
 import Donationbyuser from "./Donationbyuser";
+import { useNavigate } from "react-router-dom";
 function Donatecrud(props) {
   const currentUserId = localStorage.getItem("currentUser");
   const [imgFile, imgFileSet] = useState([]);
@@ -29,6 +30,7 @@ function Donatecrud(props) {
   const [age, setAge] = React.useState("");
   const [istrue, setistrue] = useState(true);
   const [isupload, setisupload] = useState(true);
+  let navigate = useNavigate();
   const onSubmit = async (e) => {
     if (imgFile.length == 0) {
       setisupload(false);
@@ -42,6 +44,7 @@ function Donatecrud(props) {
       setistrue(false);
       reset();
       imgFileSet([]);
+      navigate('/donations')
     }
   };
   const onImageChange = (i) => {
@@ -780,7 +783,7 @@ function Donatecrud(props) {
                 <div className="top-banner">
                   <h1>Create New Donation</h1>
                   <nav className="breadcrumb">
-                    <a className="breadcrumb-item" href="/">
+                    <a className="breadcrumb-item" href="/donations">
                       Home
                     </a>
                     <span className="breadcrumb-item active">Forum</span>
