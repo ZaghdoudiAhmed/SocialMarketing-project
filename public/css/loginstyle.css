@@ -72,9 +72,61 @@ html{
 }
 
 /*- guided registration -*/
-.previewImage{
-    height: 200px;
-    width: 200px;
+.preview{
+    position: relative;
+    top : 0;
+    left: 0;
+}
+.previewPCImage{
+    position: relative;
+    width : 760px !important;
+    max-width: 760px;
+    max-height: 225px;
+}
+.previewPPImage{
+    position: absolute;
+    top : 110px;
+    left : 30px;
+    height: 165px;
+    width: 165px;
     border-radius: 50%;
 }
+.exp-button{
+    color: white;
+    text-decoration: none;
+    border-radius: 60px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    overflow:hidden;
+    width: auto;
+    max-width: 32px; /** I'm animating max-width because width needs to be auto, and auto can't be animated **/
+    -webkit-transition: max-width 0.5s;
+    transition: max-width 0.5s;
+}
+.exp-admin {
+    background-color: #099;
+}
+.exp-block {
+    background-color: #ca212a;
+}
+.exp-button:hover {
+    max-width: 300px;
+    color: white;
+}
+
+.exp-icon {
+    font-family: "Font Awesome 5 Free";
+    font-size: 16px;
+    margin-right: 18px;
+    padding: 0px ;
+    display: flex;
+    align-items: center;
+}
+.exp-text {
+    white-space: nowrap;
+    padding-right: 15px;
+}
+
+
 

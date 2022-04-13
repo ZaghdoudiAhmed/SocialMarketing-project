@@ -28,7 +28,7 @@ function Test() {
 
 
     useEffect(() => {
-            fetch("http://localhost:3000/api/users/me", {
+            fetch("http://localhost:2600/api/users/me", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -53,7 +53,7 @@ function Test() {
                             code += characters.charAt(Math.floor(Math.random() *
                                 charactersLength));
                         }
-                        await fetch("http://localhost:3000/api/users/mail", {
+                        await fetch("http://localhost:2600/api/users/mail", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -79,7 +79,7 @@ function Test() {
         },[])
     async function verification (e){
         e.preventDefault()
-            const response = await fetch ('http://localhost:3000/api/users/verifyEmail',
+            const response = await fetch ('http://localhost:2600/api/users/verifyEmail',
                 {
                 method: 'POST',
                 headers: {
@@ -107,7 +107,7 @@ function Test() {
                 //formData.append('_id', '62262c5a81ea9c7812c02b72')
                 formData.append('upload_preset','presetName')
                 const dataRes= await axios.post(
-                    "http://localhost:3000/api/users/update",
+                    "http://localhost:2600/api/users/update",
                     formData
                 )
                 imageUrl=dataRes.data.url;
@@ -149,7 +149,7 @@ function Test() {
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid dolorem, eius eum ex expedita natus perferendis quia, quibusdam quis rerum tempore totam ullam.
                             </p>
-                            <form method={'POST'} action={'http://localhost:3000/api/users/update'} encType="multipart/form-data">
+                            <form method={'POST'} action={'http://localhost:2600/api/users/update'} encType="multipart/form-data">
                             <input type="file" accept={".png , .jpg, .jpeg"} name={'image'}
                                    onChange={(e)=>{
 

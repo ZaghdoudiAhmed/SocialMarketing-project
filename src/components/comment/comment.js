@@ -31,7 +31,7 @@ function Comment({ comment, replies, currentUser }) {
     toast: true,
     position: "top-start",
     showConfirmButton: false,
-    timer: 3000,
+    timer: 2600,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
@@ -46,7 +46,7 @@ function Comment({ comment, replies, currentUser }) {
     };
     axios
       .post(
-        "http://localhost:3000/comments/post/" +
+        "http://localhost:2600/comments/post/" +
           "6239d2e5b8d77b6ff995894d" +
           "/comment/" +
           comment._id,
@@ -136,7 +136,7 @@ function Comment({ comment, replies, currentUser }) {
                   type="submit"
                   className="btn btn-primary"
                   style={{ color: "#088dcd" }}
-                  style={{ text_decoration: "none" }}
+
                   onClick={handleReply}
                 >
                   reply

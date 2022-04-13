@@ -7,7 +7,7 @@ var Message = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Conversation",
   },
-  sender: { type: Schema.Types.ObjectId, ref: "User" },
+  sender: { type: Schema.Types.ObjectId, ref: "users" },
   text: { type: String },
   createdAt: { type: Date, default: Date.now },
 });

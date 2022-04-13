@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function Shortcuts(props) {
+  const Remove = () => {
+    localStorage.removeItem("currentUser");
+    window.reload();
+  };
   return (
     <div className="widget">
       <h4 className="widget-title">Shortcuts</h4>
@@ -66,11 +70,15 @@ function Shortcuts(props) {
         </li>
         <li>
           <i className="ti-direction" />
-          <Link to="/company">Company</Link>
+          <Link to="/donations">Donations</Link>
+        </li>
+        <li>
+          <i className="ti-direction" />
+          <Link to="/shop">Shop</Link>
         </li>
         <li>
           <i className="ti-power-off" />
-          <a href="landing.html" title>
+          <a onClick={Remove} title>
             Logout
           </a>
         </li>

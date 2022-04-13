@@ -8,7 +8,7 @@ import axios from "axios";
 
 import Post from "../post/post";
 function Timeline(props) {
-  const url = "http://localhost:3000/posts";
+  const url = "http://localhost:2600/posts";
 
   const [postData, setPostData] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -52,7 +52,7 @@ function Timeline(props) {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -66,7 +66,7 @@ function Timeline(props) {
   }, [currentUserId]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

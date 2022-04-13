@@ -1,21 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import Header from "../header";
 import Timelineinfo from "./timeline-info";
 import axios from "axios";
 import { format } from "timeago.js";
 import moment from "moment";
-
+import { io } from "socket.io-client";
 function Notification(props) {
   const [currentUser, setCurrentUser] = useState("");
 
   const currentUserId = localStorage.getItem("currentUser");
   const [friends, setFriends] = useState([]);
   const [allnotifications, setAllNotifications] = useState([]);
-
+  const socket = useRef();    
+  socket.current = io("http://localhost:2700");
+    socket?.current.emit("newUser", currentUserId);
+  useEffect(() => {  
+  
+    socket?.current.on("getNotification", (data1) => {
+    setAllNotifications((prev) => [...prev, data1]);
+  });
+  },[socket])
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -24,8 +32,9 @@ function Notification(props) {
   };
 
   const getAllNotif = async () => {
+  
     axios
-      .get("http://localhost:3000/notifications/" + currentUserId)
+      .get("http://localhost:2600/notifications/" + currentUserId)
       .then((res) => {
         setAllNotifications(res.data);
       });
@@ -34,10 +43,15 @@ function Notification(props) {
   useEffect(() => {
     getFriends();
     getAllNotif();
+  
   }, [currentUserId]);
 
+
+
+
+
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -251,97 +265,6 @@ function Notification(props) {
                                   <i className="del fa fa-close" />
                                 </li>
                               ))}
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="notifi-meta">
-                                  <p>bob frank like your post</p>
-                                  <span>30 mints ago</span>
-                                </div>
-                                <i className="del fa fa-close" />
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar2.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="notifi-meta">
-                                  <p>
-                                    Sarah Hetfield commented on your photo.{" "}
-                                  </p>
-                                  <span>1 hours ago</span>
-                                </div>
-                                <i className="del fa fa-close" />
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar3.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="notifi-meta">
-                                  <p>
-                                    Mathilda Brinker commented on your new
-                                    profile status.{" "}
-                                  </p>
-                                  <span>2 hours ago</span>
-                                </div>
-                                <i className="del fa fa-close" />
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar4.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="notifi-meta">
-                                  <p>
-                                    Green Goo Rock invited you to attend to his
-                                    event Goo in Gotham Bar.{" "}
-                                  </p>
-                                  <span>2 hours ago</span>
-                                </div>
-                                <i className="del fa fa-close" />
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar5.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="notifi-meta">
-                                  <p>
-                                    Chris Greyson liked your profile status.{" "}
-                                  </p>
-                                  <span>1 day ago</span>
-                                </div>
-                                <i className="del fa fa-close" />
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar6.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="notifi-meta">
-                                  <p>
-                                    You and Nicholas Grissom just became
-                                    friends. Write on his wall.{" "}
-                                  </p>
-                                  <span>2 days ago</span>
-                                </div>
-                                <i className="del fa fa-close" />
-                              </li>
                             </ul>
                           </div>
                         </div>

@@ -1,34 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../header";
 
 function About(props) {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState("");
+  const [coverPath, setCoverPath] = useState("");
+  const [propicPath, setProPicPath] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentUserId,
-      }),
-    }).then(async (res) => {
-      const data = await res.json();
-      setCurrentUser(data.user);
-    });
+    if (!currentUserId) {
+      navigate("/login");
+    } else {
+      fetch("http://localhost:3000/api/users/me", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentUserId,
+        }),
+      }).then(async (response) => {
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentUser(data.user);
+
+          setCoverPath(
+            "uploads/users/" + data.user.coverpic[data.user.coverpic.length - 1]
+          );
+          setProPicPath(
+            "uploads/users/" +
+              data.user.profilepic[data.user.profilepic.length - 1]
+          );
+          if (response.status === 401) {
+            window.location.reload();
+          }
+        }
+      });
+    }
   }, []);
 
   return (
     <div>
       <div className="theme-layout">
         <Header />
-        {/* topbar */}
         <section>
           <div className="feature-photo">
             <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
+              <img src={coverPath} style={{ height: 400 + "px" }} alt />
+
+              {/*<img src="uploads/users/1648378727337.png" alt />*/}
             </figure>
             <div className="add-btn">
               <span>1205 followers</span>
@@ -48,7 +70,7 @@ function About(props) {
                 <div className="col-lg-2 col-sm-3">
                   <div className="user-avatar">
                     <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
+                      <img src={propicPath} alt={"profile picture"} />
                       <form className="edit-phto">
                         <i className="fa fa-camera-retro" />
                         <label className="fileContainer">
@@ -63,8 +85,7 @@ function About(props) {
                   <div className="timeline-info">
                     <ul>
                       <li className="admin-name">
-                        <h5>{currentUser.name}</h5>
-                        <span>Group Admin</span>
+                        <h5>{currentUser.name + " " + currentUser.lastName}</h5>
                       </li>
                       <li>
                         <a className href="time-line.html" title data-ripple>
@@ -200,13 +221,7 @@ function About(props) {
                             <h5 className="f-title">
                               <i className="ti-info-alt" /> Personal Info
                             </h5>
-                            <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit, sed do eiusmod tempor incididunt ut labore
-                              et dolore magna aliqua. Ut enim ad minim veniam,
-                              quis nostrud exercitation ullamco laboris nisi ut
-                              aliquip ex ea commodo consequat.
-                            </p>
+                            <p>{currentUser.bio}</p>
                           </div>
                           <div className="d-flex flex-row mt-2">
                             <ul className="nav nav-tabs nav-tabs--vertical nav-tabs--left">
@@ -268,26 +283,15 @@ function About(props) {
                                   </li>
                                   <li>
                                     <i className="ti-map-alt" />
-                                    live in Dubai
+                                    {currentUser.address}
                                   </li>
                                   <li>
                                     <i className="ti-mobile" />
-                                    +1-234-345675
+                                    {currentUser.phone}
                                   </li>
                                   <li>
                                     <i className="ti-email" />
-                                    <a
-                                      href="https://wpkixx.com/cdn-cgi/l/email-protection"
-                                      className="__cf_email__"
-                                      data-cfemail="3c4553494e515d55507c59515d5550125f5351"
-                                    >
-                                      {currentUser.email} 
-                                      [email&nbsp;protected]
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <i className="ti-world" />
-                                    www.yoursite.com
+                                    {currentUser.email}
                                   </li>
                                 </ul>
                               </div>
@@ -307,7 +311,7 @@ function About(props) {
                               >
                                 <div>
                                   <a href="#" title>
-                                    Envato
+                                    {currentUser.interests}
                                   </a>
                                   <p>
                                     work as autohr in envato themeforest from
@@ -331,9 +335,11 @@ function About(props) {
                                 role="tabpanel"
                               >
                                 <ul className="basics">
-                                  <li>Footbal</li>
-                                  <li>internet</li>
-                                  <li>photography</li>
+                                  {currentUser.interests?.map(
+                                    (value, index) => {
+                                      return <li>{value}</li>;
+                                    }
+                                  )}
                                 </ul>
                               </div>
                               <div

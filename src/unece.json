@@ -1,0 +1,375 @@
+{
+    "Grand Tunis":{
+        "Tunis":{
+            "Sejoumi":{"$count":11.5},
+            "Jbel Jloud" : {"$count":9.5},
+            "Sidi Hassine" : {"$count":9.4} ,
+            "La Medina":{"$count":6.6},
+            "El Omrane":{"$count":6.3},
+            "El Harairia":{"$count":6.1} ,
+            "Kabbaria":{"$count":5.3},
+            "Bab Souika":{"$count":4.5},
+            "Sidi El Bachir":{"$count":4.2},
+            "Ezzouhour":{"$count":4},
+            "El Ouerdia":{"$count":3.9},
+            "El Omran Superieur": {"$count":3.5},
+            "El Kram" : {"$count":3},
+            "El Marsa": {"$count":2.2},
+            "Ettahrir":{"$count":2},
+            "Bardo":{"$count":1.8},
+            "Bab Bhar": {"$count":1.6},
+            "Carthage" : {"$count":1.6} ,
+            "Cite El Khadhra":{"$count":1.4},
+            "La Goulette":{"$count":1.1},
+            "El Menzah":{"$count":0.2}
+        },
+        "Ariana":{
+            "Kalaat El Andalos":{"$count":12.5},
+            "Ettadhamen":{"$count":12.4},
+            "Sidi Thabet":{"$count":9.1},
+            "Mnihla":{"$count":8.8},
+            "Raoued":{"$count":6.9},
+            "Soukra":{"$count":4.8},
+            "Ariana ville":{"$count":1.3}
+        },
+        "Ben Arous":{
+            "Morneg":{"$count":11.2},
+            "Fouchna":{"$count":7.3},
+            "Mhamdia":{"$count":7.1},
+            "Hammamlif":{"$count":7.1},
+            "Nouvelle Mdina":{"$count":5.2},
+            "Ben Arous":{"$count":5},
+            "Hammam Echat":{"$count":5},
+            "Rades":{"$count":4.3},
+            "Boumhel":{"$count":4.1},
+            "Megrine":{"$count":3.6},
+            "El Mourouj":{"$count":3.2},
+            "Ezzahra":{"$count":2.6}
+        },
+        "Manouba":{
+            "Tebouba":{"$count":15.2},
+            "Battane":{"$count":14.5},
+            "Borj El Amri":{"$count":12.1},
+            "Jdaida":{"$count":11.9},
+            "Douar Hicher":{"$count":10.8},
+            "Oued Ellil":{"$count":8.2},
+            "Mornaguia":{"$count":7.8},
+            "Manouba":{"$count":3.8}
+    
+        }  
+    },
+    "Nabeul":{
+        "Takelsa":{"$count":19.1},
+        "Hammem Ghezaz":{"$count":16},
+        "Elmida":{"$count":11.7},
+        "Haouaria":{"$count":11},
+        "Kelibia":{"$count":10.9},
+        "Menzel Temime":{"$count":10.2},
+        "Bouargoub":{"$count":8.6},
+        "Slimane":{"$count":7.8},
+        "Korba":{"$count":7.7},
+        "Menzel Bouzelfa":{"$count":7.1},
+        "Beni Khalled":{"$count":6.4},
+        "Grombalia":{"$count":6.3},
+        "Hammamet":{"$count":5.9},
+        "Beni Khiar":{"$count":5.8},
+        "Dar Chaabane":{"$count":4.9},
+        "Nabeul":{"$count":4.7}
+
+    },
+    "Zaghouen":{
+        "Ennadhour":{"$count":22.5},
+        "Saouaf":{"$count":19.5},
+        "Beni Mcharga":{"$count":15.8},
+        "Zriba":{"$count":13},
+        "El Fahs":{"$count":12.5},
+        "Zaghouan":{"$count":7.2}
+},
+"Bizerte":{
+    "Sejnane":{"$count":39.9},
+    "Joumine":{"$count":36.6},
+    "Ghazala":{"$count":34},
+    "Mateur":{"$count":19.3},
+    "Utique":{"$count":19.1},
+    "Bizerte":{
+           "Bizerte Sud":{"$count":15.9},
+    "Bizerte Nord":{"$count":5.3}
+    },
+    "El Alia":{"$count":15.1},
+    "Ghar El Melh":{"$count":14.5},
+    "Menzel Bourguiba":{"$count":12.8},
+    "Ras Jebel":{"$count":12.2},
+    "Tinja":{"$count":11.3},
+    "Zarzouna":{"$count":10.9},
+    "Menzel Jemil":{"$count":10.6}
+  
+},
+"Nord Ouest":{
+    "Beja":{
+        "Amdoun":{"$count":37.6},
+        "Nefza":{"$count":37.5},
+        "Goubellat":{"$count":36.9},
+        "Teboursouk":{"$count":27.3},
+        "Thibar":{"$count":25.8},
+        "Testour":{"$count":25.5},
+        "Beja":{
+            "Beja Nord":{"$count":23},
+            "Beja Sud":{"$count":18.5}
+        },
+        "Mejez El Beb":{"$count":17.1}
+    },
+    "Jendouba":{
+        "Fernana":{"$count":37.6},
+        "Ain Drahem":{"$count":37.6},
+        "Ghardimaou":{"$count":37.6},
+        "Balta":{"$count":37.6},
+        "Oued Mliz":{"$count":37.6},
+        "Tabarka":{"$count":37.6},
+        "Bou Salem":{"$count":37.6},
+        "Jendouba":{
+            "Jendouba Nord":{"$count":37.6},
+            "Jendouba Sud" :{"$count":37.6}
+        }
+    },
+    "Kef":{
+        "Nebeur":{"$count":45.4},
+        "Sakiet Sidi Youssef":{"$count":39.7},
+        "Dahmani":{"$count":38.4},
+        "Tejrouine":{"$count":37.7},
+        "El Ksour":{"$count":37.1},
+        "Kalaa Khasba":{"$count":35.3},
+        "Le Sers":{"$count":34.4},
+        "Kalaat Senan":{"$count":32.8},
+        "Jerissa":{"$count":31.9},
+        "El Kef":{
+                "El Kef Est":{"$count":24.6},
+        "El Kef Ouest":{"$count":21.9}
+        }
+    
+    },
+    "Seliana":{
+        "Rouhia":{"$count":40.7},
+        "Kisra":{"$count":32.2},
+        "Makthar":{"$count":26.5},
+        "Aroussa":{"$count":25.2},
+        "Gaafour":{"$count":24.4},
+        "Bargou":{"$count":24.4},
+        "Bourouis":{"$count":21.8},
+        "Bouarada":{"$count":21.8},
+        "El Krib":{"$count":20},
+        "Silian":{
+            "Siliana Sud":{"$count":19.9},
+            "Siliana Nord":{"$count":16.8}
+
+        }
+
+    }
+},
+"Centre Est":{
+"Sousse":{
+    "Kondar":{"$count":28.7},
+    "Sidi El Heni":{"$count":27.9},
+    "Enfida":{"$count":23.8},
+    "Bouficha":{"$count":21.9},
+    "Sidi Abdelhamid":{"$count":17.7},
+    "Zaouia ksiba Thrayet":{"$count":17.3},
+    "Sidi Bou Ali":{"$count":16.5},
+    "Hergla":{"$count":16.3},
+    "Kalaa":{
+        "Kalaa Kebira":{"$count":16.2},
+        "Kalaa Sghira":{"$count":15.1}
+    },
+    "Msaken":{"$count":14.1},
+    "Akouda":{"$count":9.3},
+    "Sousse":{
+        "Sousse Riadh":{"$count":10.7},
+        "Hammem Sousse":{"$count":8.5},
+        "Jawhara Sousse":{"$count":7},
+        "Sousse El Medina":{"$count":5.5}
+    }
+
+
+
+},
+"Monastir":{
+    "Zarmdine":{"$count":13.1},
+    "Moknine":{"$count":12.1},
+    "Beni Hassen":{"$count":10.6},
+    "Ouerdanine":{"$count":8.7},
+    "Bekalta":{"$count":8.3},
+    "Jemmal":{"$count":7.4},
+    "Ksar Hellal":{"$count":6.8},
+    "Teboulba":{"$count":6.7},
+    "Sehline":{"$count":6.7},
+    "Bembla":{"$count":6.4},
+    "Ksibet Midiouni":{"$count":5.8},
+    "Sayada Lamta Bouhjar":{"$count":4.7},
+    "Monastir":{"$count":4.6}
+},
+"Mahdia":{
+    "Chorbana":{"$count":36.9},
+    "Ouled Chamekh":{"$count":35},
+    "Hebira":{"$count":33.4},
+    "Melloulech":{"$count":30.9},
+    "Boumardass":{"$count":30.1},
+    "Essouassi":{"$count":29.2},
+    "Sidi Alouane":{"$count":28.9},
+    "El Djem":{"$count":26.5},
+    "Ksour Essef":{"$count":22.2},
+    "Chebba":{"$count":15.5},
+    "Mahdia":{"$count":13.3}
+
+}
+},
+"Sfax":{
+    "Bir Ali Ben Khalifa":{"$count":17.4},
+    "El Ghraiba":{"$count":14.5},
+    "Skhira":{"$count":12.4},
+    "Menzel Chaker":{"$count":12.2},
+    "Hencha":{"$count":11.8},
+    "Agareb":{"$count":10.7},
+    "El Mahres":{"$count":8.9},
+    "Jebeniana":{"$count":8.7},
+    "El Amera":{"$count":6.8},
+    "Tina":{"$count":6.2},
+    "Kerkena":{"$count":4.6},
+    "Sakiet Eddaier":{"$count":3.2},
+    "Sakiet Ezzit":{"$count":3.2},
+    "Sfax":{
+        "Sfax Ouest":{"$count":3},
+        "Sfax Sud":{"$count":3},
+        "Sfax Ville":{"$count":2.5}
+    }
+
+},
+"Centre-Ouest":{
+"Kairouan":{
+    "Oueslatia":{"$count":40.9},
+    "Ala":{"$count":38.3},
+    "Hajeb El Ayoun":{"$count":36.6},
+    "Sbikha":{"$count":35.1},
+    "Sidi Ali Ben Nasrallah":{"$count":35.1},
+    "Sidi Amor Bou Hajla":{"$count":32.7},
+    "Haffouz":{"$count":31.4},
+    "Cherarda":{"$count":38.0},
+    "Chebika":{"$count":24.2},
+    "Kairauan":{
+        "Kairauan sud":{"$count":23},
+        "Kairauan nord":{"$count":20.8}
+    }
+},
+"Kasserine":{
+    "Hassi Frid":{"$count":53.5},
+    "Jediliana":{"$count":53.1},
+    "El Ayoun":{"$count":50.1},
+    "Maje Ben Abbes":{"$count":41.4},
+    "Haidra":{"$count":39.8},
+    "Sbiba":{"$count":37.1},
+    "Feriana":{"$count":36.9},
+    "Sbitla":{"$count":33},
+    "Foussana":{"$count":31.5},
+    "Tala":{"$count":30.9},
+    "Ezzouhour":{"$count":27.8},
+    "Kasserine":{
+        "Kasserine Nord":{"$count":18.9}, 
+         "Kasserine Sud":{"$count":34}
+    }
+},
+"Sidi Bouzid":{
+    "Menzel Bouzayen":{"$count":39},
+    "Mezzouna":{"$count":34.3},
+    "Jelma":{"$count":31.4},
+    "Sebbelet ouled Asker":{"$count":31.2},
+    "Sidi Ali Ben Aoune":{"$count":31},
+    "Bir El Haffey":{"$count":27.4},
+    "Regueb":{"$count":23.7},
+    "Maknassi":{"$count":23.3},
+    "Sidi Bouzid Est":{"$count":21.8},
+    "Ouled Haffouz":{"$count":21.3},
+    "Souk Jdid":{"$count":20.8},
+    "Sidi Bouzid Ouest":{"$count":17.7}
+
+}
+},
+"Sud-Est":{
+"Gabes":{
+    "Menzel Habib":{"$count":33.6},
+    "Matmata":{"$count":26.4},
+    "Nouvelle Matmata":{"$count":23.6},
+    "Mareth":{"$count":21.2},
+    "El Hamma":{"$count":20.3},
+    "Ghannouche":{"$count":20},
+    "Metouia":{"$count":17.9},
+    "Gabes":{
+    "Gabes Ouest":{"$count":15},
+    "Gabes El Medina":{"$count":11.1},
+    "Gabes Sud":{"$count":9.4}
+    }
+},
+"Mednine":{
+    "Beni Kheddache":{"$count":36.9},
+    "Sidi Makhlouf":{"$count":33.4},
+    "Ben Guerdene":{"$count":23.1},
+    
+    "Zarzis":{"$count":15.8},
+    "Djerba":{
+        "Djerba Ajim":{"$count":16.7},
+        "Djerba Midoun":{"$count":11.5},
+    "Djerba Houmet Souk":{"$count":9.5}  
+    },
+    "Medenine":{
+        "Medenine Sud":{"$count":20.7},
+    "Mednine Nord":{"$count":18.9}
+    }
+  
+},
+"Tataouine":{
+    "Dhiba":{"$count":33.3},
+    "Remada":{"$count":27.4},
+    "Tataouine Nord":{"$count":18.4},
+    "Bir Lahmar":{"$count":18.4},
+    "Tataouine Sud":{"$count":17.1},
+    "Smar":{"$count":14.4},
+    "Ghomrassen":{"$count":10.5}
+
+}
+},
+"Sud Ouest":{
+"Gafsa":{
+    "Belkhir":{"$count":31.2},
+    "Sened":{"$count":27.2},  
+    "Redeyf":{"$count":21.1},
+    "Oum Laarayes":{"$count":20.5},
+    "Guetar":{"$count":19.8},
+    "Mdhila":{"$count":18.7},
+    "Elksar":{"$count":16.9},
+    "Metlaoui":{"$count":16.2},
+    "Sidi Aiche":{"$count":16.1},
+    "Gafsa":{
+         "Gafsa Sud":{"$count":15.4},
+          "Gafsa Nord":{"$count":23}
+    }
+   
+
+},
+"Tozeur":{
+    "Hazoua":{"$count":22.6},
+    "Tamaghza":{"$count":20.5},
+    "Degache":{"$count":17.4},
+    "Nefta":{"$count":17.3},
+    "Tozeur":{"$count":10.3}
+
+},
+"Kebili":{
+    "Douz":{
+         "Douz Sud":{"$count":25.9},
+    "Douz Nord":{"$count":20.4}
+    },
+    "Souk Lahad":{"$count":21.7},
+    "faouar":{"$count":25.2},
+    "Kebili Sud":{"$count":15.8},
+    "Kebili Nord":{"$count":12.3}
+
+}
+}
+}

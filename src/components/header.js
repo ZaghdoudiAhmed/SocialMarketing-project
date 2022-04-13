@@ -8,13 +8,14 @@ function Header({ socket, currentUserId, friends }) {
   const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
+
     socket?.on("getNotification", (data) => {
       setNotifications((prev) => [...prev, data]);
     });
   }, [socket]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -270,19 +271,19 @@ function Header({ socket, currentUserId, friends }) {
               </a>
               <ul>
                 <li>
-                  <a href="create-fav-page.html" title>
-                    create fav page
-                  </a>
+                  <Link to="/edit-profile" title>
+                    Edit profile
+                  </Link>
                 </li>
                 <li>
-                  <a href="edit-account-setting.html" title>
-                    edit account setting
-                  </a>
+                  <Link to="/edit-password" title>
+                    edit password
+                  </Link>
                 </li>
                 <li>
-                  <a href="edit-interest.html" title>
-                    edit-interest
-                  </a>
+                  <Link to="/user-management" title>
+                    user management
+                  </Link>
                 </li>
                 <li>
                   <a href="edit-password.html" title>
