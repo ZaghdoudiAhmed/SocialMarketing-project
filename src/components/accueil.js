@@ -217,7 +217,7 @@ function Accueil() {
   };
 
   useEffect(() => {
-    setSocket(io("http://localhost:8900"));
+    setSocket(io("http://localhost:2700"));
   }, []);
 
   useEffect(() => {
@@ -1229,7 +1229,7 @@ function Accueil() {
                               <img src="images/resources/admin2.jpg" alt />
                             </figure>
                             <div className="newpst-input">
-                              <form>
+                              <form >
                                 <textarea
                                   rows={2}
                                   placeholder="..."
@@ -1250,6 +1250,7 @@ function Accueil() {
                                             setFiles(e.target.files[0]);
                                           }}
                                           id="file"
+
                                         />
                                       </label>
                                     </li>

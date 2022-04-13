@@ -10,6 +10,15 @@ router.get('/donation/listdonations',async (req, res) =>
   res.send(donation1);
  }
 );
+
+router.get('/donation/donationbyuser/:iduser',async (req, res) =>
+ {
+   const iduser = req.params.iduser;
+  const donation1= await donation.find({donator:iduser}) ;
+  res.send(donation1);
+ }
+);
+
 router.get('/donation/listdonationsbycategorie/:categorie',async (req, res) =>
  {
    const categorie = req.params.categorie;
@@ -17,13 +26,13 @@ router.get('/donation/listdonationsbycategorie/:categorie',async (req, res) =>
   res.send(donation1);
  }
 );
-router.post('/donation/adddonation',async (req, res) =>
+router.post('/donation/adddonation/:iduser',async (req, res) =>
  {
    const x = req.body;
- 
+   const iduser = req.params.iduser;
    const donation1 =new donation({
     title : req.body[0].title,
-   donator: "ah",
+   donator: iduser,
   description: req.body[0].description,
   location: req.body[0].location,
   state: req.body[0].state,

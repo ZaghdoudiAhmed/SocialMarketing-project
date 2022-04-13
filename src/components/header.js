@@ -8,6 +8,7 @@ function Header({ socket, currentUserId, friends }) {
   const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
+
     socket?.on("getNotification", (data) => {
       setNotifications((prev) => [...prev, data]);
     });

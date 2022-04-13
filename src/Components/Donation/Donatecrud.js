@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useForm, useFormState } from "react-hook-form";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Select from "@mui/material/Select";
@@ -10,8 +10,11 @@ import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import CloseIcon from "@mui/icons-material/Close";
+import Donationbyuser from "./Donationbyuser";
 function Donatecrud(props) {
+  const currentUserId = localStorage.getItem("currentUser");
   const [imgFile, imgFileSet] = useState([]);
+  const [data, setdata] = useState([]);
   const {
     register,
     handleSubmit,
@@ -34,7 +37,7 @@ function Donatecrud(props) {
       result.push(e);
       result.push({ image: imgFile });
       await axios
-        .post("http://localhost:2600/donation/adddonation", result)
+        .post("http://localhost:2600/donation/adddonation/"+currentUserId, result)
         .catch((err) => {});
       setistrue(false);
       reset();
@@ -52,6 +55,11 @@ function Donatecrud(props) {
       setisupload(true);
     }
   };
+  useEffect( async () => {
+    const res = await axios.get("http://localhost:2600/donation/donationbyuser/"+ currentUserId)
+    console.log(res.data);
+    setdata(res.data);
+  },[])
   return (
     <div className="theme-layout">
       <div className="responsive-header">
@@ -785,7 +793,7 @@ function Donatecrud(props) {
       </section>
       {/* top area animated */}
       <section>
-        <div className="gap100">
+        <div className="gap101">
           <div className="container">
             <div className="row">
               <div className="col-lg-9">
@@ -1088,9 +1096,27 @@ function Donatecrud(props) {
               </div>
             </div>
           </div>
-        </div>
+        </div> 
+       
       </section>
+      <h4 className=" title">
+                    <i className="ti-info-alt" /> List of your donations {" "}
+      </h4>
+        <div className="dip">  
+        {data.length>0 &&(
+      
+data.map((one)=>(
+
+  <Donationbyuser key={one._id} name={one}/>
+
+
+
+)
+))}
+     </div> 
       <section>
+
+
         <div className="getquot-baner">
           <span>
             Want to join our awesome forum and start interacting with others?
