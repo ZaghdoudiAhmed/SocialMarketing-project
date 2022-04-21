@@ -56,24 +56,6 @@ router.get("/delete/:id", (req, res, next) => {
   );
 });
 
-// Like a comment
-router.post("/like/:id", (req, res, next) => {
-  Comment.findOneAndUpdate(
-    { _id: req.params.id },
-    { $inc: { Likes: 1 } }
-  ).exec();
-  res.json("done");
-});
-
-//Dislike a comment
-router.post("/dislike/:id", (req, res, next) => {
-  Comment.findOneAndUpdate(
-    { _id: req.params.id },
-    { $inc: { Dislikes: 1 } }
-  ).exec();
-  res.json("done");
-});
-
 //A comment for a post
 router.post("/post/:id/comment", async (req, res, next) => {
   //post id
@@ -129,6 +111,56 @@ router.post("/post/:idpost/comment/:idcomment", async (req, res, next) => {
     }
     res.json(populatedcomment);
   });
+});
+
+// love  a comment
+router.put("/:id/love", async (req, res, next) => {
+  const comment = await Comment.findById(req.params.id);
+  if (
+    !comment.Loves.includes(req.body.userId) &&
+    !comment.Angrys.includes(req.body.userId)
+  ) {
+    await comment.updateOne({ $push: { Loves: req.body.userId } });
+    res.json("the comment has been loved");
+  } else if (
+    comment.Angrys.includes(req.body.userId) &&
+    !comment.Loves.includes(req.body.userId)
+  ) {
+    await comment.updateOne({ $pull: { Angrys: req.body.userId } });
+    await comment.updateOne({ $push: { Loves: req.body.userId } });
+    res.json("you was Angry this comment now you are Loving it :D ");
+  } else if (
+    !comment.Angrys.includes(req.body.userId) &&
+    comment.Loves.includes(req.body.userId)
+  ) {
+    await comment.updateOne({ $pull: { Loves: req.body.userId } });
+    res.json("no react ");
+  }
+});
+
+//Angry a comment
+router.put("/:id/angry", async (req, res, next) => {
+  const comment = await Comment.findById(req.params.id);
+  if (
+    !comment.Loves.includes(req.body.userId) &&
+    !comment.Angrys.includes(req.body.userId)
+  ) {
+    await comment.updateOne({ $push: { Angrys: req.body.userId } });
+    res.json("the comment has been Angry");
+  } else if (
+    !comment.Angrys.includes(req.body.userId) &&
+    comment.Loves.includes(req.body.userId)
+  ) {
+    await comment.updateOne({ $pull: { Loves: req.body.userId } });
+    await comment.updateOne({ $push: { Angrys: req.body.userId } });
+    res.json("you was Lovings this comment now you are Angry it :D ");
+  } else if (
+    comment.Angrys.includes(req.body.userId) &&
+    !comment.Loves.includes(req.body.userId)
+  ) {
+    await comment.updateOne({ $pull: { Angrys: req.body.userId } });
+    res.json("no react ");
+  }
 });
 
 module.exports = router;

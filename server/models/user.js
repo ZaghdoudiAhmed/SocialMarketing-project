@@ -90,7 +90,7 @@ User.set("toJSON", {
     return ret;
   },
 });
-mongoose.models = {}
+mongoose.models = {};
 User.plugin(passportLocalMongoose, { usernameField: "email" });
 
 module.exports = mongoose.model("users", User);

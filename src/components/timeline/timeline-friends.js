@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Shortcuts from "./shortcuts";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import Timelineinfo from "./timeline-info";
 
@@ -10,6 +11,18 @@ import axios from "axios";
 function Timelinefriends(props) {
   const [friends, setFriends] = useState([]);
   const currentUserId = localStorage.getItem("currentUser");
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-start",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const getFriends = async () => {
     try {
@@ -23,17 +36,27 @@ function Timelinefriends(props) {
   };
 
   const handleClick = async (userid) => {
-    try {
-      await axios
-        .put("http://localhost:2600/api/users/" + userid + "/unfollow", {
-          userId: currentUserId,
-        })
-        .then((res) => {
-          console.log(res);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+    Swal.fire({
+      title: "Are you sure to delete your post ?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put("http://localhost:2600/api/users/" + userid + "/unfollow", {
+            userId: currentUserId,
+          })
+          .then((res) => {
+            const newList = friends.filter((f) => f._id !== userid);
+            setFriends(newList);
+          });
+        Swal.fire("Unfollowed!", "Your friend has been  unfollowed", "success");
+      }
+    });
   };
 
   useEffect(() => {
@@ -42,7 +65,7 @@ function Timelinefriends(props) {
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo friends={friends} setFriends={setFriends} />
@@ -122,12 +145,12 @@ function Timelinefriends(props) {
                                       <figure>
                                         <a href="time-line.html" title>
                                           <img
-                                            // src={
-                                            //   friend.profilepic
-                                            //     ? friend.profilepic
-                                            //     : "images/resources/friend-avatar9.jpg"
-                                            // }
-                                            src="images/resources/friend-avatar9.jpg"
+                                            src={
+                                              friend.profilepic
+                                                ? "/uploads/users/" +
+                                                  friend.profilepic
+                                                : "images/resources/friend-avatar9.jpg"
+                                            }
                                             alt
                                           />
                                         </a>
@@ -138,24 +161,23 @@ function Timelinefriends(props) {
                                             {friend.name}
                                           </a>
                                         </h4>
-                                        <span>ftv model</span>
-                                        <a
-                                          href="#"
-                                          title
-                                          className="add-butn more-action"
+                                        <button
+                                          className="btn btn-secondary d-flex justify-content-end"
                                           data-ripple
-                                          //  onClick={handleClick(friend._id)}
+                                          onClick={() =>
+                                            handleClick(friend._id)
+                                          }
                                         >
                                           unfriend
-                                        </a>
-                                        <a
+                                        </button>
+                                        {/* <a
                                           href="#"
                                           title
                                           className="add-butn"
                                           data-ripple
                                         >
                                           add friend
-                                        </a>
+                                        </a> */}
                                       </div>
                                     </div>
                                   </li>

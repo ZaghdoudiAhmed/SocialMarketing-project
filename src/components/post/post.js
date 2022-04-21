@@ -9,7 +9,7 @@ import "./post.css";
 import Comment from "../comment/comment";
 import CommentForm from "../comment/commentForm";
 
-function Post({ post, socket, currentUser, friends }) {
+function Post({ post, socket, currentUser, friends, handleDeletePost }) {
   const [likes, setLikes] = useState(post?.Likes);
   const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState();
@@ -241,26 +241,6 @@ function Post({ post, socket, currentUser, friends }) {
       });
   };
 
-  const handleDeletePost = () => {
-    Swal.fire({
-      title: "Are you sure to delete your post ?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios
-          .get("http://localhost:2600/posts/delete/" + post._id)
-          .then((res) => {});
-
-        Swal.fire("Deleted!", "Your post has been deleted.", "success");
-      }
-    });
-  };
-
   useEffect(() => {
     getComments();
     setLikes(post.Likes);
@@ -273,7 +253,12 @@ function Post({ post, socket, currentUser, friends }) {
         <div className="user-post">
           <div className="friend-info ">
             <figure>
-              <img src="/images/resources/friend-avatar10.jpg" alt />
+              <img
+                width="45"
+                height="45"
+                src={"/uploads/users/" + post.Creator.profilepic}
+                alt
+              />
             </figure>
             <div className="friend-name">
               <ins>{post.Creator.name}</ins>
@@ -290,12 +275,15 @@ function Post({ post, socket, currentUser, friends }) {
                     <i class="bi bi-three-dots-vertical"></i>
                   </a>
                   <div className="dropdown-menu">
-                    <a className="dropdown-item">
-                      <i className="ti-pencil-alt" href="/" /> Edit
-                    </a>
-                    <a className="dropdown-item" href="/">
+                    <button className="dropdown-item">
+                      <i className="ti-pencil-alt" /> Edit
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => handleDeletePost(post._id)}
+                    >
                       <i className="fa fa-trash" /> Delete
-                    </a>
+                    </button>
                   </div>
                 </div>
               )}
@@ -304,7 +292,7 @@ function Post({ post, socket, currentUser, friends }) {
               <div className="description">
                 <p>{post.Description}</p>
               </div>
-              <img src={"http://127.0.0.1:5500/server/uploads/" + post.Photo} />
+              <img src={"/uploads/posts/" + post.Photo} />
               <div className="we-video-info">
                 <ul>
                   <li>
@@ -349,7 +337,7 @@ function Post({ post, socket, currentUser, friends }) {
                     </span>
                   </li>
 
-                  <li className="social-media">
+                  {/* <li className="social-media">
                     <div className="menu">
                       <div className="btn trigger">
                         <i className="fa fa-share-alt" />
@@ -416,7 +404,7 @@ function Post({ post, socket, currentUser, friends }) {
                     <FacebookShareButton url={shareUrl}>
                       <FacebookIcon size={32} round={true} />
                     </FacebookShareButton>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -429,6 +417,7 @@ function Post({ post, socket, currentUser, friends }) {
                   comment={c}
                   replies={c.comments}
                   currentUser={currentUser}
+                  socket={socket}
                 />
               ))}
               <CommentForm

@@ -11,11 +11,10 @@ var Post = require("../models/posts");
 //  Storing uploaded files
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null,"../public/uploads/posts");
+    cb(null, "../public/uploads/posts");
   },
   filename: (req, file, cb) => {
     //cb(null, new Date().toISOString() + file.originalname);
-    console.log(file)
     cb(null, file.originalname);
   },
 });
@@ -35,7 +34,6 @@ const fileFilter = (req, file, cb) => {
 var upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.get("/", function (req, res, next) {
-  // res.send("respond with a resource");
   Post.find({})
     .populate("Creator")
     .exec((err, posts) => {
@@ -47,23 +45,18 @@ router.get("/", function (req, res, next) {
 });
 
 // Creating post
-router.post("/",(req, res) => {
-  console.log(req.file.originalname)
-  ////console.log(req)
-  ///console.log( req.files.Photo.name)
-  const x= new Post({
+router.post("/", upload.single("Photo"), (req, res) => {
+  new Post({
     Description: req.body.Description,
-    Private: req.body.Private,
     Creator: req.body.Creator,
-   //// Photo: req.file.originalname,
+    Photo: req.file.originalname,
   })
-///console.log(x)
     .save()
-   .then((newpost) => {
+    .then((newpost) => {
       Post.populate(newpost, "Creator", (err, populatedpost) => {
-       res.json(populatedpost);
+        res.json(populatedpost);
       });
-   });
+    });
 });
 
 //Update Post
@@ -120,27 +113,6 @@ router.get("/all/:id", (req, res, next) => {
       }
       res.json(posts);
     });
-});
-
-// Like a post
-router.post("/like/:id", (req, res, next) => {
-  Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { Likes: 1 } }).exec();
-  res.json("done");
-});
-
-//Dislike a post
-router.post("/dislike/:id", (req, res, next) => {
-  Post.findOneAndUpdate(
-    { _id: req.params.id },
-    { $inc: { Dislikes: 1 } }
-  ).exec();
-  res.json("done");
-});
-
-//Love a post
-router.post("/love/:id", (req, res, next) => {
-  Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { Love: 1 } }).exec();
-  res.json("done");
 });
 
 ///////////////////////////////////////////// Likes in array //////////////////////////

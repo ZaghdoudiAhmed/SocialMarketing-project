@@ -7,12 +7,8 @@ var logger = require("morgan");
 var multer = require("multer");
 
 var mongoose = require("mongoose");
-var DonationRouter = require("./routers/Donation");
-var CompaignRouter = require("./routers/Campaign");
-var blogRouter = require("./routers/Blog");
-var indexRouter = require("./routers/index");
-var usersRouter = require("./routers/users");
 var app = express();
+
 const http = require("http").Server(app);
 const httpd = require("http").Server(app);
 http.listen(2600);
@@ -142,32 +138,27 @@ app.use(function (req, res, next) {
 const cors = require("cors");
 const bodyparser = require("body-parser");
 const fileUpload = require("express-fileupload");
-var indexRouter = require("./routers/index");
-var usersRouter = require("./routers/users");
 
 //configuration la cnx à la base
 var mongoose = require("mongoose");
 //const port = 8080;
-var indexRouter = require("./routers/index");
 var usersRouter = require("./routers/users");
-var postsRouter = require("./routers/posts");
 var commentsRouter = require("./routers/comments");
 var conversationRouter = require("./routers/conversations");
 var messageRouter = require("./routers/messages");
 var notificationRouter = require("./routers/notifications");
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var postsRouter = require("./routes/posts");
-var commentsRouter = require("./routes/comments");
-var conversationRouter = require("./routes/conversations");
-var messageRouter = require("./routes/messages");
-var notificationRouter = require("./routes/notifications");
-var storiesRouter = require("./routes/stories");
+var postsRouter = require("./routers/posts");
+var commentsRouter = require("./routers/comments");
+var conversationRouter = require("./routers/conversations");
+var messageRouter = require("./routers/messages");
+var storiesRouter = require("./routers/stories");
+var DonationRouter = require("./routers/Donation");
+var CompaignRouter = require("./routers/Campaign");
+var blogRouter = require("./routers/Blog");
 
 var passport = require("passport");
 var path = require("path");
 var cookieParser = require("cookie-parser");
-var usersRouter = require("./routers/users");
 
 require("./routers/auth/autnetificate");
 require("./routers/auth/JwtStrategy");
@@ -189,25 +180,23 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(cookieParser());
-app.use(
-  fileUpload({
-    useTempFiles: true,
-  })
-);
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//   })
+// );
 
 app.use(cookieParser("secret"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
-app.use(cors());
 app.use(passport.initialize());
 
 app.use(bodyparser.json({ limit: "10mb" }));
-app.use(bodyparser.urlencoded({ limit: "10mb", extended: true }));
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/posts", postsRouter);
 app.use("/", DonationRouter);
 app.use("/", blogRouter);
 app.use("/", CompaignRouter);
@@ -215,7 +204,6 @@ app.use("/api", require("./routers/categoryRouter"));
 app.use("/api", require("./routers/productRouter"));
 app.use("/api", require("./routers/filterRouter"));
 app.use("/api", require("./routers/paymentRouter"));
-app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
 app.use("/conversations", conversationRouter);
 app.use("/messages", messageRouter);
@@ -223,7 +211,7 @@ app.use("/api/users", usersRouter);
 app.use("/notifications", notificationRouter);
 app.use("/stories", storiesRouter);
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

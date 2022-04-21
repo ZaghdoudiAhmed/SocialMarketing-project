@@ -83,7 +83,7 @@ function Timeline(props) {
   return (
     <div>
       <div className="theme-layout">
-        <Header currentUser={currentUser} />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo

@@ -7,7 +7,7 @@ var Story = new Schema({
   Date_fin: { type: Date },
   Likes: { type: Array, default: [] },
   Loves: { type: Array, default: [] },
-  Photo: String,
+  url: String,
   Creator: { type: Schema.Types.ObjectId, ref: "users" },
   //active: { type: Boolean, default: true },
 });

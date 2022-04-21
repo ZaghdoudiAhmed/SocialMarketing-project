@@ -13,12 +13,15 @@ function Usertimeline(props) {
 
   const [postData, setPostData] = useState([]);
   const [friends, setFriends] = useState([]);
-  const [onlineFriends, setOnlineFriends] = useState([]);
   const [newDescription, setNewDescription] = useState("");
   const [file, setFile] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
   const [userProfile, setProfile] = useState(null);
+  const [picture, setPicture] = useState(
+    "/images/resources/bloggrid-mas-1.jpg"
+  );
+
   const { userid } = useParams();
 
   const getPosts = async () => {
@@ -59,7 +62,6 @@ function Usertimeline(props) {
         console.log(err);
       }
     });
-    //  console.log(yourFriend);
   }, []);
 
   useEffect(() => {
@@ -85,16 +87,25 @@ function Usertimeline(props) {
             <Header currentUserId={currentUserId} />
             {/* topbar */}
             <section>
-              {/* <Timelineinfo friends={friends} setFriends={setFriends} /> */}
               <div className="feature-photo">
                 <figure>
-                  <img src="/images/resources/timeline-1.jpg" alt />
+                  <img
+                    src={
+                      userProfile.coverpic[0]
+                        ? "/uploads/users/" + userProfile.coverpic[0]
+                        : "/images/resources/timeline-1.jpg"
+                    }
+                    alt
+                  />
                 </figure>
                 <div className="add-btn">
-                  <span>{friends.length} followers</span>
-                  <a href="#" title data-ripple>
-                    Add Friend
-                  </a>
+                  <span>{friends.length} followings</span>
+
+                  {true ? (
+                    <a href="#" title data-ripple>
+                      Add Friend
+                    </a>
+                  ) : null}
                 </div>
                 <form className="edit-phto">
                   <i className="fa fa-camera-retro" />
@@ -108,7 +119,15 @@ function Usertimeline(props) {
                     <div className="col-lg-2 col-sm-3">
                       <div className="user-avatar">
                         <figure>
-                          <img src="/images/resources/user-avatar.jpg" alt />
+                          <img
+                            src={
+                              userProfile.profilepic
+                                ? "/uploads/users/" + userProfile.profilepic[0]
+                                : "/images/resources/bloggrid-mas-1.jpg"
+                            }
+                            alt
+                          />
+
                           <form className="edit-phto">
                             <i className="fa fa-camera-retro" />
                             <label className="fileContainer">
@@ -135,46 +154,9 @@ function Usertimeline(props) {
                             >
                               time line
                             </Link>
-                            <Link
-                              className
-                              to={{
-                                pathname: "/timelinephotos",
-                              }}
-                              title
-                              data-ripple
-                            >
-                              Photos
-                            </Link>
-                            <Link
-                              className
-                              to="/timelinevideos"
-                              title
-                              data-ripple
-                            >
-                              Videos
-                            </Link>
-                            <Link
-                              className
-                              to="/timelinefriends"
-                              title
-                              data-ripple
-                            >
-                              Friends
-                            </Link>
-                            <a
-                              className
-                              href="timeline-groups.html"
-                              title
-                              data-ripple
-                            >
-                              Groups
-                            </a>
                             <Link className to="/about" title data-ripple>
                               about
                             </Link>
-                            <a className href="#" title data-ripple>
-                              more
-                            </a>
                           </li>
                         </ul>
                       </div>
@@ -373,48 +355,7 @@ function Usertimeline(props) {
                                 <figure>
                                   <img src="/images/resources/admin2.jpg" alt />
                                 </figure>
-                                <div className="newpst-input">
-                                  {/* <form method="post">
-                                <textarea
-                                  rows={2}
-                                  placeholder="write something"
-                                  onChange={(e) =>
-                                    setNewDescription(e.target.value)
-                                  }
-                                  value={newDescription}
-                                />
-                                <div className="attachments">
-                                  <ul>
-                                    <li>
-                                      <i className="fa fa-image" />
-                                      <label className="fileContainer">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setFile(e.target.files[0]);
-                                          }}
-                                        />
-                                      </label>
-                                    </li>
-                                    <li>
-                                      <i className="fa fa-video-camera" />
-                                      <label className="fileContainer">
-                                        <input type="file" />
-                                      </label>
-                                    </li>
-
-                                    <li>
-                                      <button
-                                        type="submit"
-                                        onClick={handleSubmit}
-                                      >
-                                        Publish
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </form> */}
-                                </div>
+                                <div className="newpst-input"></div>
                               </div>
                             </div>
                             {/* add post new box */}
@@ -462,7 +403,7 @@ function Usertimeline(props) {
                               </div>
                             </div>
                             <div className="widget friend-list stick-widget">
-                              <h4 className="widget-title">Followers</h4>
+                              <h4 className="widget-title">Followings</h4>
                               <div id="searchDir" />
                               <ul id="people-list" className="friendz-list">
                                 {friends.map((f) => (

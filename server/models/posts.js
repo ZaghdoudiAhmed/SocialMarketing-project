@@ -8,11 +8,8 @@ var Post = new Schema({
   Likes: { type: Array, default: [] },
   Dislikes: { type: Array, default: [] },
   Nbr_comments: { type: Number, default: 0 },
-  Private: Boolean,
-  // Views: [Schema.Types.ObjectId],
   Creator: { type: Schema.Types.ObjectId, ref: "users" },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-
+  comments: [{ type: Schema.Types.ObjectId, ref: "comments" }],
   Photo: String,
 });
 

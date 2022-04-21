@@ -47,9 +47,10 @@ function Timelineinfo({ friends, setFriends }) {
       </figure>
       <div className="add-btn">
         <span>{friends.length} followers</span>
-        <a href="#" title data-ripple>
+
+        {/* <a href="#" title data-ripple>
           Add Friend
-        </a>
+        </a> */}
       </div>
       <form className="edit-phto">
         <i className="fa fa-camera-retro" />

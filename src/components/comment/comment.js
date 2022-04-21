@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "./comment.css";
 import { format } from "timeago.js";
@@ -7,20 +7,16 @@ import CommentForm from "./commentForm";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function Comment({ comment, replies, currentUser }) {
+function Comment({ comment, replies, currentUser, socket }) {
   const canReply = Boolean(currentUser);
   const [activeComment, setActiveComment] = useState(null);
   const [replyBody, setReplyBody] = useState("");
   const [repliies, setReplies] = useState(replies);
-  const [likes, setLikes] = useState();
-  const [dislike, setDislike] = useState();
+  const [loves, setLoves] = useState(comment?.Loves);
+  const [angrys, setAngrys] = useState(comment?.Angrys);
 
-  const hasLikedPost = true;
-  const hasDislikedPost = true;
-  // const hasLikedPost = likes.find((like) => like === currentUser._id);
-  // const hasDislikedPost = dislike.find(
-  //   (dislike) => dislike === currentUser._id
-  // );
+  const hasLovedComment = loves.find((love) => love === currentUser._id);
+  const hasAngryComment = angrys.find((angry) => angry === currentUser._id);
 
   const isReplying =
     activeComment &&
@@ -63,10 +59,158 @@ function Comment({ comment, replies, currentUser }) {
       });
   };
 
+  const handleLove = async () => {
+    const user = {
+      userId: currentUser._id,
+    };
+    const text = currentUser.name + " Loved your comment ";
+
+    axios
+      .put("http://localhost:2600/comments/" + comment._id + "/love", user)
+      .then((res) => {
+        if (hasLovedComment) {
+          setLoves(comment.Loves.filter((id) => id !== currentUser._id));
+        } else if (hasAngryComment) {
+          setAngrys(comment.Angrys.filter((id) => id !== currentUser._id));
+          setLoves([...comment?.Loves, currentUser._id]);
+          Toast.fire({
+            icon: "success",
+            title: "you loved the comment of " + comment.Creator.name,
+          });
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: comment.Creator._id,
+          };
+
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== comment.Creator._id
+          ) {
+            const notif = axios.post(
+              "http://localhost:2600/notifications",
+              notification
+            );
+            socket?.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: comment.Creator._id,
+              text: text,
+            });
+          }
+        } else {
+          setLoves([...comment?.Loves, currentUser._id]);
+          Toast.fire({
+            icon: "success",
+            title: "you loved the comment ",
+          });
+
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: comment.Creator._id,
+          };
+
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== comment.Creator._id
+          ) {
+            const notif = axios.post(
+              "http://localhost:2600/notifications",
+              notification
+            );
+            socket?.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: comment.Creator._id,
+              text: text,
+            });
+          }
+        }
+      });
+  };
+
+  const handleAngry = async () => {
+    const user = {
+      userId: currentUser._id,
+    };
+
+    const text = currentUser.name + " Angry your comment ";
+
+    axios
+      .put("http://localhost:2600/comments/" + comment._id + "/angry", user)
+      .then((res) => {
+        if (hasAngryComment) {
+          setAngrys(comment.Angrys.filter((id) => id !== currentUser._id));
+        } else if (hasLovedComment) {
+          setLoves(comment.Loves.filter((id) => id !== currentUser._id));
+
+          setAngrys([...comment?.Angrys, currentUser._id]);
+          Toast.fire({
+            icon: "success",
+            title: "you angry the comment of  " + comment.Creator.name,
+          });
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: comment.Creator._id,
+          };
+
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== comment.Creator._id
+          ) {
+            const notif = axios.post(
+              "http://localhost:2600/notifications",
+              notification
+            );
+            socket.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: comment.Creator._id,
+              text: text,
+            });
+          }
+        } else {
+          setAngrys([...comment?.Angrys, currentUser._id]);
+          Toast.fire({
+            icon: "success",
+            title: "you angry the comment ",
+          });
+          const notification = {
+            text: text,
+            sender: currentUser._id,
+            receiver: comment.Creator._id,
+          };
+
+          if (
+            notification.sender !== notification.receiver &&
+            currentUser._id !== comment.Creator._id
+          ) {
+            const notif = axios.post(
+              "http://localhost:2600/notifications",
+              notification
+            );
+            socket.emit("sendNotification", {
+              senderId: currentUser._id,
+              receiverId: comment.Creator._id,
+              text: text,
+            });
+          }
+        }
+      });
+  };
+
+  useEffect(() => {
+    setLoves(comment.Loves);
+    setAngrys(comment.Angrys);
+  }, []);
+
   return (
     <li key={comment._id} className="user-comment-box">
       <div className="comet-avatar">
-        <img src="images/resources/comet-1.jpg" />
+        <img
+          width="45"
+          height="45"
+          src={"/uploads/users/" + comment.Creator.profilepic}
+        />
       </div>
       <div className="we-comment">
         <div className="coment-head ">
@@ -90,23 +234,23 @@ function Comment({ comment, replies, currentUser }) {
         <p>{comment.Body}</p>
         <div className="d-flex justify-content-end">
           <li className="angry">
-            <span>
-              {hasDislikedPost ? (
+            <span onClick={handleAngry} data-toggle="tooltip">
+              {hasAngryComment ? (
                 <i class="bi bi-emoji-angry-fill"></i>
               ) : (
                 <i class="bi bi-emoji-angry"></i>
               )}
-              <sup>100</sup>
+              <sup>{angrys.length}</sup>
             </span>
           </li>
           <li className="love">
-            <span>
-              {hasLikedPost ? (
+            <span onClick={handleLove} data-toggle="tooltip">
+              {hasLovedComment ? (
                 <i class="bi bi-heart-fill"></i>
               ) : (
                 <i class="bi bi-heart"></i>
               )}
-              <sup>100</sup>
+              <sup>{loves.length}</sup>
             </span>
           </li>
         </div>
@@ -116,7 +260,11 @@ function Comment({ comment, replies, currentUser }) {
         {isReplying && (
           <li>
             <div className="comet-avatar">
-              <img src="images/resources/comet-1.jpg" />
+              <img
+                width="45"
+                height="45"
+                src={"/uploads/users/" + currentUser.profilepic}
+              />
             </div>
             <div className="we-comment">
               <div className="coment-head">
@@ -136,7 +284,6 @@ function Comment({ comment, replies, currentUser }) {
                   type="submit"
                   className="btn btn-primary"
                   style={{ color: "#088dcd" }}
-
                   onClick={handleReply}
                 >
                   reply
@@ -149,7 +296,11 @@ function Comment({ comment, replies, currentUser }) {
         {repliies?.map((p) => (
           <li key={p._id}>
             <div className="comet-avatar">
-              <img src="images/resources/comet-1.jpg" />
+              <img
+                width="45"
+                height="45"
+                src={"/uploads/users/" + p.Creator.profilepic}
+              />
             </div>
             <div className="we-comment">
               <div className="coment-head">
@@ -162,22 +313,22 @@ function Comment({ comment, replies, currentUser }) {
               <div className="d-flex justify-content-end">
                 <li className="angry">
                   <span>
-                    {hasDislikedPost ? (
+                    {hasAngryComment ? (
                       <i class="bi bi-emoji-angry-fill"></i>
                     ) : (
                       <i class="bi bi-emoji-angry"></i>
                     )}
-                    <sup>100</sup>
+                    <sup>{p.Angrys.length}</sup>
                   </span>
                 </li>
                 <li className="love">
                   <span>
-                    {hasLikedPost ? (
+                    {hasLovedComment ? (
                       <i class="bi bi-heart-fill"></i>
                     ) : (
                       <i class="bi bi-heart"></i>
                     )}
-                    <sup>100</sup>
+                    <sup>{p.Loves.length}</sup>
                   </span>
                 </li>
               </div>

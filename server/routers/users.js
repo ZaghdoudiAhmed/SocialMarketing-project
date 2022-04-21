@@ -1051,7 +1051,7 @@ router.post("/me", (req, res, next) => {
 });
 
 router.get("/logout", (req, res, next) => {
-/*  const { signedCookies = {} } = req;
+  /*  const { signedCookies = {} } = req;
   const { refreshToken } = signedCookies;
   User.findById(req.user._id).then(
     (user) => {
@@ -1278,6 +1278,20 @@ router.get("/:userId", async (req, res) => {
   try {
     const user = await User.findById(userId);
     res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//get users that  you didn't follow
+router.get("/all/:userid", async (req, res) => {
+  const userid = req.params.userid;
+  try {
+    const users = await User.find({
+      _id: { $ne: userid },
+      followers: { $nin: userid },
+    });
+    res.json(users);
   } catch (err) {
     res.status(500).json(err);
   }

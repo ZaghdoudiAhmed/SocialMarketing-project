@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
-
 import {
   NotificationContainer,
   NotificationManager,
@@ -46,7 +45,7 @@ function Login(props) {
     if (gender === "" || password === "" || name === "" || email === "") {
       setErrors("Please fill all fields!");
     } else if (!robot) {
-      const response = await fetch("http://localhost:3000/api/users/register", {
+      const response = await fetch("http://localhost:2600/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +75,7 @@ function Login(props) {
   async function loginUser(event) {
     event.preventDefault();
     console.log("password = " + loginemail + "email : " + loginpassword);
-    fetch("http://localhost:3000/api/users/login", {
+    fetch("http://localhost:2600/api/users/login", {
       method: "POST",
       withCredentials: true,
       headers: {
@@ -102,7 +101,8 @@ function Login(props) {
         setUserContext((oldValues) => {
           return { ...oldValues, token: data.token };
         });
-        navigate("/");
+        window.location.reload(true);
+
         /* if(data.role==='admin'){
                             navigate('/test')
                         } else {
@@ -121,121 +121,306 @@ function Login(props) {
     for (var i = 0; i < 10; i++) {
       code += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    await fetch("http://localhost:3000/api/users/ResetMail", {
+    await fetch("http://localhost:2600/api/users/ResetMail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: loginemail,
-        password: loginpassword,
+        code: code,
+        mail: resetEmail,
       }),
-    }).then(async (response) => {
-      setIsSubmitting(false);
-      if (!response.ok) {
-        if (response.status === 400) {
-          setErrors("Please fill all the fields coorectly!");
-        } else if (response.status === 401) {
-          setErrors("Invalid email and password combination.");
-        } else {
-          setErrors("Something went wrong! please try again later!");
-        }
-      } else {
-        const data = await response.json();
-        localStorage.setItem("currentUser", data.id);
-        setUserContext((oldValues) => {
-          return { ...oldValues, token: data.token };
-        });
-        navigate("/");
-      }
     });
+    setSent(true);
+  }
+  async function handleResetPwd() {
+    const response = await fetch("http://localhost:2600/api/users/ResetPwd", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mail: resetEmail,
+        code: resetCode,
+      }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setResetPwd(true);
+      setSent(false);
+    } else {
+      setResetPwd(false);
+    }
+  }
+  function reCaptchCB(value) {
+    if (value) {
+      isRobot(false);
+    }
+  }
+  async function handleResetPassword() {
+    const response = await fetch(
+      "http://localhost:2600/api/users/Resetpassword",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mail: resetEmail,
+          pwd: pwd,
+        }),
+      }
+    );
+    const data = await response.json();
+    if (data.success) {
+      NotificationManager.success(
+        "your password has been modified successfully.",
+        "Password modified"
+      );
+      setReset(false);
+    } else {
+      console.log("fail");
+    }
   }
 
   return (
     <>
+      <NotificationContainer />
       <div className="theme-layout">
         <div className="row" style={{ marginTop: 24 + "rem" }}>
           {showLoginCb ? (
-            <div className="col-md-6">
-              <div className="log-reg-area login_form">
-                <h2 className="log-title">Login</h2>
-                <p>
-                  Don’t use Winku Yet?{" "}
-                  <a href="#" title="">
-                    Take the tour
-                  </a>{" "}
-                  or{" "}
-                  <a href="#" title="">
-                    Join now
-                  </a>
-                </p>
-                <form method="post">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      id="input"
-                      required="required"
-                      value={loginemail}
-                      onChange={(e) => {
-                        setLoginEmail(e.target.value);
+            reset === true ? (
+              <div className="col-md-6">
+                <div className="log-reg-area login_form">
+                  <h2 className="log-title">Reset password</h2>
+                  <form method="post">
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        id="input"
+                        required="required"
+                        value={resetEmail}
+                        onChange={(e) => {
+                          setResetEmail(e.target.value);
+                        }}
+                      />
+                      <label className="control-label" htmlFor="input">
+                        Email
+                      </label>
+                      <i className="mtrl-select" />
+                    </div>
+                    {sent && !resetPwd ? (
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          required="required"
+                          value={resetCode}
+                          onChange={(e) => {
+                            setResetCode(e.target.value);
+                          }}
+                        />
+                        <label className="control-label" htmlFor="input">
+                          Reset code
+                        </label>
+                        <i className="mtrl-select" />
+                      </div>
+                    ) : null}
+                    {resetPwd ? (
+                      <>
+                        <div className="form-group">
+                          <input
+                            type="password"
+                            required="required"
+                            value={pwd}
+                            onChange={(e) => {
+                              setpwd(e.target.value);
+                            }}
+                          />
+                          <label className="control-label" htmlFor="input">
+                            New Password
+                          </label>
+                          <i className="mtrl-select" />
+                        </div>
+                        <div className="form-group">
+                          <input
+                            type="password"
+                            required="required"
+                            value={confPwd}
+                            onChange={(e) => {
+                              setConfPwd(e.target.value);
+                            }}
+                          />
+                          <label className="control-label" htmlFor="input">
+                            Confirm Password
+                          </label>
+                          <i className="mtrl-select" />
+                        </div>
+                        {pwd.length > 7 && pwd === confPwd ? (
+                          <button
+                            onClick={() => {
+                              handleResetPassword();
+                            }}
+                            className="mtr-btn signin"
+                            type="button"
+                          >
+                            <span>Reset password</span>
+                          </button>
+                        ) : null}
+                      </>
+                    ) : null}
+                    {!sent ? (
+                      <button
+                        onClick={() => {
+                          handleReset();
+                        }}
+                        className="mtr-btn signin"
+                        type="button"
+                      >
+                        <span>Reset</span>
+                      </button>
+                    ) : !resetPwd ? (
+                      <button
+                        onClick={() => {
+                          handleResetPwd();
+                        }}
+                        className="mtr-btn signin"
+                        type="button"
+                      >
+                        <span>Verify</span>
+                      </button>
+                    ) : null}
+                    <a
+                      href="#"
+                      title=""
+                      className="forgot-pwd"
+                      onClick={(e) => {
+                        setReset(false);
                       }}
-                    />
-                    <label className="control-label" htmlFor="input">
-                      Email
-                    </label>
-                    <i className="mtrl-select"></i>
-                  </div>
-                  <div className="form-group">
-                    <input
-                      type="password"
-                      required="required"
-                      value={loginpassword}
-                      onChange={(e) => {
-                        setLoginPassword(e.target.value);
-                      }}
-                    />
-                    <label className="control-label" htmlFor="input">
-                      Password
-                    </label>
-                    <i className="mtrl-select"></i>
-                  </div>
-                  <div className="checkbox">
-                    <label>
-                      <input type="checkbox" defaultChecked={true} />
-                      <i className="check-box"></i>Always Remember Me.
-                    </label>
-                  </div>
-                  <a href="#" title="" className="forgot-pwd">
-                    Forgot Password?
-                  </a>
-                  <div className="submit-btns">
-                    <button
-                      onClick={loginUser}
-                      className="mtr-btn signin"
-                      type="button"
                     >
-                      <span>Login</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setClassForLogin("slide-in");
-                        console.log("clicked");
-
-                        setLogoClass("spin-me");
-                      }}
-                      className="mtr-btn"
-                      type="button"
-                    >
-                      <span>Register</span>
-                    </button>
-                  </div>
-                </form>
+                      Login
+                    </a>
+                    <div className="submit-btns">
+                      <button
+                        onClick={loginUser}
+                        className="mtr-btn signin"
+                        type="button"
+                      >
+                        <span>Login</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setClassForLogin("slide-in");
+                          console.log("clicked");
+                          setLogoClass("spin-me");
+                        }}
+                        className="mtr-btn"
+                        type="button"
+                      >
+                        <span>Register</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="col-md-6">
+                <div className="log-reg-area login_form">
+                  <h2 className="log-title">Login</h2>
+                  <p>
+                    Don’t use Winku Yet?{" "}
+                    <a href="#" title="">
+                      Take the tour
+                    </a>{" "}
+                    or{" "}
+                    <a href="#" title="">
+                      Join now
+                    </a>
+                  </p>
+                  {loginErrors ? (
+                    <div className="alert alert-danger" role="alert">
+                      {loginErrors}
+                    </div>
+                  ) : null}
+                  <form method="post">
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        id="input"
+                        required="required"
+                        value={loginemail}
+                        onChange={(e) => {
+                          setLoginEmail(e.target.value);
+                        }}
+                      />
+                      <label className="control-label" htmlFor="input">
+                        Email
+                      </label>
+                      <i className="mtrl-select"></i>
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        required="required"
+                        value={loginpassword}
+                        onChange={(e) => {
+                          setLoginPassword(e.target.value);
+                        }}
+                      />
+                      <label className="control-label" htmlFor="input">
+                        Password
+                      </label>
+                      <i className="mtrl-select"></i>
+                    </div>
+                    <div className="checkbox">
+                      <label>
+                        <input type="checkbox" defaultChecked={true} />
+                        <i className="check-box"></i>Always Remember Me.
+                      </label>
+                    </div>
+                    <a
+                      href="#"
+                      title=""
+                      className="forgot-pwd"
+                      onClick={(e) => {
+                        setReset(true);
+                      }}
+                    >
+                      Forgot Password?
+                    </a>
+                    <div className="submit-btns">
+                      <button
+                        onClick={loginUser}
+                        className="mtr-btn signin"
+                        type="button"
+                      >
+                        <span>Login</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setClassForLogin("slide-in");
+                          console.log("clicked");
+
+                          setLogoClass("spin-me");
+                        }}
+                        className="mtr-btn"
+                        type="button"
+                      >
+                        <span>Register</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )
           ) : null}
           <div className="col-md-6">
             <div className="log-reg-area register_form fading">
-              <h2 className="log-title">Register</h2>
+              <h2 className="log-title">
+                Register
+                <i className="bi bi-heart-pulse" />
+              </h2>
+              {/*  {!registered ? (
+                                <>*/}
               {errors ? (
                 <div className="alert alert-danger" role="alert">
                   {errors}
@@ -328,17 +513,16 @@ function Login(props) {
                   </label>
                   <i className="mtrl-select"></i>
                 </div>
-
                 {/* <div className="checkbox">
                                     <label>
                                         <input type="checkbox" defaultChecked={false} required/><i className="check-box"></i>Accept
                                         Terms & Conditions ?
                                     </label>*/}
                 <div className="mx-5">
-                  {/* <ReCAPTCHA
+                  <ReCAPTCHA
                     sitekey="6Ld-KAsfAAAAABrKh_MYB4borMQf3ditkWWsWx9I"
                     onChange={reCaptchCB}
-                  /> */}
+                  />
                 </div>
                 <a
                   onClick={() => {
@@ -375,7 +559,6 @@ function Login(props) {
           </div>
         </div>
       </div>
-
       <div className="container-fluid">
         <div className={"login-banner " + classForLogin}>
           <div className="land-featurearea">
