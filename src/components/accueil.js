@@ -20,7 +20,7 @@ import Mentions from "rc-mentions";
 
 import Post from "./post/post";
 import Header from "./header";
-import Story from "./stories";
+import Story from "./Story/stories";
 import Shortcuts from "./timeline/shortcuts";
 import Loading from "./loading";
 
@@ -42,6 +42,7 @@ function Accueil() {
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
+
   const [btnClass, setBtnClass] = useState(null);
 
   const [verif, setVerify] = useState("");
@@ -154,7 +155,6 @@ function Accueil() {
 
     const text = currentUser.name + " posted a post";
 
-    console.log(files);
     post.append("Photo", files);
     post.append("Description", newDescription);
     post.append("Creator", currentUserId);
@@ -165,11 +165,14 @@ function Accueil() {
           icon: "success",
           title: "Your post is added succesfuly",
         });
-        socket.emit("sendNotification", {
-          senderId: res.data.Creator._id,
-          receiverId: currentUserId,
-          text: text,
-        });
+
+        if (currentUserId !== res.data.Creator._id) {
+          socket.emit("sendNotification", {
+            senderId: res.data.Creator._id,
+            receiverId: currentUserId,
+            text: text,
+          });
+        }
 
         setPostData([res.data, ...postData]);
         setNewDescription("");
@@ -189,15 +192,18 @@ function Accueil() {
         .put("http://localhost:2600/api/users/" + userId + "/follow", user)
         .then((res) => {
           Toast.fire({
-            icon: "warning",
-            title: "you demande to follow " + username,
+            icon: "info",
+            title: "you follow " + username,
           });
-          const newList = setUsers;
+          const newList = setUsers.filter((u) => u._id !== userId);
+          setUsers(newList);
+          // reload.window()
         });
     } catch (err) {
       console.log(err);
     }
   };
+
   const getPosts = async () => {
     try {
       axios.get(url + "/").then((res) => {
@@ -253,13 +259,45 @@ function Accueil() {
     });
   };
 
+  const handleConversation = (userid) => {
+    const members = {
+      senderId: currentUserId,
+      receiverId: userid,
+    };
+    const status = axios
+      .get(
+        "http://localhost:2600/conversations/find/" +
+          currentUserId +
+          "/" +
+          userid
+      )
+      .then((res) => {
+        if (res.data == null) {
+          axios
+            .post("http://localhost:2600/conversations/", members)
+            .then((res) => {
+              Toast.fire({
+                icon: "success",
+                title: "New conversation !",
+              });
+
+              setTimeout(() => {
+                navigate("/messages");
+              }, 3000);
+            });
+        } else {
+          navigate("/messages");
+        }
+      });
+  };
+
   useEffect(() => {
     setSocket(io("http://localhost:2700"));
   }, []);
 
   useEffect(() => {
     socket?.emit("newUser", currentUserId);
-  }, [socket]);
+  }, [socket, currentUserId]);
 
   useEffect(() => {
     getPosts();
@@ -893,7 +931,10 @@ function Accueil() {
               <ul className="chat-users">
                 {friends.map((f) => (
                   <li key={f._id}>
-                    <div className="author-thmb">
+                    <div
+                      className="author-thmb"
+                      onClick={() => handleConversation(f._id)}
+                    >
                       <img src={"/uploads/users/" + f.profilepic} alt />
                       <span className="status f-online" />
                     </div>
@@ -1013,14 +1054,13 @@ function Accueil() {
             <div className="menu-left">
               <ul className="left-menu">
                 <li>
-                  <a
-                    href="newsfeed.html"
-                    title="Newsfeed Page"
+                  <button
+                    className="btn btn-light border-0"
                     data-toggle="tooltip"
                     data-placement="right"
                   >
-                    <i className="ti-magnet" />
-                  </a>
+                    <i className="ti-magnet" aria-hidden="true" />
+                  </button>
                 </li>
                 <li>
                   <a
@@ -1129,7 +1169,7 @@ function Accueil() {
                           <div className="widget">
                             <h4 className="widget-title">Recent Activity</h4>
                             <ul className="activitiez">
-                              <li>
+                              {/* <li>
                                 <div className="activity-meta">
                                   <i>10 hours Ago</i>
                                   <span>
@@ -1165,7 +1205,7 @@ function Accueil() {
                                     "<a href="#">you are so funny mr.been.</a>"
                                   </h6>
                                 </div>
-                              </li>
+                              </li> */}
                             </ul>
                           </div>
                           {/* recent activites */}
@@ -1190,8 +1230,8 @@ function Accueil() {
                                         {u.name}
                                       </Link>
                                     </h4>
-                                    {u.followers.includes(
-                                      currentUserId
+                                    {currentUser?.followers?.includes(
+                                      u._id
                                     ) ? null : (
                                       <button
                                         onClick={() =>
@@ -1218,9 +1258,10 @@ function Accueil() {
                       </div> */}
                       <div className="col-lg-6">
                         <div className="central-meta">
-                          <h1>Stories :</h1>
-
-                          <Story currentUserId={currentUserId} />
+                          <Story
+                            currentUserId={currentUserId}
+                            currentUser={currentUser}
+                          />
                         </div>
                         <div className="central-meta">
                           <div className="new-postbox">

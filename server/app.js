@@ -63,7 +63,6 @@ iooo.on("connection", (socket) => {
 
   socket.on("sendNotification", ({ senderId, receiverId, text }) => {
     const receiver = getUser(receiverId);
-    console.log(text);
     console.log(users);
     iooo.to(receiver?.socketId).emit("getNotification", {
       senderId,

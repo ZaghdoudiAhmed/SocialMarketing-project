@@ -3,6 +3,7 @@ import { format } from "timeago.js";
 import moment from "moment";
 import Swal from "sweetalert2";
 import { FacebookShareButton, FacebookIcon } from "react-share";
+import { Modal, Button } from "react-bootstrap";
 
 import axios from "axios";
 import "./post.css";
@@ -14,6 +15,11 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
   const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState();
   const [nbrcomments, setnbrcomments] = useState(post?.Nbr_comments);
+  const [epinglé, setEpinglé] = useState(post?.Epinglé);
+  const [show, setShow] = useState(false);
+
+  const [newDescription, setNewDescription] = useState(post?.Description);
+  const [file, setFile] = useState(null);
 
   const hasLikedPost = likes.find((like) => like === currentUser._id);
   const hasDislikedPost = dislike.find(
@@ -241,14 +247,115 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
       });
   };
 
+  const EpinglePost = () => {
+    axios.put("http://localhost:2600/posts/epingle/" + post._id).then((res) => {
+      Toast.fire({
+        icon: "info",
+        title: "post epinglé!",
+      });
+      setEpinglé(true);
+    });
+  };
+
+  const HandleEdit = (e) => {
+    e.preventDefault();
+
+    const newpost = new FormData();
+    newpost.append("Photo", file);
+    newpost.append("Description", newDescription);
+
+    try {
+      axios
+        .put("http://localhost:2600/posts/" + post._id, newpost)
+        .then((res) => {
+          Toast.fire({
+            icon: "info",
+            title: "Your post edited succesfully",
+          });
+          setShow(false);
+          window.location.reload(true);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
     getComments();
     setLikes(post.Likes);
     setDislike(post.Dislikes);
   }, []);
 
+  const handleClose = () => setShow(false);
+
   return (
     <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit your post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="central-meta post item">
+            <div className="user-post">
+              <div className="friend-info ">
+                <figure>
+                  <img
+                    width="45"
+                    height="45"
+                    src={"/uploads/users/" + post.Creator.profilepic}
+                    alt
+                  />
+                </figure>
+                <div className="friend-name">
+                  <ins>{post.Creator.name}</ins>
+                </div>
+                <div className="post-meta">
+                  <div className="description">
+                    <p>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="description"
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                      />
+                    </p>
+                  </div>
+                  <input
+                    className="form-control"
+                    onChange={(e) => {
+                      setFile(e.target.files[0]);
+                    }}
+                    type="file"
+                    id="formFile"
+                  />
+
+                  {file ? (
+                    <div className="center">
+                      <img
+                        style={{ position: "center" }}
+                        alt=""
+                        src={URL.createObjectURL(file)}
+                      />
+                    </div>
+                  ) : (
+                    <img src={"/uploads/posts/" + post.Photo} />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <button
+            className="btn btn-warning-outline"
+            onClick={HandleEdit}
+            type="submit"
+          >
+            Edit
+          </button>
+        </Modal.Footer>
+      </Modal>
+
       <div className="central-meta post item">
         <div className="user-post">
           <div className="friend-info ">
@@ -262,6 +369,8 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
             </figure>
             <div className="friend-name">
               <ins>{post.Creator.name}</ins>
+              {epinglé && <i className=" d-flex fa-solid fa-thumbtack" />}
+
               <span>
                 {"published: "}
                 {moment(post.Date_creation).format("MMMM Do YYYY")}
@@ -270,12 +379,22 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
                 {format(post.Date_creation)}
               </span>
               {yourPost && (
-                <div className="dropdown d-flex flex-justify-content">
-                  <a data-toggle="dropdown" style={{ color: "#088dcd" }}>
+                <div className="dropdown d-flex justify-content-end">
+                  <a
+                    style={{ color: "#088dcd" }}
+                    aria-expanded="false"
+                    data-bs-toggle="dropdown"
+                  >
                     <i class="bi bi-three-dots-vertical"></i>
                   </a>
-                  <div className="dropdown-menu">
-                    <button className="dropdown-item">
+                  <div
+                    className="dropdown-menu "
+                    aria-labelledby="dropdownMenuButton1"
+                  >
+                    <button
+                      className="dropdown-item"
+                      onClick={() => setShow(true)}
+                    >
                       <i className="ti-pencil-alt" /> Edit
                     </button>
                     <button
@@ -283,6 +402,12 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
                       onClick={() => handleDeletePost(post._id)}
                     >
                       <i className="fa fa-trash" /> Delete
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => EpinglePost()}
+                    >
+                      <i className="fa-solid fa-thumbtack" /> Epingle
                     </button>
                   </div>
                 </div>

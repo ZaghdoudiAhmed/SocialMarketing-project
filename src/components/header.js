@@ -1,11 +1,14 @@
 import { useEffect, useState, React } from "react";
 
 import { Link } from "react-router-dom";
+import "./header.css";
 import axios from "axios";
 
 function Header({ socket, currentUserId, friends }) {
   const [notifications, setNotifications] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
+  const [show, setShow] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     socket?.on("getNotification", (data) => {
@@ -333,35 +336,48 @@ function Header({ socket, currentUserId, friends }) {
                 </Link>
               </li>
               <li>
-                <a href="#" title="Notification" data-ripple>
+                <div
+                  className="icon"
+                  title="Notification"
+                  onClick={() => setOpen(!open)}
+                >
                   <i className="ti-bell" />
                   {notifications.length > 0 && (
-                    <span>{notifications.length}</span>
+                    <span className="counter">{notifications.length}</span>
                   )}
-                </a>
-                <div className="dropdowns">
-                  <span>{notifications.length} New Notifications</span>
-                  <ul className="drops-menu">
-                    {notifications.map((n) => (
-                      <li key={n._id}>
-                        <a href="notifications.html" title>
-                          <img src="/images/resources/thumb-3.jpg" alt />
-                          <div className="mesg-meta">
-                            <h6>{n?.sender?.name}</h6>
-                            <p className="notification">{n?.text}</p>
-                          </div>
-                        </a>
-                        <span className="tag green">seen</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    //   onClick={handleRead}
-                    className="btn btn-primary-outline"
-                  >
-                    delete
-                  </button>
                 </div>
+                {open && (
+                  <div className="notifications">
+                    <span>{notifications.length} New Notifications</span>
+                    <ul>
+                      {notifications.map((n) => (
+                        <>
+                          <li key={n._id}>
+                            <a href="/notification" title>
+                              <img
+                                src={
+                                  "/uploads/users/" + n?.sender?.profilepic[0]
+                                }
+                                alt
+                              />
+                              <div>
+                                <h6>{n?.sender?.name}</h6>
+                                <p>{n?.text}</p>
+                              </div>
+                            </a>
+                            {/* <span className="tag green">seen</span> */}
+                          </li>
+                        </>
+                      ))}
+                    </ul>
+                    {/* <button
+                      //   onClick={handleRead}
+                      className="btn btn-primary-outline"
+                    >
+                      delete
+                    </button> */}
+                  </div>
+                )}
               </li>
             </ul>
             <div className="user-img">

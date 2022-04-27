@@ -101,7 +101,7 @@ function Login(props) {
         setUserContext((oldValues) => {
           return { ...oldValues, token: data.token };
         });
-        window.location.reload(true);
+        // window.location.reload(true);
 
         /* if(data.role==='admin'){
                             navigate('/test')

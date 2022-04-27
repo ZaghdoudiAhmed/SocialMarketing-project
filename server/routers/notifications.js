@@ -39,4 +39,8 @@ router.delete("/:receiverId", async (req, res) => {
   res.json("done");
 });
 
+router.get("/delete/:id", async (req, res) => {
+  Notification.find({ _id: req.params.id }).deleteOne().exec();
+  res.json("done");
+});
 module.exports = router;

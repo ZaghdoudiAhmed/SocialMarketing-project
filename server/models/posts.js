@@ -11,6 +11,7 @@ var Post = new Schema({
   Creator: { type: Schema.Types.ObjectId, ref: "users" },
   comments: [{ type: Schema.Types.ObjectId, ref: "comments" }],
   Photo: String,
+  Epinglé: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model("posts", Post);

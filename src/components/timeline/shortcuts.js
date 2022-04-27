@@ -11,10 +11,10 @@ function Shortcuts(props) {
       <h4 className="widget-title">Shortcuts</h4>
       <ul className="naves">
         <li>
-          <i className="ti-clipboard" />
-          <a href="newsfeed.html" title>
+          <i className="ti-instagram" />
+          <Link to="/timelinestories" title>
             Stories
-          </a>
+          </Link>
         </li>
         <li>
           <i className="ti-user" />

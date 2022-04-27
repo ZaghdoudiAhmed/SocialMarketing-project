@@ -1,69 +1,34 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import Shortcuts from "./shortcuts";
+import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import { format } from "timeago.js";
+import Stories, { WithSeeMore } from "react-insta-stories";
 
-import Conversation from "./conversation";
-import Message from "./message";
-import Header from "../../header";
-import Shortcuts from "../shortcuts";
-import Timelineinfo from "../timeline-info";
-import Chatonline from "./chatonline";
+import Timelineinfo from "./timeline-info";
 
+import Header from "../header";
 import axios from "axios";
-import { io } from "socket.io-client";
 
-function Messanger(props) {
-  const [conversations, setConversations] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState("");
-  const currentUserId = localStorage.getItem("currentUser");
+function TimelineStories(props) {
   const [friends, setFriends] = useState([]);
-  const [user, setUser] = useState(null);
+  const [yourstory, setYourStory] = useState([]);
+  const [archstory, setArchStory] = useState([]);
 
-  const scrollRef = useRef();
-  const socket = useRef();
-  const url = "http://localhost:2600/conversations/";
+  const currentUserId = localStorage.getItem("currentUser");
 
-  useEffect(() => {
-    socket.current = io("http://localhost:2700");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      });
-    });
-  }, []);
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-start",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
-  useEffect(() => {
-    arrivalMessage &&
-      currentChat?.members?.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage, currentChat]);
-
-  const getConversations = async () => {
-    try {
-      const res = await axios.get(url + currentUserId);
-      setConversations(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getMessages = async () => {
-    try {
-      if (currentChat !== null) {
-        const res = await axios.get(
-          "http://localhost:2600/messages/" + currentChat?._id
-        );
-        setMessages(res.data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
@@ -74,93 +39,57 @@ function Messanger(props) {
       console.log(err);
     }
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const message = {
-      sender: currentUser._id,
-      text: newMessage,
-      conversationId: currentChat._id,
-    };
 
-    const receiverId = currentChat.members.find(
-      (member) => member !== currentUser._id
-    );
+  const getYourStories = async () => {
+    axios
+      .get("http://localhost:2600/stories/activestory/" + currentUserId)
+      .then((res) => {
+        const result = res.data.map((s) => {
+          const time = format(s.Date_creation);
+          const container = {};
+          container["url"] = "/uploads/stories/" + s.url;
+          container["header"] = {
+            heading: s.Creator.name,
+            subheading: time,
+            profileImage: "/uploads/users/" + s?.Creator?.profilepic,
+          };
 
-    try {
-      const res = await axios.post("http://localhost:2600/messages", message);
-      setMessages([...messages, res.data]);
-      setNewMessage("");
-      socket?.current.emit("sendMessage", {
-        senderId: currentUser._id,
-        receiverId,
-        text: newMessage,
+          return container;
+        });
+        setYourStory(result);
       });
-    } catch (err) {
-      console.log(err);
-    }
   };
 
-  const getUser = async () => {
-    const friendId = currentChat?.members.find((m) => m !== currentUser._id);
+  const getArchStories = async () => {
+    axios
+      .get("http://localhost:2600/stories/archives/" + currentUserId)
+      .then((res) => {
+        const result = res.data.map((s) => {
+          const container = {};
+          container["url"] = "/uploads/stories/" + s.url;
+          container["header"] = {
+            heading: s.Creator.name,
+            profileImage: "/uploads/users/" + s?.Creator?.profilepic,
+          };
 
-    try {
-      if (currentChat !== null) {
-        const res = await axios.get(
-          "http://localhost:2600/api/users/" + friendId
-        );
-        setUser(res.data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+          return container;
+        });
+        setArchStory(result);
+      });
   };
+
   useEffect(() => {
-    getConversations();
-    getMessages();
     getFriends();
-    getUser();
-  }, [currentUserId, currentChat]);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  useEffect(() => {
-    socket?.current.emit("newUser", currentUserId);
-
-    socket?.current.on("getUsers", (users) => {
-      setOnlineUsers(
-        currentUser.followings.filter((f) => users.some((u) => u._id === f))
-      );
-    });
-  }, [socket, currentUserId, currentUser]);
-
-  useEffect(() => {
-    fetch("http://localhost:2600/api/users/me", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentUserId,
-      }),
-    }).then(async (res) => {
-      const data = await res.json();
-      setCurrentUser(data.user);
-    });
-  }, [currentUserId]);
-
+    getYourStories();
+    getArchStories();
+  }, []);
   return (
     <div>
       <div className="theme-layout">
         <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
-          <Timelineinfo
-            friends={friends}
-            setFriends={setFriends}
-            currentUser={currentUser}
-          />
+          <Timelineinfo friends={friends} setFriends={setFriends} />
         </section>
         {/* top area */}
         <section>
@@ -171,144 +100,127 @@ function Messanger(props) {
                   <div className="row" id="page-contents">
                     <div className="col-lg-3">
                       <aside className="sidebar static">
-                        <div className="advertisment-box">
-                          <h4 className>advertisment</h4>
-                          <figure>
-                            <a href="#" title="Advertisment">
-                              <img src="images/resources/ad-widget.jpg" alt />
-                            </a>
-                          </figure>
-                        </div>
                         <Shortcuts />
                         {/* Shortcuts */}
+                        <div className="widget stick-widget">
+                          <h4 className="widget-title">Profile intro</h4>
+                          <ul className="short-profile">
+                            <li>
+                              <span>about</span>
+                              <p>
+                                Hi, i am jhon kates, i am 32 years old and
+                                worked as a web developer in microsoft company.{" "}
+                              </p>
+                            </li>
+                            <li>
+                              <span>fav tv show</span>
+                              <p>
+                                Hi, i am jhon kates, i am 32 years old and
+                                worked as a web developer in microsoft company.{" "}
+                              </p>
+                            </li>
+                            <li>
+                              <span>favourit music</span>
+                              <p>
+                                Hi, i am jhon kates, i am 32 years old and
+                                worked as a web developer in microsoft company.{" "}
+                              </p>
+                            </li>
+                          </ul>
+                        </div>
+                        {/* profile intro widget */}
                       </aside>
                     </div>
                     {/* sidebar */}
                     <div className="col-lg-6">
                       <div className="central-meta">
-                        <div className="messages">
-                          <h5 className="f-title">
-                            <i className="ti-bell" />
-                            All Messages{" "}
-                            <span className="more-options">
-                              <i className="fa fa-ellipsis-h" />
-                            </span>
-                          </h5>
-                          <div className="row">
-                            <div className="col-4">
-                              <div className="message-box">
-                                <ul className="peoples">
-                                  {conversations.map((c) => (
-                                    <li
-                                      key={c._id}
-                                      onClick={() => setCurrentChat(c)}
-                                    >
-                                      <Conversation
-                                        key={c._id}
-                                        conversation={c}
-                                        currentUser={currentUser}
-                                      />
-                                    </li>
-                                  ))}
-                                </ul>
+                        <div className="frnds">
+                          <ul className="nav nav-tabs">
+                            <li className="nav-item">
+                              <a
+                                className="active"
+                                href="#frends"
+                                data-toggle="tab"
+                              >
+                                My Storys
+                              </a>{" "}
+                            </li>
+                            <li className="nav-item">
+                              <a className href="#frends-req" data-toggle="tab">
+                                Archives Story
+                              </a>
+                            </li>
+                          </ul>
+                          {/* Tab panes */}
+                          <div className="tab-content">
+                            <div
+                              className="tab-pane active fade show "
+                              id="frends"
+                            >
+                              <ul className="nearby-contct center">
+                                {yourstory.length > 0 &&
+                                yourstory !== undefined ? (
+                                  <Stories
+                                    loop
+                                    isPaused={true}
+                                    stories={yourstory}
+                                    keyboardNavigation={true}
+                                    width={400}
+                                    height={500}
+                                  />
+                                ) : null}
+                              </ul>
+                              <div className="lodmore">
+                                <button className="btn-view btn-load-more" />
                               </div>
                             </div>
-                            <div className="col-8">
-                              <div className="peoples-mesg-box">
-                                {currentChat ? (
-                                  <div className="conversation-head">
-                                    <figure>
-                                      <img
-                                        src={
-                                          "/uploads/users/" +
-                                          user?.profilepic[0]
-                                        }
-                                        alt
-                                      />
-                                    </figure>
-                                    <span>
-                                      {user?.name} <i>online</i>
-                                    </span>
-                                  </div>
+                            <div className="tab-pane fade" id="frends-req">
+                              <ul className="nearby-contct">
+                                {archstory.length > 0 &&
+                                archstory !== undefined ? (
+                                  <Stories
+                                    loop
+                                    isPaused={true}
+                                    stories={archstory}
+                                    keyboardNavigation={true}
+                                    width={400}
+                                    height={500}
+                                  />
                                 ) : null}
-
-                                {currentChat ? (
-                                  <ul className="chatting-area" ref={scrollRef}>
-                                    {messages.map((m) => (
-                                      <>
-                                        <Message
-                                          key={m._id}
-                                          message={m}
-                                          own={m.sender._id === currentUserId}
-                                          currentUser={currentUser}
-                                        />
-                                      </>
-                                    ))}
-                                  </ul>
-                                ) : (
-                                  <span className="noConversationText">
-                                    Open a conversation to start a chat.
-                                  </span>
-                                )}
-                                <div className="message-text-container">
-                                  <form method="post">
-                                    <textarea
-                                      defaultValue={""}
-                                      onChange={(e) =>
-                                        setNewMessage(e.target.value)
-                                      }
-                                      value={newMessage}
-                                    />
-                                    <button title="send" onClick={handleSubmit}>
-                                      <i className="fa fa-paper-plane" />
-                                    </button>
-                                  </form>
-                                </div>
-                              </div>
+                              </ul>
+                              <button className="btn-view btn-load-more" />
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                    {/* centerl meta */}
                     <div className="col-lg-3">
                       <aside className="sidebar static">
                         <div className="widget">
-                          <h4 className="widget-title">Socials</h4>
-                          <ul className="socials">
-                            <li className="facebook">
-                              <a title href="#">
-                                <i className="fa fa-facebook" />{" "}
-                                <span>facebook</span> <ins>45 likes</ins>
-                              </a>
-                            </li>
-                            <li className="twitter">
-                              <a title href="#">
-                                <i className="fa fa-twitter" />{" "}
-                                <span>twitter</span>
-                                <ins>25 likes</ins>
-                              </a>
-                            </li>
-                            <li className="google">
-                              <a title href="#">
-                                <i className="fa fa-google" />{" "}
-                                <span>google</span>
-                                <ins>35 likes</ins>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="widget stick-widget">
-                          <h4 className="widget-title">Who's Online </h4>
-
+                          <h4 className="widget-title">Your Friends</h4>
                           <ul className="followers">
-                            <Chatonline
-                              onlineUsers={onlineUsers}
-                              currentUserId={currentUserId}
-                              setCurrentChat={setCurrentChat}
-                            />
+                            {friends.map((f) => (
+                              <li>
+                                <figure>
+                                  <img
+                                    src={"/uploads/users/" + f.profilepic[0]}
+                                    alt
+                                  />
+                                  <span className="status f-online" />
+                                </figure>
+                                <div className="friendz-meta">
+                                  <Link to={`/timeline/${f._id}`}>
+                                    {f.name}
+                                  </Link>
+                                </div>
+                              </li>
+                            ))}
                           </ul>
                         </div>
                         {/* who's following */}
+
+                        {/* friends list sidebar */}
                       </aside>
                     </div>
                     {/* sidebar */}
@@ -582,4 +494,4 @@ function Messanger(props) {
   );
 }
 
-export default Messanger;
+export default TimelineStories;

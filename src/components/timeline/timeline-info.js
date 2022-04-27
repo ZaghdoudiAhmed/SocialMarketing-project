@@ -81,7 +81,6 @@ function Timelineinfo({ friends, setFriends }) {
               <ul>
                 <li className="admin-name">
                   <h5>{currentUser.name}</h5>
-                  <span>Group Admin</span>
                 </li>
                 <li>
                   <Link className="active" to="/timeline" title data-ripple>

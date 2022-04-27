@@ -73,6 +73,19 @@ router.get("/activestory/:idcreator", (req, res) => {
     });
 });
 
+//get archives stories
+router.get("/archives/:idcreator", (req, res) => {
+  const datenow = new Date(Date.now());
+  Story.find({ Creator: req.params.idcreator })
+    .populate("Creator")
+    .then((stories) => {
+      let archivesstories = stories.filter(
+        (storie) => storie.Date_fin < datenow
+      );
+      res.json(archivesstories);
+    });
+});
+
 //get stories of friends
 router.get("/:userid", async (req, res) => {
   const id = req.params.userid;
@@ -80,18 +93,15 @@ router.get("/:userid", async (req, res) => {
 
   const user = await User.findById(id);
 
-  const friends = await Promise.all(
+  const friendsstorys = await Promise.all(
     user.followings.map((friendId) => {
-      Story.find({ Creator: friendId })
-        .populate("Creator")
-        .then((stories) => {
-          let activestories = stories.filter(
-            (storie) => storie.Date_fin >= datenow
-          );
-          res.json(activestories);
-        });
+      return Story.find({
+        Creator: friendId,
+        Date_fin: { $gte: datenow },
+      }).populate("Creator");
     })
   );
+  res.json(friendsstorys);
 });
 
 module.exports = router;

@@ -6,6 +6,7 @@ import Timelinefriends from "./components/timeline/timeline-friends";
 import Timelinegroups from "./components/timeline/timeline-groups";
 import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
+import TimelineStories from "./components/timeline/timeline-stories";
 
 import React, { Suspense, lazy } from "react";
 import Donationbystate from "./components/Donation/Donationbystate";
@@ -163,6 +164,12 @@ function App() {
             path="/timelinevideos"
             element={currentUserId ? <Timelinevideos /> : <Login />}
           />
+
+          <Route
+            path="/timelinestories"
+            element={currentUserId ? <TimelineStories /> : <Login />}
+          />
+
           <Route
             path="/login"
             element={currentUserId ? <Navigate replace to="/" /> : <Login />}

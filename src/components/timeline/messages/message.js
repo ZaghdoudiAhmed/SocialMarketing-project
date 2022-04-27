@@ -9,7 +9,7 @@ function message({ message, own, currentUser }) {
         <img
           height="32"
           width="32"
-          src={"/uploads/users/" + message?.sender?.profilepic[0]}
+          src={"/uploads/users/" + message?.sender?.profilepic}
           alt
         />
       </figure>

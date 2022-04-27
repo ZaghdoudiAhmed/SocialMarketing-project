@@ -3394,7 +3394,7 @@ nav.breadcrumb {
   text-transform: capitalize;
 }
 
-a.add-butn {
+button.add-butn {
   color: #fff;
   float: right;
   font-size: 13px;
@@ -3597,12 +3597,12 @@ a.add-butn {
   color: #8d8d8d;
 }
 
-a.add-butn.more-action {
+button.add-butn.more-action {
   background: lightslategray none repeat scroll 0 0;
   right: 74px;
 }
 
-#frends a.add-butn.more-action {
+#frends button.add-butn.more-action {
   right: 89px;
 }
 
