@@ -16,7 +16,7 @@ router.post('/blog/addblog/:userid',async (req, res) =>
  {
   const userid = req.params.userid;
    const data= req.body;
-   console.log(data);
+  /// console.log(data);
    const blog1 =new blog({
     _id: new mongoose.Types.ObjectId(),
     title: data[0].title,
@@ -35,7 +35,7 @@ router.post('/reply/addreply/:userid',async (req, res) =>
  {
   const userid = req.params.userid;
    const x = req.body;
-   console.log(x);
+ ///  console.log(x);
    const reply1 =new reply({
     _id: new mongoose.Types.ObjectId(),
     desciption: x[0].post,

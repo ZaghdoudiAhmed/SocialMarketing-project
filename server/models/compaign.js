@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const compaign = mongoose.Schema({
     Id : String,
     title: String,
@@ -10,5 +11,8 @@ const compaign = mongoose.Schema({
     image :String ,
     date_debut :Date,
     date_fin :Date,
+    Creator :{ type: Schema.Types.ObjectId, ref: 'users' },
+    members : [{ type: Schema.Types.ObjectId, ref: "users", default: [] }],
+
 });
 module.exports = mongoose.model("compaign", compaign);

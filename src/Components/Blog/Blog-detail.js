@@ -9,6 +9,7 @@ import {
   useParams,
 } from "react-router-dom";
 import axios from "axios";
+import  {format } from "timeago.js";
 import Comment from "./Comment";
 import { useForm, useFormState } from "react-hook-form";
 const BlogDetail = () => {
@@ -51,7 +52,7 @@ const BlogDetail = () => {
       .then((result) => {
         ////console.log(result.data);
         setcomments(result.data);
-        console.log(comments);
+       /// console.log(comments);
       });
   };
   const onSubmit = (e) => {
@@ -71,7 +72,7 @@ const BlogDetail = () => {
   };
   useEffect(() => {
     fetchdata();
-    ////console.log(comments)
+   //// console.log(state)
   }, []);
   return (
     <div>
@@ -566,11 +567,6 @@ const BlogDetail = () => {
                 <img src="images/logo2.png" alt />
               </a>
             </div>
-            <div className="menu-container" id="toggle">
-              <a href="#" className="canvas-menu">
-                <i className="fa fa-times fa-bars" aria-hidden="true" />
-              </a>
-            </div>
             <div className="overlay" id="overlay">
               <nav className="overlay-menu">
                 <ul className="offcanvas-menu">
@@ -991,28 +987,12 @@ const BlogDetail = () => {
                             </a>
                           </div>
                         </div>
-                        <div className="gap-60">
-                          <div className="site-admin">
-                            <div className="admin-avatar">
-                              <img src="images/resources/admin4.jpg" alt />
-                            </div>
-                            <div className="admin-postmeta">
-                              <h4>Sarah William</h4>
-                              <span>Web Developer, Online Instructor</span>
-                              <p>
-                                I always loved computers and technology in
-                                general. In 2011 I was lucky enough to be
-                                invited.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
                         <div className="gap-60 no-top">
                           <div className="comment-area">
                             <h4 className="comment-title">
                               {nbrcomments} comments
                             </h4>
-                            <ul className="comments">
+                            <ul className="comments e " >
                               {comments.map((comment) => (
                                 <Comment name={comment}></Comment>
                               ))}

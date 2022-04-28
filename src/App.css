@@ -24,6 +24,12 @@
   border-left: 6px solid #99c68e;
   padding: 8px 0 8px 10px;
 }
+.toi{
+  padding-top: 5px;
+}
+.to{
+  color: gray;
+}
 .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment {
   background: #99c68e;
   border: 1px solid #fff9a3;

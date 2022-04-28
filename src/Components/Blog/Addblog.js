@@ -11,6 +11,10 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 const Addblog = () => {
   const [imgFile, imgFileSet] = useState([]);
   const {
@@ -23,6 +27,7 @@ const Addblog = () => {
   const { isValid } = useFormState({
     control,
   });
+  let navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const [age, setAge] = React.useState("");
   const [istrue, setistrue] = useState(true);
@@ -42,7 +47,9 @@ const Addblog = () => {
       console.log(result);
       axios.post("http://localhost:2600/blog/addblog/"+currentUserId, result).catch((err) => {
         console.log(err);
+     
       });
+      navigate('/blog')
       setistrue(false);
       reset();
       imgFileSet([]);
@@ -780,7 +787,7 @@ const Addblog = () => {
                   <div className="top-banner">
                     <h1>Create New Topic</h1>
                     <nav className="breadcrumb">
-                      <a className="breadcrumb-item" href="index-2.html">
+                      <a className="breadcrumb-item" href="/blog">
                         Home
                       </a>
                       <span className="breadcrumb-item active">Forum</span>
@@ -794,13 +801,13 @@ const Addblog = () => {
         {/* top area animated */}
         <section>
           <div className="gap100">
-            <div className="container">
+            <div className="container xv">
               <div className="row">
-                <div className="col-lg-9">
+                <div className="col-lg-9 ">
                   <div className="forum-form">
                     <section>
-                      <div className="gap100">
-                        <div className="container">
+                      <div className="gap100 ">
+                        <div className="container xv ">
                           <div className="row">
                             <div className="col-lg-9">
                               <div className="forum-warper"></div>

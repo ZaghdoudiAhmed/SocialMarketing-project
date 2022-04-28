@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import  {format } from "timeago.js";
 const Comment = (props) => {
+
   const {
     register,
     handleSubmit,
@@ -31,11 +33,13 @@ const Comment = (props) => {
     await axios
       .get("http://localhost:2600/reply/getreply/" + `${props.name._id}`)
       .then((result) => {
-        setreplies(result.data);
+        setreplies(result.data); 
+   
       });
   }
   useEffect(() => {
     fetchdata();
+    console.log(props.name)
   }, []);
   const replybox = (i) => {
     setstate(true);
@@ -63,7 +67,7 @@ const Comment = (props) => {
                 <div className="commenter-meta">
                   <div className="comment-titles">
                     <h6 className="pad">{props.name.publisher.name}</h6>
-                    <span>12 june 2017</span>
+                    <span>{format(props.name.Date_creation)}</span>
                     <a
                       title
                       onClick={(i) => {
@@ -98,7 +102,7 @@ const Comment = (props) => {
                     <div className="commenter-meta">
                       <div className="comment-titles">
                         <h6>{reply.user.name}</h6>
-                        <span>22 july 2017</span>
+                        <span>{format(reply.date)}</span>
                       </div>
                       <p> {reply.desciption} </p>
                     </div>

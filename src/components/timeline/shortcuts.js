@@ -77,6 +77,14 @@ function Shortcuts(props) {
           <Link to="/shop">Shop</Link>
         </li>
         <li>
+          <i className="ti-direction" />
+          <Link to="/blog">Blog</Link>
+        </li>
+        <li>
+          <i className="ti-direction" />
+          <Link to="/articles">Articles</Link>
+        </li>
+        <li>
           <i className="ti-power-off" />
           <a onClick={Remove} title>
             Logout

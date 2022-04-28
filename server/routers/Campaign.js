@@ -5,7 +5,6 @@ const compaign = require('../models/compaign')
 router.post('/compaign/add',async (req, res) =>
  {
    const data = req.body;
-  
    const compaign1 = new compaign(
     {
      title: data[0].title,
@@ -17,6 +16,7 @@ router.post('/compaign/add',async (req, res) =>
      image :data[1].image ,
      date_debut :data[3].time[0],
      date_fin :data[3].time[1],
+     Creator : data[4].Creator
     }
 );  
 
@@ -27,9 +27,23 @@ router.get('/compaign/getcompaign',async (req, res) => {
     const compaign1= await compaign.find() ;
     res.send(compaign1);
 })
+router.get('/compaign/getcompaigns/:id',async (req, res) => {
+  const id =req.params.id ; 
+ const compaign1 = await compaign.find({Creator : id}).populate("members");
+ res.send(compaign1);
+ }); 
+ 
 
-router.post('/compaign/GetData', async (req, res) =>{
-  const compaign1= await compaign.find()
+router.post('/compaign/adddonator',async (req, res) => {
+  const result = req.body;
+console.log(result);
+const compaing = await compaign.findOne({_id:result[0].compaignid })
+ await compaing.updateOne({ $push: { members: result[1].donatorid}})
+})
+
+router.post('/compaign/GetData/:idcreator', async (req, res) =>{
+  const id = req.params.idcreator;
+  const compaign1= await compaign.find({Creator : id})
    const  data =[]
       for (var i = 0; i < compaign1.length; i++) {
           var sdate = new Date(compaign1[i].date_debut);

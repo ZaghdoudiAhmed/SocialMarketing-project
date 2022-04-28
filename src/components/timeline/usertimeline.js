@@ -161,14 +161,14 @@ function Usertimeline(props) {
                             >
                               Friends
                             </Link>
-                            <a
+                            <Link
                               className
-                              href="timeline-groups.html"
+                             to="/timelinegroups"
                               title
                               data-ripple
                             >
                               Groups
-                            </a>
+                            </Link>
                             <Link className to="/about" title data-ripple>
                               about
                             </Link>

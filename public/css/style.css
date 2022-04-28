@@ -9,7 +9,26 @@
     position: absolute;
     content: '';
 }
-
+.ico{
+    padding-top: 1px;
+    font-family: var(--Abel);
+    font-size: 0.8125rem;
+    color : black ;
+    padding-left: 6px;
+  }
+  .formu{
+    height: 339px!important;
+    max-height: 339px!important;
+  }
+  .bo{
+    border-radius: 16px;
+    border: 1px solid #bdbdbd;
+    width: 140px;
+    display: flex;
+    height: 33px;
+    padding: 2px;
+    margin-left: 5px;
+  }
 .we-comment::after,
 .peoples-mesg-box > ul > li p:after {
     border-bottom: 8px solid transparent;
@@ -5411,7 +5430,7 @@ canvas {
     bottom: -2px;
     position: fixed;
     right: 100%;
-    width: 300px;
+    width: 350px;
     z-index: 9999999;
     transform: translate(40px) scale(0);
     opacity: 0;
@@ -6671,8 +6690,14 @@ input[type="file"] {
     margin-left: 5px;
      size: 50px;
   }
+  .e{
+    text-align: start;
+  }
 .x {
     transition-duration: 0.4s;
+  }
+  .xv{
+      padding-top :4px!important;
   }
 .blg-socials > li:nth-child(1) a {
     -webkit-transition-delay: 0.1s;
