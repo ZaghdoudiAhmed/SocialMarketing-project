@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import Shortcuts from "./shortcuts";
 import Timelineinfo from "./timeline-info";
+import Swal from "sweetalert2";
+import { io } from "socket.io-client";
 
 import Header from "../header";
 import axios from "axios";
@@ -15,25 +17,50 @@ function Timeline(props) {
   const [onlineFriends, setOnlineFriends] = useState([]);
 
   const [newDescription, setNewDescription] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
+  const [socket, setSocket] = useState(null);
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-start",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const post = new FormData();
 
-    post.append("Photo", file);
+    const text = currentUser.name + " posted a post";
+
+    post.append("Photo", files);
     post.append("Description", newDescription);
-    post.append("Private", true);
     post.append("Creator", currentUserId);
 
     try {
-      const res = await axios.post(url, post);
-      setPostData([res.data, ...postData]);
-      setNewDescription(null);
-      setFile(null);
+      await axios.post(url, post).then((res) => {
+        Toast.fire({
+          icon: "success",
+          title: "Your post is added succesfuly",
+        });
+        socket.emit("sendNotification", {
+          senderId: res.data.Creator._id,
+          receiverId: currentUserId,
+          text: text,
+        });
+
+        setPostData([res.data, ...postData]);
+        setNewDescription("");
+        setFiles(null);
+      });
     } catch (err) {
       console.log(err);
     }
@@ -66,6 +93,14 @@ function Timeline(props) {
   }, [currentUserId]);
 
   useEffect(() => {
+    setSocket(io("http://localhost:2700"));
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("newUser", currentUserId);
+  }, [socket]);
+
+  useEffect(() => {
     fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
@@ -83,7 +118,7 @@ function Timeline(props) {
   return (
     <div>
       <div className="theme-layout">
-        <Header currentUser={currentUser} />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo
@@ -128,7 +163,7 @@ function Timeline(props) {
                         </div>
                         <Shortcuts />
                         {/* Shortcuts */}
-                        <div className="widget">
+                        {/* <div className="widget">
                           <h4 className="widget-title">Recent Activity</h4>
                           <ul className="activitiez">
                             <li>
@@ -173,9 +208,9 @@ function Timeline(props) {
                               </div>
                             </li>
                           </ul>
-                        </div>
+                        </div> */}
                         {/* recent activites */}
-                        <div className="widget stick-widget">
+                        {/* <div className="widget stick-widget">
                           <h4 className="widget-title">Who's follownig</h4>
                           <ul className="followers">
                             <li>
@@ -269,7 +304,7 @@ function Timeline(props) {
                               </div>
                             </li>
                           </ul>
-                        </div>
+                        </div> */}
                         {/* who's following */}
                       </aside>
                     </div>
@@ -279,7 +314,12 @@ function Timeline(props) {
                         <div className="central-meta item">
                           <div className="new-postbox">
                             <figure>
-                              <img src="images/resources/admin2.jpg" alt />
+                              <img
+                                src={
+                                  "/uploads/users/" + currentUser?.profilepic
+                                }
+                                alt
+                              />
                             </figure>
                             <div className="newpst-input">
                               <form method="post">
@@ -299,7 +339,7 @@ function Timeline(props) {
                                         <input
                                           type="file"
                                           onChange={(e) => {
-                                            setFile(e.target.files[0]);
+                                            setFiles(e.target.files[0]);
                                           }}
                                         />
                                       </label>
@@ -319,6 +359,16 @@ function Timeline(props) {
                                         Publish
                                       </button>
                                     </li>
+                                    <br />
+                                    {files && (
+                                      <div className="center">
+                                        <img
+                                          style={{ position: "center" }}
+                                          alt=""
+                                          src={URL.createObjectURL(files)}
+                                        />
+                                      </div>
+                                    )}
                                   </ul>
                                 </div>
                               </form>
@@ -326,6 +376,24 @@ function Timeline(props) {
                           </div>
                         </div>
                         {/* add post new box */}
+                        {postData
+                          .sort(
+                            (a, b) =>
+                              new Date(b.Date_creation) -
+                              new Date(a.Date_creation)
+                          )
+
+                          .map(function (p) {
+                            if (p.Epinglé == true) {
+                              return (
+                                <Post
+                                  key={p._id}
+                                  post={p}
+                                  currentUser={currentUser}
+                                />
+                              );
+                            }
+                          })}
 
                         {postData
                           .sort(
@@ -333,13 +401,17 @@ function Timeline(props) {
                               new Date(b.Date_creation) -
                               new Date(a.Date_creation)
                           )
-                          .map((p) => (
-                            <Post
-                              key={p._id}
-                              post={p}
-                              currentUser={currentUser}
-                            />
-                          ))}
+                          .map(function (p) {
+                            if (p.Epinglé == false) {
+                              return (
+                                <Post
+                                  key={p._id}
+                                  post={p}
+                                  currentUser={currentUser}
+                                />
+                              );
+                            }
+                          })}
                       </div>
                     </div>
                     {/* centerl meta */}
@@ -377,7 +449,7 @@ function Timeline(props) {
                               <li>
                                 <figure>
                                   <img
-                                    src="images/resources/friend-avatar.jpg"
+                                    src={"/uploads/users/" + f.profilepic[0]}
                                     alt
                                   />
                                   <span className="status f-online" />

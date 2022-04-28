@@ -25,10 +25,9 @@ export default function Conversation({ conversation, currentUser }) {
         <img
           src={
             user?.profilepic[0]
-              ? user.profilepic[0]
-              : "images/resources/friend-avatar2.jpg"
+              ? "/uploads/users/" + user.profilepic[0]
+              : "/images/resources/friend-avatar2.jpg"
           }
-          // src="images/resources/friend-avatar2.jpg"
           alt
         />
         <span className="status f-online" />

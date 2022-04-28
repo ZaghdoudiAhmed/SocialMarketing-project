@@ -1,9 +1,11 @@
 .love {
   color: #dd333f;
   padding-right: 5px;
+  padding-top: 10px;
 }
 
 .angry {
   color: #02325b;
   padding-right: 10px;
+  padding-top: 10px;
 }

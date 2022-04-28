@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import Shortcuts from "./shortcuts";
 import Timelineinfo from "./timeline-info";
+import Swal from "sweetalert2";
 
 import Loading from "../loading";
 import Header from "../header";
@@ -13,23 +14,23 @@ function Usertimeline(props) {
 
   const [postData, setPostData] = useState([]);
   const [friends, setFriends] = useState([]);
-  const [onlineFriends, setOnlineFriends] = useState([]);
-  const [newDescription, setNewDescription] = useState("");
-  const [file, setFile] = useState(null);
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
   const [userProfile, setProfile] = useState(null);
+
   const { userid } = useParams();
 
-  const getPosts = async () => {
-    try {
-      axios.get(url + "/all/" + userProfile._id).then((res) => {
-        setPostData(res.data);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-start",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const getFriends = async () => {
     try {
@@ -37,6 +38,26 @@ function Usertimeline(props) {
         "http://localhost:2600/api/users/friends/" + userProfile._id
       );
       setFriends(friendList.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlefollow = async (userId, username) => {
+    const user = {
+      userId: currentUserId,
+    };
+    try {
+      axios
+        .put("http://localhost:2600/api/users/" + userId + "/follow", user)
+        .then((res) => {
+          Toast.fire({
+            icon: "info",
+            title: "you follow " + username,
+          });
+
+          window.location.reload(true);
+        });
     } catch (err) {
       console.log(err);
     }
@@ -59,7 +80,6 @@ function Usertimeline(props) {
         console.log(err);
       }
     });
-    //  console.log(yourFriend);
   }, []);
 
   useEffect(() => {
@@ -85,16 +105,32 @@ function Usertimeline(props) {
             <Header currentUserId={currentUserId} />
             {/* topbar */}
             <section>
-              {/* <Timelineinfo friends={friends} setFriends={setFriends} /> */}
               <div className="feature-photo">
                 <figure>
-                  <img src="/images/resources/timeline-1.jpg" alt />
+                  <img
+                    src={
+                      userProfile.coverpic[0]
+                        ? "/uploads/users/" + userProfile.coverpic[0]
+                        : "/images/resources/timeline-1.jpg"
+                    }
+                    alt
+                  />
                 </figure>
                 <div className="add-btn">
-                  <span>{friends.length} followers</span>
-                  <a href="#" title data-ripple>
-                    Add Friend
-                  </a>
+                  <span>{friends.length} followings</span>
+
+                  {currentUser?.followings?.includes(userid) ? null : (
+                    <a
+                      href=""
+                      title
+                      data-ripple
+                      onClick={() =>
+                        handlefollow(userProfile._id, userProfile.name)
+                      }
+                    >
+                      Add Friend
+                    </a>
+                  )}
                 </div>
                 <form className="edit-phto">
                   <i className="fa fa-camera-retro" />
@@ -108,7 +144,15 @@ function Usertimeline(props) {
                     <div className="col-lg-2 col-sm-3">
                       <div className="user-avatar">
                         <figure>
-                          <img src="/images/resources/user-avatar.jpg" alt />
+                          <img
+                            src={
+                              userProfile.profilepic
+                                ? "/uploads/users/" + userProfile.profilepic[0]
+                                : "/images/resources/bloggrid-mas-1.jpg"
+                            }
+                            alt
+                          />
+
                           <form className="edit-phto">
                             <i className="fa fa-camera-retro" />
                             <label className="fileContainer">
@@ -124,7 +168,6 @@ function Usertimeline(props) {
                         <ul>
                           <li className="admin-name">
                             <h5>{userProfile.name}</h5>
-                            <span>Group Admin</span>
                           </li>
                           <li>
                             <Link
@@ -135,46 +178,9 @@ function Usertimeline(props) {
                             >
                               time line
                             </Link>
-                            <Link
-                              className
-                              to={{
-                                pathname: "/timelinephotos",
-                              }}
-                              title
-                              data-ripple
-                            >
-                              Photos
-                            </Link>
-                            <Link
-                              className
-                              to="/timelinevideos"
-                              title
-                              data-ripple
-                            >
-                              Videos
-                            </Link>
-                            <Link
-                              className
-                              to="/timelinefriends"
-                              title
-                              data-ripple
-                            >
-                              Friends
-                            </Link>
-                            <a
-                              className
-                              href="timeline-groups.html"
-                              title
-                              data-ripple
-                            >
-                              Groups
-                            </a>
                             <Link className to="/about" title data-ripple>
                               about
                             </Link>
-                            <a className href="#" title data-ripple>
-                              more
-                            </a>
                           </li>
                         </ul>
                       </div>
@@ -267,7 +273,7 @@ function Usertimeline(props) {
                               </ul>
                             </div>
                             {/* recent activites */}
-                            <div className="widget stick-widget">
+                            {/* <div className="widget stick-widget">
                               <h4 className="widget-title">Who's follownig</h4>
                               <ul className="followers">
                                 <li>
@@ -361,77 +367,56 @@ function Usertimeline(props) {
                                   </div>
                                 </li>
                               </ul>
-                            </div>
+                            </div> */}
                             {/* who's following */}
                           </aside>
                         </div>
                         {/* sidebar */}
                         <div className="col-lg-6">
                           <div className="loadMore">
-                            <div className="central-meta item">
-                              <div className="new-postbox">
-                                <figure>
-                                  <img src="/images/resources/admin2.jpg" alt />
-                                </figure>
-                                <div className="newpst-input">
-                                  {/* <form method="post">
-                                <textarea
-                                  rows={2}
-                                  placeholder="write something"
-                                  onChange={(e) =>
-                                    setNewDescription(e.target.value)
-                                  }
-                                  value={newDescription}
-                                />
-                                <div className="attachments">
-                                  <ul>
-                                    <li>
-                                      <i className="fa fa-image" />
-                                      <label className="fileContainer">
-                                        <input
-                                          type="file"
-                                          onChange={(e) => {
-                                            setFile(e.target.files[0]);
-                                          }}
-                                        />
-                                      </label>
-                                    </li>
-                                    <li>
-                                      <i className="fa fa-video-camera" />
-                                      <label className="fileContainer">
-                                        <input type="file" />
-                                      </label>
-                                    </li>
-
-                                    <li>
-                                      <button
-                                        type="submit"
-                                        onClick={handleSubmit}
-                                      >
-                                        Publish
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </form> */}
+                            {currentUserId !== userid ? null : (
+                              <div className="central-meta item">
+                                <div className="new-postbox">
+                                  <figure>
+                                    <img
+                                      src="/images/resources/admin2.jpg"
+                                      alt
+                                    />
+                                  </figure>
+                                  <div className="newpst-input"></div>
                                 </div>
                               </div>
-                            </div>
+                            )}
                             {/* add post new box */}
-
-                            {postData
-                              .sort(
-                                (a, b) =>
-                                  new Date(b.Date_creation) -
-                                  new Date(a.Date_creation)
-                              )
-                              .map((p) => (
-                                <Post
-                                  key={p._id}
-                                  post={p}
-                                  currentUser={currentUser}
-                                />
-                              ))}
+                            {postData !== [] ? (
+                              <>
+                                {postData
+                                  .sort(
+                                    (a, b) =>
+                                      new Date(b.Date_creation) -
+                                      new Date(a.Date_creation)
+                                  )
+                                  .map((p) => (
+                                    <Post
+                                      key={p._id}
+                                      post={p}
+                                      currentUser={currentUser}
+                                    />
+                                  ))}
+                              </>
+                            ) : (
+                              <div className="central-meta item">
+                                <div className="new-postbox">
+                                  <figure>
+                                    <img
+                                      src="/images/resources/admin2.jpg"
+                                      alt
+                                    />
+                                  </figure>
+                                  <div className="newpst-input"></div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                         {/* centerl meta */}
@@ -462,27 +447,20 @@ function Usertimeline(props) {
                               </div>
                             </div>
                             <div className="widget friend-list stick-widget">
-                              <h4 className="widget-title">Followers</h4>
+                              <h4 className="widget-title">Followings</h4>
                               <div id="searchDir" />
                               <ul id="people-list" className="friendz-list">
                                 {friends.map((f) => (
                                   <li>
                                     <figure>
                                       <img
-                                        src="/images/resources/friend-avatar.jpg"
+                                        src={"/uploads/users/" + f.profilepic}
                                         alt
                                       />
                                       <span className="status f-online" />
                                     </figure>
                                     <div className="friendz-meta">
                                       <a href="time-line.html">{f.name}</a>
-                                      <i>
-                                        <a
-                                          href="https://wpkixx.com/cdn-cgi/l/email-protection"
-                                          className="__cf_email__"
-                                          data-cfemail="4136282f352433322e2d25243301262c20282d6f222e2c"
-                                        ></a>
-                                      </i>
                                     </div>
                                   </li>
                                 ))}

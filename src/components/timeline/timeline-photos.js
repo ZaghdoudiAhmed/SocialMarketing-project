@@ -56,7 +56,7 @@ function Timelinephotos(props) {
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo friends={friends} setFriends={setFriends} />
@@ -106,21 +106,12 @@ function Timelinephotos(props) {
                               <li>
                                 <a
                                   className="strip"
-                                  href={
-                                    "http://127.0.0.1:5500/server/uploads/" +
-                                    p.Photo
-                                  }
+                                  href={"/uploads/posts/" + p.Photo}
                                   title
                                   data-strip-group="mygroup"
                                   data-strip-group-options="loop: false"
                                 >
-                                  <img
-                                    src={
-                                      "http://127.0.0.1:5500/server/uploads/" +
-                                      p.Photo
-                                    }
-                                    alt
-                                  />
+                                  <img src={"/uploads/posts/" + p.Photo} alt />
                                 </a>
                               </li>
                             ))}

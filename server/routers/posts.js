@@ -7,15 +7,16 @@ var path = require("path");
 var router = express.Router();
 
 var Post = require("../models/posts");
+var User = require("../models/user");
+var Comment = require("../models/comment");
 
 //  Storing uploaded files
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null,"../public/uploads/posts");
+    cb(null, "../public/uploads/posts");
   },
   filename: (req, file, cb) => {
     //cb(null, new Date().toISOString() + file.originalname);
-    console.log(file)
     cb(null, file.originalname);
   },
 });
@@ -35,7 +36,6 @@ const fileFilter = (req, file, cb) => {
 var upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.get("/", function (req, res, next) {
-  // res.send("respond with a resource");
   Post.find({})
     .populate("Creator")
     .exec((err, posts) => {
@@ -46,39 +46,52 @@ router.get("/", function (req, res, next) {
     });
 });
 
+router.get("/friendsposts/:currentUser", async (req, res) => {
+  const user = User.findById(req.params.currentUser);
+  const friendsposts = await Promise.all(
+    user.followings.map((friendId) => {
+      return Post.find({ Creator: friendId }).populate("Creator");
+    })
+  );
+  const yourposts = Post.find({ Creator: req.params.currentUser }).populate(
+    "Creator"
+  );
+
+  const totalposts = [];
+  totalposts.push(friendsposts);
+  totalposts.push(yourposts);
+  res.json(totalposts);
+});
 // Creating post
-router.post("/",(req, res) => {
-  console.log(req.file.originalname)
-  ////console.log(req)
-  ///console.log( req.files.Photo.name)
-  const x= new Post({
+router.post("/", upload.single("Photo"), (req, res) => {
+  new Post({
     Description: req.body.Description,
-    Private: req.body.Private,
     Creator: req.body.Creator,
-   //// Photo: req.file.originalname,
+    Photo: req.file.originalname,
   })
-///console.log(x)
     .save()
-   .then((newpost) => {
+    .then((newpost) => {
       Post.populate(newpost, "Creator", (err, populatedpost) => {
-       res.json(populatedpost);
+        res.json(populatedpost);
       });
-   });
+    });
 });
 
 //Update Post
-router.put("/:id", (req, res) => {
+router.put("/:id", upload.single("Photo"), (req, res) => {
   //parameter get id
   const { id } = req.params;
   //parameter POST
-  const { Description, Private, Creator } = req.body;
+  const { Description } = req.body;
+  const Photo = req.file.originalname;
+  const Datenow = Date.now();
   //Update Data
   const post = Post.findOneAndUpdate(
     { _id: id },
     {
       Description: Description,
-      Private: Private,
-      //   Creator: Creator,
+      Photo: Photo,
+      Date_creation: Datenow,
     }
   ).catch((error) => {
     return error;
@@ -88,6 +101,16 @@ router.put("/:id", (req, res) => {
     data: post,
     message: "Updated ",
   });
+});
+
+router.put("/epingle/:id", (req, res) => {
+  const post = Post.findOneAndUpdate(
+    { _id: req.params.id },
+    { Epinglé: true }
+  ).catch((err) => {
+    return err;
+  });
+  res.json("post epinglé ");
 });
 
 // Removing post
@@ -100,6 +123,8 @@ router.get("/delete/:id", (req, res, next) => {
       if (err) {
         res.send("error removing");
       } else {
+        // const comments = Comment.find({ Post_id: Post._id });
+        Comment.deleteMany({ Post_id: Post._id }).exec();
         res.json({
           success: true,
           message: "Deleted",
@@ -120,27 +145,6 @@ router.get("/all/:id", (req, res, next) => {
       }
       res.json(posts);
     });
-});
-
-// Like a post
-router.post("/like/:id", (req, res, next) => {
-  Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { Likes: 1 } }).exec();
-  res.json("done");
-});
-
-//Dislike a post
-router.post("/dislike/:id", (req, res, next) => {
-  Post.findOneAndUpdate(
-    { _id: req.params.id },
-    { $inc: { Dislikes: 1 } }
-  ).exec();
-  res.json("done");
-});
-
-//Love a post
-router.post("/love/:id", (req, res, next) => {
-  Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { Love: 1 } }).exec();
-  res.json("done");
 });
 
 ///////////////////////////////////////////// Likes in array //////////////////////////

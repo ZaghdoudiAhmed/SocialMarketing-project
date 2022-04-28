@@ -11,22 +11,10 @@ function Shortcuts(props) {
       <h4 className="widget-title">Shortcuts</h4>
       <ul className="naves">
         <li>
-          <i className="ti-clipboard" />
-          <a href="newsfeed.html" title>
-            News feed
-          </a>
-        </li>
-        <li>
-          <i className="ti-mouse-alt" />
-          <a href="inbox.html" title>
-            Inbox
-          </a>
-        </li>
-        <li>
-          <i className="ti-files" />
-          <a href="fav-page.html" title>
-            My pages
-          </a>
+          <i className="ti-instagram" />
+          <Link to="/timelinestories" title>
+            Stories
+          </Link>
         </li>
         <li>
           <i className="ti-user" />
@@ -55,18 +43,6 @@ function Shortcuts(props) {
           <Link to="/notification" title>
             Notifications
           </Link>
-        </li>
-        <li>
-          <i className="ti-share" />
-          <a href="people-nearby.html" title>
-            People Nearby
-          </a>
-        </li>
-        <li>
-          <i className="fa fa-bar-chart-o" />
-          <a href="insights.html" title>
-            insights
-          </a>
         </li>
         <li>
           <i className="ti-direction" />

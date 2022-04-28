@@ -16,37 +16,23 @@ import { io } from "socket.io-client";
 import { Modal, Button } from "react-bootstrap";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import Mentions from "rc-mentions";
 
 import Post from "./post/post";
 import Header from "./header";
+import Story from "./Story/stories";
 import Shortcuts from "./timeline/shortcuts";
 import Loading from "./loading";
-import Mentions from "rc-mentions";
 
 function Accueil() {
   const url = "http://localhost:2600/posts";
   const [postData, setPostData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newDescription, setNewDescription] = useState("");
-  const [newPhoto, setNewPhoto] = useState(null);
   const [files, setFiles] = useState(null);
   const [socket, setSocket] = useState(null);
   const [friends, setFriends] = useState([]);
-  const users = [
-    {
-      id: "1",
-      display: "Jimmy",
-    },
-    {
-      id: "2",
-      display: "Ketut",
-    },
-    {
-      id: "3",
-      display: "Gede",
-    },
-  ];
-
+  const [users, setUsers] = useState([]);
   const { Option } = Mentions;
 
   const navigate = useNavigate();
@@ -56,6 +42,7 @@ function Accueil() {
   const [show1, setShow1] = useState(false);
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
+
   const [btnClass, setBtnClass] = useState(null);
 
   const [verif, setVerify] = useState("");
@@ -170,7 +157,6 @@ function Accueil() {
 
     post.append("Photo", files);
     post.append("Description", newDescription);
-    post.append("Private", true);
     post.append("Creator", currentUserId);
 
     try {
@@ -179,16 +165,40 @@ function Accueil() {
           icon: "success",
           title: "Your post is added succesfuly",
         });
-        socket.emit("sendNotification", {
-          senderId: res.data.Creator._id,
-          receiverId: currentUserId,
-          text: text,
-        });
+
+        if (currentUserId !== res.data.Creator._id) {
+          socket.emit("sendNotification", {
+            senderId: res.data.Creator._id,
+            receiverId: currentUserId,
+            text: text,
+          });
+        }
 
         setPostData([res.data, ...postData]);
         setNewDescription("");
         setFiles(null);
       });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handlefollow = async (userId, username) => {
+    const user = {
+      userId: currentUserId,
+    };
+    try {
+      axios
+        .put("http://localhost:2600/api/users/" + userId + "/follow", user)
+        .then((res) => {
+          Toast.fire({
+            icon: "info",
+            title: "you follow " + username,
+          });
+          const newList = setUsers.filter((u) => u._id !== userId);
+          setUsers(newList);
+          // reload.window()
+        });
     } catch (err) {
       console.log(err);
     }
@@ -216,17 +226,83 @@ function Accueil() {
     }
   };
 
+  const getNotFollowers = async () => {
+    try {
+      await axios
+        .get("http://localhost:2600/api/users/all/" + currentUserId)
+        .then((res) => {
+          setUsers(res.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeletePost = (id) => {
+    Swal.fire({
+      title: "Are you sure to delete your post ?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.get("http://localhost:2600/posts/delete/" + id).then((res) => {
+          const newList = postData.filter((post) => post._id !== id);
+          setPostData(newList);
+        });
+
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+      }
+    });
+  };
+
+  const handleConversation = (userid) => {
+    const members = {
+      senderId: currentUserId,
+      receiverId: userid,
+    };
+    const status = axios
+      .get(
+        "http://localhost:2600/conversations/find/" +
+          currentUserId +
+          "/" +
+          userid
+      )
+      .then((res) => {
+        if (res.data == null) {
+          axios
+            .post("http://localhost:2600/conversations/", members)
+            .then((res) => {
+              Toast.fire({
+                icon: "success",
+                title: "New conversation !",
+              });
+
+              setTimeout(() => {
+                navigate("/messages");
+              }, 3000);
+            });
+        } else {
+          navigate("/messages");
+        }
+      });
+  };
+
   useEffect(() => {
     setSocket(io("http://localhost:2700"));
   }, []);
 
   useEffect(() => {
     socket?.emit("newUser", currentUserId);
-  }, [socket]);
+  }, [socket, currentUserId]);
 
   useEffect(() => {
     getPosts();
     getFriends();
+    getNotFollowers();
   }, []);
 
   useEffect(() => {
@@ -280,6 +356,14 @@ function Accueil() {
       }
     });
   }, []);
+
+  let Options = users.map((u) => (
+    <Option key={u._id} value={u.name} className="dynamic-option">
+      <img src={"/uploads/users/" + u.profilepic} alt={u.profilepic} />
+      <span>{u.name}</span>
+    </Option>
+  ));
+
   return (
     <>
       <>
@@ -406,8 +490,9 @@ function Accueil() {
               >
                 <label>pp picker</label>
                 <input
-                  type="file"
+                  type={"file"}
                   accept={".png , .jpg, .jpeg"}
+                  className="form-control style-none"
                   name={"image"}
                   onChange={(e) => {
                     setFile(window.URL.createObjectURL(e.target.files[0]));
@@ -846,8 +931,11 @@ function Accueil() {
               <ul className="chat-users">
                 {friends.map((f) => (
                   <li key={f._id}>
-                    <div className="author-thmb">
-                      <img src="images/resources/side-friend1.jpg" alt />
+                    <div
+                      className="author-thmb"
+                      onClick={() => handleConversation(f._id)}
+                    >
+                      <img src={"/uploads/users/" + f.profilepic} alt />
                       <span className="status f-online" />
                     </div>
                   </li>
@@ -966,14 +1054,13 @@ function Accueil() {
             <div className="menu-left">
               <ul className="left-menu">
                 <li>
-                  <a
-                    href="newsfeed.html"
-                    title="Newsfeed Page"
+                  <button
+                    className="btn btn-light border-0"
                     data-toggle="tooltip"
                     data-placement="right"
                   >
-                    <i className="ti-magnet" />
-                  </a>
+                    <i className="ti-magnet" aria-hidden="true" />
+                  </button>
                 </li>
                 <li>
                   <a
@@ -1082,7 +1169,7 @@ function Accueil() {
                           <div className="widget">
                             <h4 className="widget-title">Recent Activity</h4>
                             <ul className="activitiez">
-                              <li>
+                              {/* <li>
                                 <div className="activity-meta">
                                   <i>10 hours Ago</i>
                                   <span>
@@ -1118,121 +1205,79 @@ function Accueil() {
                                     "<a href="#">you are so funny mr.been.</a>"
                                   </h6>
                                 </div>
-                              </li>
+                              </li> */}
                             </ul>
                           </div>
                           {/* recent activites */}
                           <div className="widget stick-widget">
-                            <h4 className="widget-title">Who's follownig</h4>
+                            <h4 className="widget-title">Other Users</h4>
                             <ul className="followers">
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar2.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="friend-meta">
-                                  <h4>
-                                    <a href="time-line.html" title>
-                                      Kelly Bill
-                                    </a>
-                                  </h4>
-                                  <a href="#" title className="underline">
-                                    Add Friend
-                                  </a>
-                                </div>
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar4.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="friend-meta">
-                                  <h4>
-                                    <a href="time-line.html" title>
-                                      Issabel
-                                    </a>
-                                  </h4>
-                                  <a href="#" title className="underline">
-                                    Add Friend
-                                  </a>
-                                </div>
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar6.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="friend-meta">
-                                  <h4>
-                                    <a href="time-line.html" title>
-                                      Andrew
-                                    </a>
-                                  </h4>
-                                  <a href="#" title className="underline">
-                                    Add Friend
-                                  </a>
-                                </div>
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar8.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="friend-meta">
-                                  <h4>
-                                    <a href="time-line.html" title>
-                                      Sophia
-                                    </a>
-                                  </h4>
-                                  <a href="#" title className="underline">
-                                    Add Friend
-                                  </a>
-                                </div>
-                              </li>
-                              <li>
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar3.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <div className="friend-meta">
-                                  <h4>
-                                    <a href="time-line.html" title>
-                                      Allen
-                                    </a>
-                                  </h4>
-                                  <a href="#" title className="underline">
-                                    Add Friend
-                                  </a>
-                                </div>
-                              </li>
+                              {users.map((u) => (
+                                <li key={u._id}>
+                                  <figure>
+                                    <img
+                                      src={
+                                        u.profilepic
+                                          ? "/uploads/users/" + u.profilepic
+                                          : "/images/resources/friend-avatar2.jpg"
+                                      }
+                                      alt
+                                    />
+                                  </figure>
+                                  <div className="friend-meta">
+                                    <h4>
+                                      <Link to={`/timeline/${u._id}`} title>
+                                        {u.name}
+                                      </Link>
+                                    </h4>
+                                    {currentUser?.followers?.includes(
+                                      u._id
+                                    ) ? null : (
+                                      <button
+                                        onClick={() =>
+                                          handlefollow(u._id, u.name)
+                                        }
+                                        className=" btn btn-primary underline"
+                                      >
+                                        Add Friend
+                                      </button>
+                                    )}
+                                  </div>
+                                </li>
+                              ))}
                             </ul>
                           </div>
                           {/* who's following */}
                         </aside>
                       </div>
                       {/* sidebar */}
-
+                      {/* <div style={{ paddingTop: 200 }}>
+                        <Mentions autoSize transitionName="motion-zoom">
+                          {Options}
+                        </Mentions>
+                      </div> */}
                       <div className="col-lg-6">
+                        <div className="central-meta">
+                          <Story
+                            currentUserId={currentUserId}
+                            currentUser={currentUser}
+                          />
+                        </div>
                         <div className="central-meta">
                           <div className="new-postbox">
                             <figure>
-                              <img src="images/resources/admin2.jpg" alt />
+                              <img
+                                width="35"
+                                height="35"
+                                src={"/uploads/users/" + currentUser.profilepic}
+                                alt
+                              />
                             </figure>
                             <div className="newpst-input">
-                              <form >
+                              <form>
                                 <textarea
                                   rows={2}
-                                  placeholder="..."
+                                  placeholder="share something .."
                                   onChange={(e) =>
                                     setNewDescription(e.target.value)
                                   }
@@ -1250,7 +1295,6 @@ function Accueil() {
                                             setFiles(e.target.files[0]);
                                           }}
                                           id="file"
-
                                         />
                                       </label>
                                     </li>
@@ -1302,6 +1346,7 @@ function Accueil() {
                                   socket={socket}
                                   currentUser={currentUser}
                                   friends={friends}
+                                  handleDeletePost={handleDeletePost}
                                 />
                               ))}
                           </div>

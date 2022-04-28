@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Shortcuts from "./shortcuts";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import Timelineinfo from "./timeline-info";
 
@@ -10,6 +11,18 @@ import axios from "axios";
 function Timelinefriends(props) {
   const [friends, setFriends] = useState([]);
   const currentUserId = localStorage.getItem("currentUser");
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-start",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const getFriends = async () => {
     try {
@@ -23,17 +36,27 @@ function Timelinefriends(props) {
   };
 
   const handleClick = async (userid) => {
-    try {
-      await axios
-        .put("http://localhost:2600/api/users/" + userid + "/unfollow", {
-          userId: currentUserId,
-        })
-        .then((res) => {
-          console.log(res);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+    Swal.fire({
+      title: "Are you sure to delete your post ?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .put("http://localhost:2600/api/users/" + userid + "/unfollow", {
+            userId: currentUserId,
+          })
+          .then((res) => {
+            const newList = friends.filter((f) => f._id !== userid);
+            setFriends(newList);
+          });
+        Swal.fire("Unfollowed!", "Your friend has been  unfollowed", "success");
+      }
+    });
   };
 
   useEffect(() => {
@@ -42,7 +65,7 @@ function Timelinefriends(props) {
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo friends={friends} setFriends={setFriends} />
@@ -122,12 +145,12 @@ function Timelinefriends(props) {
                                       <figure>
                                         <a href="time-line.html" title>
                                           <img
-                                            // src={
-                                            //   friend.profilepic
-                                            //     ? friend.profilepic
-                                            //     : "images/resources/friend-avatar9.jpg"
-                                            // }
-                                            src="images/resources/friend-avatar9.jpg"
+                                            src={
+                                              friend.profilepic
+                                                ? "/uploads/users/" +
+                                                  friend.profilepic
+                                                : "images/resources/friend-avatar9.jpg"
+                                            }
                                             alt
                                           />
                                         </a>
@@ -138,24 +161,15 @@ function Timelinefriends(props) {
                                             {friend.name}
                                           </a>
                                         </h4>
-                                        <span>ftv model</span>
-                                        <a
-                                          href="#"
-                                          title
-                                          className="add-butn more-action"
+                                        <button
+                                          className=" btn add-butn more-action"
                                           data-ripple
-                                          //  onClick={handleClick(friend._id)}
+                                          onClick={() =>
+                                            handleClick(friend._id)
+                                          }
                                         >
                                           unfriend
-                                        </a>
-                                        <a
-                                          href="#"
-                                          title
-                                          className="add-butn"
-                                          data-ripple
-                                        >
-                                          add friend
-                                        </a>
+                                        </button>
                                       </div>
                                     </div>
                                   </li>
@@ -203,258 +217,7 @@ function Timelinefriends(props) {
                                     </div>
                                   </div>
                                 </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly1.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          sophia Gate
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly6.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          caty lasbo
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/friend-avatar9.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          jhon kates
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly2.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          sara grey
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly4.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          Sara grey
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/nearly3.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          Sexy cat
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="nearly-pepls">
-                                    <figure>
-                                      <a href="time-line.html" title>
-                                        <img
-                                          src="images/resources/friend-avatar9.jpg"
-                                          alt
-                                        />
-                                      </a>
-                                    </figure>
-                                    <div className="pepl-info">
-                                      <h4>
-                                        <a href="time-line.html" title>
-                                          jhon kates
-                                        </a>
-                                      </h4>
-                                      <span>ftv model</span>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn more-action"
-                                        data-ripple
-                                      >
-                                        delete Request
-                                      </a>
-                                      <a
-                                        href="#"
-                                        title
-                                        className="add-butn"
-                                        data-ripple
-                                      >
-                                        Confirm
-                                      </a>
-                                    </div>
-                                  </div>
-                                </li>
+                              
                               </ul>
                               <button className="btn-view btn-load-more" />
                             </div>

@@ -1,8 +1,12 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../header";
+import Shortcuts from "./shortcuts";
+
 import Timelineinfo from "./timeline-info";
 import axios from "axios";
 import { format } from "timeago.js";
+import Swal from "sweetalert2";
+
 import moment from "moment";
 import { io } from "socket.io-client";
 function Notification(props) {
@@ -10,16 +14,31 @@ function Notification(props) {
 
   const currentUserId = localStorage.getItem("currentUser");
   const [friends, setFriends] = useState([]);
+  const [postData, setPostData] = useState([]);
+
   const [allnotifications, setAllNotifications] = useState([]);
-  const socket = useRef();    
-  socket.current = io("http://localhost:2700");
-    socket?.current.emit("newUser", currentUserId);
-  useEffect(() => {  
-  
-    socket?.current.on("getNotification", (data1) => {
-    setAllNotifications((prev) => [...prev, data1]);
+  const socket = useRef();
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-start",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
   });
-  },[socket])
+
+  useEffect(() => {
+    socket.current = io("http://localhost:2700");
+    socket?.current.emit("newUser", currentUserId);
+
+    socket?.current.on("getNotification", (data1) => {
+      setAllNotifications((prev) => [...prev, data1]);
+    });
+  }, [socket]);
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
@@ -32,23 +51,42 @@ function Notification(props) {
   };
 
   const getAllNotif = async () => {
-  
     axios
       .get("http://localhost:2600/notifications/" + currentUserId)
       .then((res) => {
         setAllNotifications(res.data);
       });
   };
+  const getPosts = async () => {
+    try {
+      axios
+        .get("http://localhost:2600/posts" + "/all/" + currentUserId)
+        .then((res) => {
+          setPostData(res.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    axios
+      .get("http://localhost:2600/notifications/delete/" + id)
+      .then((res) => {
+        Toast.fire({
+          icon: "warning",
+          title: "Notification deleted succesfully",
+        });
+        const newList = allnotifications.filter((notif) => notif._id !== id);
+        setAllNotifications(newList);
+      });
+  };
 
   useEffect(() => {
     getFriends();
     getAllNotif();
-  
+    getPosts();
   }, [currentUserId]);
-
-
-
-
 
   useEffect(() => {
     fetch("http://localhost:2600/api/users/me", {
@@ -68,7 +106,7 @@ function Notification(props) {
   return (
     <div>
       <div className="theme-layout">
-        <Header currentUser={currentUser} />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo
@@ -88,110 +126,29 @@ function Notification(props) {
                       <aside className="sidebar static">
                         <div className="widget">
                           <h4 className="widget-title">Recent Photos</h4>
-                          <ul className="recent-photos">
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-11.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-1.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-22.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-2.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-33.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-3.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-44.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-4.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-55.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-5.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-66.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-6.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-77.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-7.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-88.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-8.jpg" alt />
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                className="strip"
-                                href="images/resources/recent-99.jpg"
-                                title
-                                data-strip-group="mygroup"
-                                data-strip-group-options="loop: false"
-                              >
-                                <img src="images/resources/recent-9.jpg" alt />
-                              </a>
-                            </li>
-                          </ul>
+                          {postData.length ? (
+                            <ul className="recent-photos">
+                              {postData?.map((p) => (
+                                <li>
+                                  <a
+                                    className="strip"
+                                    href={"/uploads/posts/" + p.Photo}
+                                    title
+                                    data-strip-group="mygroup"
+                                    data-strip-group-options="loop: false"
+                                  >
+                                    <img
+                                      src={"/uploads/posts/" + p.Photo}
+                                      alt
+                                    />
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : null}
                         </div>
                         {/* recent photos*/}
-                        <div className="widget stick-widget">
+                        {/* <div className="widget stick-widget">
                           <h4 className="widget-title">Shortcuts</h4>
                           <ul className="naves">
                             <li>
@@ -237,7 +194,8 @@ function Notification(props) {
                               </a>
                             </li>
                           </ul>
-                        </div>
+                        </div> */}
+                        <Shortcuts />
                       </aside>
                     </div>
                     {/* sidebar */}
@@ -254,7 +212,9 @@ function Notification(props) {
                                 <li key={n._id}>
                                   <figure>
                                     <img
-                                      src="images/resources/friend-avatar.jpg"
+                                      src={
+                                        "/uploads/users/" + n.sender.profilepic
+                                      }
                                       alt
                                     />
                                   </figure>
@@ -262,7 +222,10 @@ function Notification(props) {
                                     <p>{n.text}</p>
                                     <span> {format(n.Date_creation)}</span>
                                   </div>
-                                  <i className="del fa fa-close" />
+                                  <i
+                                    className="del fa fa-close"
+                                    onClick={() => handleDelete(n._id)}
+                                  />
                                 </li>
                               ))}
                             </ul>

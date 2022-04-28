@@ -20,6 +20,7 @@ function Messanger(props) {
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
   const [friends, setFriends] = useState([]);
+  const [user, setUser] = useState(null);
 
   const scrollRef = useRef();
   const socket = useRef();
@@ -37,7 +38,6 @@ function Messanger(props) {
   }, []);
 
   useEffect(() => {
-    console.log(currentChat);
     arrivalMessage &&
       currentChat?.members?.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
@@ -45,7 +45,6 @@ function Messanger(props) {
 
   const getConversations = async () => {
     try {
-
       const res = await axios.get(url + currentUserId);
       setConversations(res.data);
     } catch (err) {
@@ -55,11 +54,12 @@ function Messanger(props) {
 
   const getMessages = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:2600/messages/" + currentChat?._id
-      );
-      console.log(res.data);
-      setMessages(res.data);
+      if (currentChat !== null) {
+        const res = await axios.get(
+          "http://localhost:2600/messages/" + currentChat?._id
+        );
+        setMessages(res.data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -86,17 +86,30 @@ function Messanger(props) {
       (member) => member !== currentUser._id
     );
 
-    console.log(receiverId);
-    socket?.current.emit("sendMessage", {
-      senderId: currentUser._id,
-      receiverId,
-      text: newMessage,
-    });
-
     try {
       const res = await axios.post("http://localhost:2600/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
+      socket?.current.emit("sendMessage", {
+        senderId: currentUser._id,
+        receiverId,
+        text: newMessage,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getUser = async () => {
+    const friendId = currentChat?.members.find((m) => m !== currentUser._id);
+
+    try {
+      if (currentChat !== null) {
+        const res = await axios.get(
+          "http://localhost:2600/api/users/" + friendId
+        );
+        setUser(res.data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -105,7 +118,8 @@ function Messanger(props) {
     getConversations();
     getMessages();
     getFriends();
-  }, [currentUserId,currentChat]);
+    getUser();
+  }, [currentUserId, currentChat]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -116,10 +130,10 @@ function Messanger(props) {
 
     socket?.current.on("getUsers", (users) => {
       setOnlineUsers(
-        currentUser?.followings?.filter((f) => users.some((u) => u._id === f))
+        currentUser.followings.filter((f) => users.some((u) => u._id === f))
       );
     });
-  }, [socket, currentUser]);
+  }, [socket, currentUserId, currentUser]);
 
   useEffect(() => {
     fetch("http://localhost:2600/api/users/me", {
@@ -134,12 +148,12 @@ function Messanger(props) {
       const data = await res.json();
       setCurrentUser(data.user);
     });
-  }, []);
+  }, [currentUserId]);
 
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header currentUserId={currentUserId} />
         {/* topbar */}
         <section>
           <Timelineinfo
@@ -180,63 +194,76 @@ function Messanger(props) {
                               <i className="fa fa-ellipsis-h" />
                             </span>
                           </h5>
-                          <div className="message-box">
-                            <ul className="peoples">
-                              {conversations.map((c) => (
-                                <li
-                                  key={c._id}
-                                  onClick={() => setCurrentChat(c)}
-                                >
-                                  <Conversation
-                                    key={c._id}
-                                    conversation={c}
-                                    currentUser={currentUser}
-                                  />
-                                </li>
-                              ))}
-                            </ul>
-                            <div className="peoples-mesg-box">
-                              <div className="conversation-head">
-                                <figure>
-                                  <img
-                                    src="images/resources/friend-avatar.jpg"
-                                    alt
-                                  />
-                                </figure>
-                                <span>
-                                  jason bourne <i>online</i>
-                                </span>
+                          <div className="row">
+                            <div className="col-4">
+                              <div className="message-box">
+                                <ul className="peoples">
+                                  {conversations.map((c) => (
+                                    <li
+                                      key={c._id}
+                                      onClick={() => setCurrentChat(c)}
+                                    >
+                                      <Conversation
+                                        key={c._id}
+                                        conversation={c}
+                                        currentUser={currentUser}
+                                      />
+                                    </li>
+                                  ))}
+                                </ul>
                               </div>
-                              {currentChat ? (
-                                <>
+                            </div>
+                            <div className="col-8">
+                              <div className="peoples-mesg-box">
+                                {currentChat ? (
+                                  <div className="conversation-head">
+                                    <figure>
+                                      <img
+                                        src={
+                                          "/uploads/users/" +
+                                          user?.profilepic[0]
+                                        }
+                                        alt
+                                      />
+                                    </figure>
+                                    <span>
+                                      {user?.name} <i>online</i>
+                                    </span>
+                                  </div>
+                                ) : null}
+
+                                {currentChat ? (
                                   <ul className="chatting-area" ref={scrollRef}>
                                     {messages.map((m) => (
-                                      <Message
-                                        key={m._id}
-                                        message={m}
-                                        own={m.sender === currentUserId}
-                                      />
+                                      <>
+                                        <Message
+                                          key={m._id}
+                                          message={m}
+                                          own={m.sender._id === currentUserId}
+                                          currentUser={currentUser}
+                                        />
+                                      </>
                                     ))}
                                   </ul>
-                                </>
-                              ) : (
-                                <span className="noConversationText">
-                                  Open a conversation to start a chat.
-                                </span>
-                              )}
-                              <div className="message-text-container">
-                                <form method="post">
-                                  <textarea
-                                    defaultValue={""}
-                                    onChange={(e) =>
-                                      setNewMessage(e.target.value)
-                                    }
-                                    value={newMessage}
-                                  />
-                                  <button title="send" onClick={handleSubmit}>
-                                    <i className="fa fa-paper-plane" />
-                                  </button>
-                                </form>
+                                ) : (
+                                  <span className="noConversationText">
+                                    Open a conversation to start a chat.
+                                  </span>
+                                )}
+                                <div className="message-text-container">
+                                  <form method="post">
+                                    <textarea
+                                      defaultValue={""}
+                                      onChange={(e) =>
+                                        setNewMessage(e.target.value)
+                                      }
+                                      value={newMessage}
+                                    />
+                                    <button title="send" onClick={handleSubmit}>
+                                      <i className="fa fa-paper-plane" />
+                                    </button>
+                                  </form>
+                                </div>
                               </div>
                             </div>
                           </div>

@@ -17,7 +17,12 @@ function CommentForm({ post, handleComment, currentUser, friends }) {
   return (
     <li className="post-comment">
       <div className="comet-avatar">
-        <img src="images/resources/comet-1.jpg" alt />
+        <img
+          width="45"
+          height="45"
+          src={"/uploads/users/" + currentUser.profilepic}
+          alt
+        />
       </div>
       <div className="post-comt-box">
         <form method="post">

@@ -1,21 +1,16 @@
 var createError = require("http-errors");
 var express = require("express");
 
-
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var multer = require("multer");
 
 var mongoose = require("mongoose");
-var DonationRouter = require('./routers/Donation');
-var CompaignRouter = require('./routers/Campaign');
-var blogRouter = require('./routers/Blog');
-var indexRouter = require("./routers/index");
-var usersRouter = require("./routers/users");
 var app = express();
-const http = require('http').Server(app)
-const httpd = require('http').Server(app)
+
+const http = require("http").Server(app);
+const httpd = require("http").Server(app);
 http.listen(2600);
 httpd.listen(2700);
 const { ExpressPeerServer } = require("peer");
@@ -25,8 +20,8 @@ const peerServer = ExpressPeerServer(http, {
 
 app.use("/peerjs", peerServer);
 
-const io = require('socket.io')(http, { cors: {origin:'*'}});
-const iooo = require('socket.io')(httpd, { cors: {origin:'*'}});
+const io = require("socket.io")(http, { cors: { origin: "*" } });
+const iooo = require("socket.io")(httpd, { cors: { origin: "*" } });
 let users = [];
 
 const addUser = (userId, socketId) => {
@@ -57,7 +52,7 @@ iooo.on("connection", (socket) => {
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
-console.log(user);
+    console.log(user);
     iooo.to(user?.socketId).emit("getMessage", {
       senderId,
       text,
@@ -67,10 +62,8 @@ console.log(user);
   ///////real time notification //////
 
   socket.on("sendNotification", ({ senderId, receiverId, text }) => {
-
     const receiver = getUser(receiverId);
-    console.log(text)
-    console.log(users)
+    console.log(users);
     iooo.to(receiver?.socketId).emit("getNotification", {
       senderId,
       receiverId,
@@ -96,76 +89,79 @@ console.log(user);
   });
 });
 
-
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
-
     socket.join(roomId);
-    console.log(userId)
+    console.log(userId);
     socket.broadcast.to(roomId).emit("user-connected", userId);
 
-socket.on("message", (message) => {
+    socket.on("message", (message) => {
       io.in(roomId).emit("createMessage", message, userName);
     });
- socket.on('disconnect',()=>{
-  socket.broadcast.to(roomId).emit('user-disconnected', userId)
- });
+    socket.on("disconnect", () => {
+      socket.broadcast.to(roomId).emit("user-disconnected", userId);
     });
-
-socket.on('chat',(msg)=>{
-    io.emit('new message',msg)
-
-})
   });
 
-  app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the A
-
-// to the API (e.g. in case you use sessions)
-res.setHeader('Access-Control-Allow-Credentials', true);
-
-// Pass to next layer of middleware
-next();
+  socket.on("chat", (msg) => {
+    io.emit("new message", msg);
+  });
 });
-  
-const cors = require('cors');
-const bodyparser = require('body-parser');
-const fileUpload = require('express-fileupload')
-var indexRouter = require("./routers/index");
-var usersRouter = require("./routers/users");
+
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+
+  // Request methods you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+
+  // Request headers you wish to allow
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the A
+
+  // to the API (e.g. in case you use sessions)
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
+  // Pass to next layer of middleware
+  next();
+});
+
+const cors = require("cors");
+const bodyparser = require("body-parser");
+const fileUpload = require("express-fileupload");
 
 //configuration la cnx à la base
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 //const port = 8080;
-var indexRouter = require("./routers/index");
 var usersRouter = require("./routers/users");
-var postsRouter = require("./routers/posts");
 var commentsRouter = require("./routers/comments");
 var conversationRouter = require("./routers/conversations");
 var messageRouter = require("./routers/messages");
 var notificationRouter = require("./routers/notifications");
+var postsRouter = require("./routers/posts");
+var commentsRouter = require("./routers/comments");
+var conversationRouter = require("./routers/conversations");
+var messageRouter = require("./routers/messages");
+var storiesRouter = require("./routers/stories");
+var DonationRouter = require("./routers/Donation");
+var CompaignRouter = require("./routers/Campaign");
+var blogRouter = require("./routers/Blog");
 
 var passport = require("passport");
 var path = require("path");
 var cookieParser = require("cookie-parser");
-var usersRouter = require("./routers/users");
 
 require("./routers/auth/autnetificate");
 require("./routers/auth/JwtStrategy");
 require("./routers/auth/LocalStrategy");
-
-
 
 app.use(cookieParser("secret"));
 app.use(cors());
@@ -177,47 +173,44 @@ mongoose
   .then(() => console.log("Database connected!"))
   .catch((err) => console.log(err));
 
-
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(cookieParser());
-app.use(fileUpload({
-  useTempFiles: true
-}))
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//   })
+// );
 
 app.use(cookieParser("secret"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
-app.use(cors());
 app.use(passport.initialize());
 
-
-
-app.use(bodyparser.json({limit: "10mb"}));
-app.use(bodyparser.urlencoded({limit: "10mb", extended: true}));
+app.use(bodyparser.json({ limit: "10mb" }));
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use('/',DonationRouter);
-app.use('/',blogRouter);
-app.use('/',CompaignRouter);
-app.use('/api', require('./routers/categoryRouter'))
-app.use('/api', require('./routers/productRouter'))
-app.use('/api', require('./routers/filterRouter'))
-app.use('/api',require('./routers/paymentRouter'))
 app.use("/posts", postsRouter);
+app.use("/", DonationRouter);
+app.use("/", blogRouter);
+app.use("/", CompaignRouter);
+app.use("/api", require("./routers/categoryRouter"));
+app.use("/api", require("./routers/productRouter"));
+app.use("/api", require("./routers/filterRouter"));
+app.use("/api", require("./routers/paymentRouter"));
 app.use("/comments", commentsRouter);
 app.use("/conversations", conversationRouter);
 app.use("/messages", messageRouter);
 app.use("/api/users", usersRouter);
 app.use("/notifications", notificationRouter);
+app.use("/stories", storiesRouter);
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -233,7 +226,6 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
-
 });
 
 module.exports = app;
