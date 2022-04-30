@@ -40,7 +40,7 @@ const Oneblog = (props) => {
     <div className="col-lg-4 col-sm-6">
       <div className="g-post-classic">
         <figure>
-          <img alt src="images/resources/bloggrid-6.jpg" />
+          <img className="formu" alt src={data.image} />
           <i className="fa fa-video-camera" />
         </figure>
         <div className="g-post-meta">
@@ -48,7 +48,8 @@ const Oneblog = (props) => {
             <h4>
               {" "}
               <a
-                style={{ color: "black" }}
+      
+                style={{ color: "black" ,cursor : "pointer"}}
                 onClick={() => {
                   navigate("/Blogdetail", { state: data });
                 }}
@@ -84,6 +85,7 @@ const Oneblog = (props) => {
             )}
             <a
               title
+              style={{cursor : "pointer"}}
               onClick={() => {
                 navigate("/Blogdetail", { state: data });
               }}

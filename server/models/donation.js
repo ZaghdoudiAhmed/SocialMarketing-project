@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 const donation = mongoose.Schema({
   title: String,
-  donator: String,
+  donator: { type: Schema.Types.ObjectId, ref: "users" },
   description: String,
   location: String,
   state: String,

@@ -12,7 +12,7 @@ function Timelineinfo({ friends, setFriends }) {
     if (!currentUserId) {
       navigate("/login");
     } else {
-      fetch("http://localhost:3000/api/users/me", {
+      fetch("http://localhost:2600/api/users/me", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,15 +23,16 @@ function Timelineinfo({ friends, setFriends }) {
       }).then(async (response) => {
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           setCurrentUser(data.user);
 
-          setCoverPath(
-            "uploads/users/" + data.user.coverpic[data.user.coverpic.length - 1]
-          );
-          setProPicPath(
-            "uploads/users/" +
-              data.user.profilepic[data.user.profilepic.length - 1]
-          );
+         /// setCoverPath(
+        ///    "uploads/users/" + data.user.coverpic[data.user.coverpic.length - 1]
+        ///  );
+        //  setProPicPath(
+        ////    "uploads/users/" +
+        //      data.user.profilepic[data.user.profilepic.length - 1]
+        ////  );
           if (response.status === 401) {
             window.location.reload();
           }
@@ -46,8 +47,7 @@ function Timelineinfo({ friends, setFriends }) {
         <img src={coverPath} style={{ height: 400 + "px" }} alt />
       </figure>
       <div className="add-btn">
-        <span>{friends.length} followers</span>
-        <a href="#" title data-ripple>
+            <a href="#" title data-ripple>
           Add Friend
         </a>
       </div>
@@ -102,9 +102,9 @@ function Timelineinfo({ friends, setFriends }) {
                   <Link className to="/timelinefriends" title data-ripple>
                     Friends
                   </Link>
-                  <a className href="timeline-groups.html" title data-ripple>
+                  <Link className to="/timelinegroups" title data-ripple>
                     Groups
-                  </a>
+                  </Link>
                   <Link className to="/about" title data-ripple>
                     about
                   </Link>

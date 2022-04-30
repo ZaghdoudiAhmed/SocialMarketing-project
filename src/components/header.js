@@ -8,13 +8,14 @@ function Header({ socket, currentUserId, friends }) {
   const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
+
     socket?.on("getNotification", (data) => {
       setNotifications((prev) => [...prev, data]);
     });
   }, [socket]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/users/me", {
+    fetch("http://localhost:2600/api/users/me", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

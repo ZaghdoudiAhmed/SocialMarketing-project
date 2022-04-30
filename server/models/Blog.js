@@ -8,9 +8,9 @@ const blog = mongoose.Schema({
     title: String,
     description: String,
     image :String ,
-    publisher: { type: Schema.Types.ObjectId, ref: 'user' },
+    publisher: { type: Schema.Types.ObjectId, ref: 'users' },
     date_publish : Date,
-    comments : [{ type: Schema.Types.ObjectId, ref: 'comment' }],
+    comments : [{ type: Schema.Types.ObjectId, ref: 'commentaire' }],
     likes : Number
 });
 module.exports = mongoose.model("blog", blog);

@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import Footer from './Footer';
 import Navbar from './NavBar';
-//import { useDispatch } from "react-redux";
 //import { createProduct } from '../../actions/products';
 import ProductDataService from "../services/Product.service";
 import CategoryDataService from "../services/Category.service";

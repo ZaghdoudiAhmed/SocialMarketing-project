@@ -18,5 +18,17 @@ comments :[{ type: Schema.Types.ObjectId, ref: 'comment' }],
   
   
 });
+<<<<<<< HEAD
+=======
+//Remove refreshToken from the response
+User.set("toJSON", {
+  transform: function (doc, ret, options) {
+    delete ret.refreshToken;
+    return ret;
+  },
+});
+mongoose.models = {}
+User.plugin(passportLocalMongoose, { usernameField: "email" });
+>>>>>>> 82223093b13f008567710c889ae1bc1caefff2c8
 
 module.exports =mongoose.model("user", user);;

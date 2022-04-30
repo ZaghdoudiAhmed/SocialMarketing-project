@@ -12,4 +12,8 @@ const comment = mongoose.Schema({
   publisher :{ type: Schema.Types.ObjectId, ref: 'user' },
 });
 
+<<<<<<< HEAD
 module.exports =mongoose.model("comment", comment);;
+=======
+module.exports = mongoose.model("comments", Comment);
+>>>>>>> 82223093b13f008567710c889ae1bc1caefff2c8

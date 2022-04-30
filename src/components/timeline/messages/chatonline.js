@@ -8,7 +8,7 @@ function Chatonline({ onlineUsers, currentUserId, setCurrentChat }) {
   const getFriends = async () => {
     try {
       const friendList = await axios.get(
-        "http://localhost:3000/api/users/friends/" + currentUserId
+        "http://localhost:2600/api/users/friends/" + currentUserId
       );
       setFriends(friendList.data);
     } catch (err) {
@@ -27,7 +27,7 @@ function Chatonline({ onlineUsers, currentUserId, setCurrentChat }) {
   const handleClick = async (user) => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/conversations/find/" +
+        "http://localhost:2600/conversations/find/" +
           currentUserId +
           "/" +
           user._id

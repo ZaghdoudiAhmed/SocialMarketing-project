@@ -11,10 +11,11 @@ var Post = require("../models/posts");
 //  Storing uploaded files
 var storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/");
+    cb(null,"../public/uploads/posts");
   },
   filename: (req, file, cb) => {
     //cb(null, new Date().toISOString() + file.originalname);
+    console.log(file)
     cb(null, file.originalname);
   },
 });
@@ -46,19 +47,23 @@ router.get("/", function (req, res, next) {
 });
 
 // Creating post
-router.post("/", upload.single("Photo"), (req, res) => {
-  new Post({
+router.post("/",(req, res) => {
+  console.log(req.file.originalname)
+  ////console.log(req)
+  ///console.log( req.files.Photo.name)
+  const x= new Post({
     Description: req.body.Description,
     Private: req.body.Private,
     Creator: req.body.Creator,
-    Photo: req.file.originalname,
+   //// Photo: req.file.originalname,
   })
+///console.log(x)
     .save()
-    .then((newpost) => {
+   .then((newpost) => {
       Post.populate(newpost, "Creator", (err, populatedpost) => {
-        res.json(populatedpost);
+       res.json(populatedpost);
       });
-    });
+   });
 });
 
 //Update Post
