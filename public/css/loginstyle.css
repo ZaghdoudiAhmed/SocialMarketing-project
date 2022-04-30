@@ -128,5 +128,23 @@ html{
     padding-right: 15px;
 }
 
-
-
+.table-image td, .table-image th {
+    vertical-align: middle;
+}
+li.test-li::after {
+    content: none !important;
+}
+i.test-i{
+    font-family: fontawesome;
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+.reactour_helper_large-centered{
+    max-width: 70% !important;
+    transform: translate(20%, 10%) !important;
+}
+.reactour_helper_large{
+    max-width: 70% !important;
+}

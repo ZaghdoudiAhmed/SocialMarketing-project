@@ -31,7 +31,7 @@ const { compareSync } = require("bcrypt");
 //confirm email
 const nodemailer = require("nodemailer");
 const Process = require("process");
-// const {forEach} = require("react-bootstrap/ElementChildren");
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -883,6 +883,7 @@ router.post("/register", async (req, res) => {
         res.send(err);
       } else {
         user.name = req.body.name;
+        user.lastname= req.body.lastname;
         user.gender = req.body.gender;
         const token = getToken({ _id: user._id });
         const refreshToken = getRefreshToken({ _id: user._id });
@@ -943,7 +944,7 @@ router.post("/updateprofilepic", upload.single("image"), async (req, res) => {
 });
 
 router.post("/updatecoverpic", upload.single("image"), async (req, res) => {
-  console.log(req.file.filename);
+  //console.log(req);
   console.log(req.body.email);
 
   User.findOne({ email: req.body.email }).then((user) => {
@@ -956,12 +957,6 @@ router.post("/updatecoverpic", upload.single("image"), async (req, res) => {
 
 router.post("/updateAccount", (req, res) => {
   User.findById(req.body.id).then((user) => {
-    /* name,
-                    lastname,
-                    bio,
-                    phone,
-                    birthday,
-                    address*/
     if (req.body.name) {
       user.name = req.body.name;
     }
@@ -1037,14 +1032,15 @@ router.post("/refreshToken", (req, res, next) => {
 router.post("/me", (req, res, next) => {
   User.findById(req.body.currentUserId).then(
     (user) => {
-      user.save((err, user) => {
+/*      user?.save((err, user) => {
         if (err) {
           res.statusCode = 500;
           res.send(err);
         } else {
           res.send({ user: user });
         }
-      });
+      });*/
+      res.send({ user: user });
     },
     (err) => next(err)
   );

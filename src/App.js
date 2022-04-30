@@ -7,6 +7,7 @@ import Timelinegroups from "./components/timeline/timeline-groups";
 import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
 import TimelineStories from "./components/timeline/timeline-stories";
+import SuggestedProducts from "./components/timeline/SuggestedProducts";
 
 import React, { Suspense, lazy } from "react";
 import Donationbystate from "./components/Donation/Donationbystate";
@@ -41,6 +42,8 @@ import Messanger from "./components/timeline/messages/messanger";
 import Notification from "./components/timeline/notification";
 import About from "./components/timeline/about";
 import Test from "./components/test";
+import Ads from './components/timeline/ads';
+import AdsCrud from './components/timeline/AdsCrud'
 function App() {
   const currentUserId = localStorage.getItem("currentUser");
   const Donations = React.lazy(
@@ -117,7 +120,11 @@ function App() {
           <Route
             path="/Addblog"
             element={currentUserId ? <Addblog /> : <Login />}
-          ></Route>
+          />
+
+          <Route path="/ads-management"   element={currentUserId ? <AdsCrud /> : <Login/>}/>
+
+
           {/* <Route path="/company" element={<Indexcompany />} /> */}
           <Route path="/shop" element={currentUserId ? <Shop /> : <Login />} />
           <Route

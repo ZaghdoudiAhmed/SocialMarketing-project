@@ -4,9 +4,15 @@ var express = require("express");
 var path = require("path");
 
 var logger = require("morgan");
-var multer = require("multer");
 
 var mongoose = require("mongoose");
+var DonationRouter = require('./routers/Donation');
+var CompaignRouter = require('./routers/Campaign');
+var blogRouter = require('./routers/Blog');
+var indexRouter = require("./routers/index");
+var usersRouter = require("./routers/users");
+var adsRouter= require('./routers/Ad')
+var kmeansRouter = require('./routers/data-mining/kmeans')
 var app = express();
 
 const http = require("http").Server(app);
@@ -134,7 +140,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-const cors = require("cors");
+
 const bodyparser = require("body-parser");
 const fileUpload = require("express-fileupload");
 
@@ -142,6 +148,31 @@ const fileUpload = require("express-fileupload");
 var mongoose = require("mongoose");
 //const port = 8080;
 var usersRouter = require("./routers/users");
+
+  app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the A
+
+// to the API (e.g. in case you use sessions)
+res.setHeader('Access-Control-Allow-Credentials', true);
+
+// Pass to next layer of middleware
+next();
+});
+const cors = require('cors');
+app.use(cors());
+app.use(bodyparser.json())
+var postsRouter = require("./routers/posts");
 var commentsRouter = require("./routers/comments");
 var conversationRouter = require("./routers/conversations");
 var messageRouter = require("./routers/messages");
@@ -165,10 +196,9 @@ require("./routers/auth/LocalStrategy");
 
 app.use(cookieParser("secret"));
 app.use(cors());
-mongoose
-  .connect("mongodb://127.0.0.1:27017/socialmarketingpi", {
+mongoose.connect("mongodb://127.0.0.1:27017/socialmarketingpi", {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   })
   .then(() => console.log("Database connected!"))
   .catch((err) => console.log(err));
@@ -179,22 +209,31 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(cookieParser());
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//   })
-// );
+
+/*app.use(fileUpload({
+  useTempFiles: true
+}))*/
 
 app.use(cookieParser("secret"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use(passport.initialize());
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 app.use(bodyparser.json({ limit: "10mb" }));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use('/', indexRouter);
+app.use('/',DonationRouter);
+app.use('/',blogRouter);
+app.use('/',CompaignRouter);
+app.use('/api', require('./routers/categoryRouter'))
+app.use('/api', require('./routers/productRouter'))
+app.use('/api', require('./routers/filterRouter'))
+app.use('/api',require('./routers/paymentRouter'))
 app.use("/posts", postsRouter);
 app.use("/", DonationRouter);
 app.use("/", blogRouter);
@@ -207,11 +246,13 @@ app.use("/comments", commentsRouter);
 app.use("/conversations", conversationRouter);
 app.use("/messages", messageRouter);
 app.use("/api/users", usersRouter);
+app.use("/ads", adsRouter);
+app.use("/dm/kmeans", kmeansRouter)
 app.use("/notifications", notificationRouter);
 app.use("/stories", storiesRouter);
 
-app.use(express.urlencoded({ extended: true }));
 
+app.use(express.urlencoded({ extended: true }));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

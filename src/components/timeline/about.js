@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../header";
+import TimelineCover from "./timeline-cover";
 
 function About(props) {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function About(props) {
     if (!currentUserId) {
       navigate("/login");
     } else {
-      fetch("http://localhost:3000/api/users/me", {
+      fetch("http://localhost:2600/api/users/me", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,103 +46,7 @@ function About(props) {
     <div>
       <div className="theme-layout">
         <Header />
-        <section>
-          <div className="feature-photo">
-            <figure>
-              <img src={coverPath} style={{ height: 400 + "px" }} alt />
-
-              {/*<img src="uploads/users/1648378727337.png" alt />*/}
-            </figure>
-            <div className="add-btn">
-              <span>1205 followers</span>
-              <a href="#" title data-ripple>
-                Add Friend
-              </a>
-            </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
-            <div className="container-fluid">
-              <div className="row merged">
-                <div className="col-lg-2 col-sm-3">
-                  <div className="user-avatar">
-                    <figure>
-                      <img src={propicPath} alt={"profile picture"} />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
-                    </figure>
-                  </div>
-                </div>
-                <div className="col-lg-10 col-sm-9">
-                  <div className="timeline-info">
-                    <ul>
-                      <li className="admin-name">
-                        <h5>{currentUser.name + " " + currentUser.lastName}</h5>
-                      </li>
-                      <li>
-                        <a className href="time-line.html" title data-ripple>
-                          time line
-                        </a>
-                        <a
-                          className
-                          href="timeline-photos.html"
-                          title
-                          data-ripple
-                        >
-                          Photos
-                        </a>
-                        <a
-                          className
-                          href="timeline-videos.html"
-                          title
-                          data-ripple
-                        >
-                          Videos
-                        </a>
-                        <a
-                          className
-                          href="timeline-friends.html"
-                          title
-                          data-ripple
-                        >
-                          Friends
-                        </a>
-                        <a
-                          className
-                          href="timeline-groups.html"
-                          title
-                          data-ripple
-                        >
-                          Groups
-                        </a>
-                        <a
-                          className="active"
-                          href="about.html"
-                          title
-                          data-ripple
-                        >
-                          about
-                        </a>
-                        <a className href="#" title data-ripple>
-                          more
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <TimelineCover/>
         {/* top area */}
         <section>
           <div className="gap gray-bg">
