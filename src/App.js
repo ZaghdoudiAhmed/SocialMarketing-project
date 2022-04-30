@@ -22,6 +22,7 @@ import Calendar from "./components/Donation/Calendar";
 import Maptun from "./components/Donation/Maptun";
 import Donationdetails from "./components/Donation/Donationdetails";
 import Donationbycategorie from "./components/Donation/Donationbycategorie";
+import Courbes from "./components/Donation/Courbe";
 import CircularProgress from "@mui/material/CircularProgress";
 import Mapaffiche from "./components/Donation/Mapaffiche";
 import Shop from "./components/EcommerceComponent/Shop";
@@ -44,6 +45,9 @@ import About from "./components/timeline/about";
 import Test from "./components/test";
 import Ads from './components/timeline/ads';
 import AdsCrud from './components/timeline/AdsCrud'
+import Machinelearning from "./components/machine_learning";
+import Videofeed from "./components/videofeed";
+import Chat from "./components/chat";
 function App() {
   const currentUserId = localStorage.getItem("currentUser");
   const Donations = React.lazy(
@@ -163,9 +167,21 @@ function App() {
             path="/timelinegroups"
             element={currentUserId ? <Timelinegroups /> : <Login />}
           />
+             <Route
+              path="/courbes"
+              element={currentUserId ? <Courbes /> : <Login />}
+          />
           <Route
             path="/timelinephotos"
             element={currentUserId ? <Timelinephotos /> : <Login />}
+          />
+             <Route
+              path="/machinelearning"
+              element={currentUserId ? <Machinelearning /> : <Login />}
+          />
+               <Route
+              path="/chatbot"
+              element={currentUserId ? <Chat /> : <Login />}
           />
           <Route
             path="/timelinevideos"
@@ -186,7 +202,7 @@ function App() {
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/edit-password" element={<EditPassword />} />
           <Route path="/user-management" element={<Template />} />
-
+          <Route path="/videofeed" element={<Videofeed />} />
           <Route
             path="/company"
             element={currentUserId ? <Indexcompany /> : <Login />}

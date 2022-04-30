@@ -20,6 +20,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const Mapaffiche = () => {
   const [data, setdata] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [comapign, setcomapign] = React.useState(null);
+  const currentUserId = localStorage.getItem("currentUser");
+
   function geticon() {
     return L.icon({
       iconUrl: require("../../leaf-red.png"),
@@ -31,8 +34,9 @@ const Mapaffiche = () => {
       popupAnchor: [-3, -76],
     });
   }
-  const handleClickOpen = () => {
+  const handleClickOpen = (id) => {
     setOpen(true);
+    setcomapign(id);
   };
   const handleClose = () => {
     setOpen(false);
@@ -48,7 +52,7 @@ const Mapaffiche = () => {
     ///  console.log(response.data);
     setdata(response.data);
   };
-  const click = () => {
+  const click =async () => {
     const btn = document.getElementById("disable");
     btn.disabled = "true";
     btn.style.color = "black";
@@ -60,6 +64,10 @@ const Mapaffiche = () => {
       showConfirmButton: false,
       timer: 1500,
     });
+    const result =[];
+    result.push({ compaignid: comapign },{donatorid :currentUserId});
+    console.log(result);
+  await  axios.post("http://localhost:2600/compaign/adddonator",result).catch((err) => {console.log(err)});
   };
   useEffect(() => {
     fetchdata();
@@ -113,7 +121,7 @@ const Mapaffiche = () => {
                       <Button
                         id="disable"
                         onClick={() => {
-                          handleClickOpen();
+                          handleClickOpen(compaign._id);
                         }}
                         size="small"
                         variant="outlined"

@@ -5,8 +5,10 @@ import { DataManager, UrlAdaptor  ,ODataV4Adaptor,WebApiAdaptor } from '@syncfus
 import axios from "axios";
 
  const Calendar =() =>{
+  const currentUserId = localStorage.getItem("currentUser");
+
    const dataManager =  new DataManager({
-    url: 'http://localhost:2600/compaign/GetData',
+    url: 'http://localhost:2600/compaign/GetData/'+currentUserId,
     crudUrl: 'http://localhost:2600/compaign/BatchData',
     adaptor: new UrlAdaptor(),
     crossDomain: true

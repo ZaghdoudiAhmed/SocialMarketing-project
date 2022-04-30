@@ -165,6 +165,40 @@ function Usertimeline(props) {
                             >
                               time line
                             </Link>
+                            <Link
+                              className
+                              to={{
+                                pathname: "/timelinephotos",
+                              }}
+                              title
+                              data-ripple
+                            >
+                              Photos
+                            </Link>
+                            <Link
+                              className
+                              to="/timelinevideos"
+                              title
+                              data-ripple
+                            >
+                              Videos
+                            </Link>
+                            <Link
+                              className
+                              to="/timelinefriends"
+                              title
+                              data-ripple
+                            >
+                              Friends
+                            </Link>
+                            <Link
+                              className
+                             to="/timelinegroups"
+                              title
+                              data-ripple
+                            >
+                              Groups
+                            </Link>
                             <Link className to="/about" title data-ripple>
                               about
                             </Link>

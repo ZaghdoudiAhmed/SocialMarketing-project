@@ -51,10 +51,7 @@ function Donationdetails(props) {
     ));
   };
   const { state } = useLocation();
-  const change = () => {
-    var elts = document.getElementsByClassName("chat-box");
-    elts[0].classList.add("show");
-  };
+
   const onSubmit = async (e) => {
     socketRef.current.emit("chat", e);
     reset();
@@ -62,6 +59,10 @@ function Donationdetails(props) {
   const close = () => {
     var elts = document.getElementsByClassName("chat-box");
     elts[0].classList.remove("show");
+  };
+  const change = () => {
+    var elts = document.getElementsByClassName("chat-box");
+    elts[0].classList.add("show");
   };
   return (
     <div>

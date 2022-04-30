@@ -1,8 +1,24 @@
-import React from "react";
+
 import Header from "../header";
 import Timelineinfo from "./timeline-info";
+import axios from "axios";
+import React, { useState, useRef, useEffect } from "react";
+import Compaign from "../Donation/compaign";
 
 function Timelinegroups(props) {
+    const currentUserId = localStorage.getItem("currentUser");
+    const [compaigns, setcompaigns] = useState([]);
+  useEffect(() => {
+getdata();
+  },[])
+  const getdata = async ()=>{
+await axios.get("http://localhost:2600/compaign/getcompaigns/"+currentUserId).then((response)=>{
+  setcompaigns(response.data);
+  console.log(response.data);
+})
+  }
+
+
   return (
     <div>
       <div className="theme-layout">
@@ -10,44 +26,10 @@ function Timelinegroups(props) {
         {/* topbar */}
         <section>
           <div className="feature-photo">
-            <figure>
-              <img src="images/resources/timeline-1.jpg" alt />
-            </figure>
-            <div className="add-btn">
-              <span>1205 followers</span>
-              <a href="#" title data-ripple>
-                Add Friend
-              </a>
-            </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
-            <div className="container-fluid">
-              <div className="row merged">
-                <div className="col-lg-2 col-sm-3">
-                  <div className="user-avatar">
-                    <figure>
-                      <img src="images/resources/user-avatar.jpg" alt />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
-                    </figure>
-                  </div>
-                </div>
-                <div className="col-lg-10 col-sm-9">
                   <Timelineinfo />
-                </div>
-              </div>
+   
             </div>
-          </div>
+
         </section>
         {/* top area */}
         <section>
@@ -164,218 +146,13 @@ function Timelinegroups(props) {
                       <div className="central-meta">
                         <div className="groups">
                           <span>
-                            <i className="fa fa-users" /> joined Groups
+                            <i className="fa fa-users" /> Compaigns
                           </span>
                         </div>
                         <ul className="nearby-contct">
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group1.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    funparty
-                                  </a>
-                                </h4>
-                                <span>public group</span>
-                                <em>32k Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group2.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    ABC News
-                                  </a>
-                                </h4>
-                                <span>Private group</span>
-                                <em>5M Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group3.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    SEO Zone
-                                  </a>
-                                </h4>
-                                <span>Public group</span>
-                                <em>32k Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group4.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Max Us
-                                  </a>
-                                </h4>
-                                <span>Public group</span>
-                                <em> 756 Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group5.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Banana Group
-                                  </a>
-                                </h4>
-                                <span>Friends Group</span>
-                                <em>32k Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group6.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Bad boys n Girls
-                                  </a>
-                                </h4>
-                                <span>Public group</span>
-                                <em>32k Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group7.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Bachelor's fun
-                                  </a>
-                                </h4>
-                                <span>Public Group</span>
-                                <em>500 Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="nearly-pepls">
-                              <figure>
-                                <a href="time-line.html" title>
-                                  <img src="images/resources/group4.jpg" alt />
-                                </a>
-                              </figure>
-                              <div className="pepl-info">
-                                <h4>
-                                  <a href="time-line.html" title>
-                                    Max Us
-                                  </a>
-                                </h4>
-                                <span>Public group</span>
-                                <em> 756 Members</em>
-                                <a
-                                  href="#"
-                                  title
-                                  className="add-butn"
-                                  data-ripple
-                                >
-                                  leave group
-                                </a>
-                              </div>
-                            </div>
-                          </li>
+                      {compaigns.map((compaign)=>{
+                        return(<Compaign state={compaign}></Compaign>)
+                      })}
                         </ul>
                         <div className="lodmore">
                           <button className="btn-view btn-load-more" />

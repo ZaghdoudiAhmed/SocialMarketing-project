@@ -208,10 +208,6 @@ const Blog = () => {
           <div className="logo">
             <a title href="newsfeed.html"><img src="images/logo2.png" alt /></a>
           </div>
-          <div className="menu-container" id="toggle">
-            <a href="#" className="canvas-menu">
-              <i className="fa fa-times fa-bars" aria-hidden="true" /></a>
-          </div>
           <div className="overlay" id="overlay">
             <nav className="overlay-menu">
               <ul className="offcanvas-menu">
@@ -295,7 +291,7 @@ const Blog = () => {
                   <div className="top-banner">
                     <h1>Our Blog Grid</h1>
                     <nav className="breadcrumb">
-                      <a className="breadcrumb-item" href="index-2.html">Home</a>
+                      <a className="breadcrumb-item" href="/">Home</a>
                       <span className="breadcrumb-item active">Blog</span>
                     </nav>
                   </div>
@@ -363,8 +359,7 @@ const Blog = () => {
                         <button><i className="ti-search" /></button>
                       </form>
                       <div className="purify">
-
-                        <a style={{ color: 'white' }} onClick={() => {
+                        <a style={{ color: 'white',cursor : "pointer" }} onClick={() => {
                           navigate("/Addblog");
                         }} >Add Blog</a>
                       </div>
