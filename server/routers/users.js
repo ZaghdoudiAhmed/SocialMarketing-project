@@ -942,12 +942,27 @@ router.post("/updateprofilepic", upload.single("image"), async (req, res) => {
     res.send();
   });
 });
+router.post("/updateprofilepic/:id", upload.single("image"), async (req, res) => {
+const iduser = req.params.id;
 
-router.post("/updatecoverpic", upload.single("image"), async (req, res) => {
-  //console.log(req);
-  console.log(req.body.email);
+  User.findOne({ _id: iduser }).then((user) => {
+    user.profilepic.push(req.file.filename);
+    user.save();
+    res.statusCode = 201;
+    res.send();
+  });
+});
+router.get("/photoprofil/:id", async (req, res) => {
+  const iduser = req.params.id;
+  
+    User.findOne({ _id: iduser }).then((user) => {
+      res.send( user.profilepic);
+    });
+  });
+router.post("/updatecoverpic/:id", upload.single("image"), async (req, res) => {
+  const iduser = req.params.id;
 
-  User.findOne({ email: req.body.email }).then((user) => {
+  User.findOne({  _id: iduser  }).then((user) => {
     user.coverpic.push(req.file.filename);
     user.save();
     res.statusCode = 201;
@@ -1057,7 +1072,6 @@ router.get("/logout", (req, res, next) => {
       if (tokenIndex !== -1) {
         user.refreshToken.id(user.refreshToken[tokenIndex]._id).remove();
       }
-
       user.save((err, user) => {
         if (err) {
           res.statusCode = 500;

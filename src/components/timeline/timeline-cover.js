@@ -48,25 +48,58 @@ function TimelineCover() {
                         <span>1205 followers</span>
                         <a href="#" title="" data-ripple="">Add Friend</a>
                     </div>
-                    <form className="edit-phto">
-                        <i className="fa fa-camera-retro"/>
-                        <label className="fileContainer">
-                            Edit Cover Photo
-                            <input type="file"/>
-                        </label>
-                    </form>
+                    <form
+                method={"POST"}
+                action={"http://localhost:2600/api/users/updatecoverpic/"+currentUserId}
+                encType="multipart/form-data"
+                target="hidden-form"
+              >
+                <label className={"mr-3"}>
+                  please pick you first cover picture
+                </label>
+                <input
+                className="disp"
+                  type="file"
+                  accept={".png , .jpg, .jpeg"}
+                  name={"image"}
+                  onChange={(e) => {
+                    setCoverPath(window.URL.createObjectURL(e.target.files[0]));
+                  }}
+                />
+                <br />
+                <input
+                  type={"text"}
+                  value={currentUser.email}
+                  name={"email"}
+                  hidden
+                  readOnly
+                />
+                <input type={"submit"} value={"submit"} />
+              </form>
                     <div className="container-fluid">
                         <div className="row merged">
                             <div className="col-lg-2 col-sm-3">
                                 <div className="user-avatar">
                                     <figure>
                                         <img src={propicPath} alt={"profile picture"} />
-                                        <form className="edit-phto">
+                                        <form    method={"POST"}
+                action={"http://localhost:2600/api/users/updateprofilepic/"+currentUserId}
+                encType="multipart/form-data"
+                target="hidden-form"
+                className="edit-phto">
                                             <i className="fa fa-camera-retro"/>
                                             <label className="fileContainer">
-                                                Edit Display Photo
-                                                <input type="file"/>
-                                            </label>
+                                                Edit Display Photo  </label>
+                                                <input      
+                                                className="disp"
+                  type="file"
+                  accept={".png , .jpg, .jpeg"}
+                  name={"image"}
+                  onChange={(e) => {
+                    setProPicPath(window.URL.createObjectURL(e.target.files[0]));
+                  }}/>
+                                          
+                                            <input type={"submit"} value={"submit"} />
                                         </form>
                                     </figure>
                                 </div>

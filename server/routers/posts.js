@@ -64,17 +64,32 @@ router.get("/friendsposts/:currentUser", async (req, res) => {
 });
 // Creating post
 router.post("/", upload.single("Photo"), (req, res) => {
-  new Post({
-    Description: req.body.Description,
-    Creator: req.body.Creator,
-    Photo: req.file.originalname,
-  })
-    .save()
-    .then((newpost) => {
+  if(!req.file){
+    new Post({
+      Description: req.body.Description,
+      Creator: req.body.Creator,
+    }).save().then((newpost) => {
       Post.populate(newpost, "Creator", (err, populatedpost) => {
         res.json(populatedpost);
       });
     });
+  }
+  else{
+ new Post({
+    Description: req.body.Description,
+    Creator: req.body.Creator,
+    Photo: req.file.originalname,
+  }).save().then((newpost) => {
+      Post.populate(newpost, "Creator", (err, populatedpost) => {
+        res.json(populatedpost);
+      });
+    });
+
+
+  }
+ 
+    
+    
 });
 
 //Update Post

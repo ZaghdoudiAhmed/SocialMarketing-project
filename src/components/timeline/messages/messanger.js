@@ -21,23 +21,28 @@ function Messanger(props) {
   const currentUserId = localStorage.getItem("currentUser");
   const [friends, setFriends] = useState([]);
   const [user, setUser] = useState(null);
-
+  const [response , setresponse] =useState(null);
+const [socket , setsocket] = useState(null);
   const scrollRef = useRef();
-  const socket = useRef();
-  const url = "http://localhost:2600/conversations/";
-
+  const url = "http://localhost:2600/conversations/";  
   useEffect(() => {
-    socket.current = io("http://localhost:2700");
-    socket.current.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      });
+ 
+    setsocket(io("http://localhost:2700"));
+  
+  },[])
+
+useEffect(()=>{
+ 
+    socket?.on("getMessage", (data) => {
+        setArrivalMessage({
+          sender: data.senderId  ,
+          text: data.text,
+          createdAt: Date.now(),
+        });
     });
-  }, []);
-
+},[socket])
   useEffect(() => {
+  
     arrivalMessage &&
       currentChat?.members?.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
@@ -85,40 +90,25 @@ function Messanger(props) {
     const receiverId = currentChat.members.find(
       (member) => member !== currentUser._id
     );
-
+    socket.emit("sendMessage", {
+      senderId: currentUser._id,
+      receiverId:receiverId,
+      text: newMessage,
+    });
     try {
       const res = await axios.post("http://localhost:2600/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
-      socket?.current.emit("sendMessage", {
-        senderId: currentUser._id,
-        receiverId,
-        text: newMessage,
-      });
+    
     } catch (err) {
       console.log(err);
     }
   };
 
-  const getUser = async () => {
-    const friendId = currentChat?.members.find((m) => m !== currentUser._id);
-
-    try {
-      if (currentChat !== null) {
-        const res = await axios.get(
-          "http://localhost:2600/api/users/" + friendId
-        );
-        setUser(res.data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
   useEffect(() => {
     getConversations();
     getMessages();
     getFriends();
-    getUser();
   }, [currentUserId, currentChat]);
 
   useEffect(() => {
@@ -126,14 +116,14 @@ function Messanger(props) {
   }, [messages]);
 
   useEffect(() => {
-    socket?.current.emit("newUser", currentUserId);
-
-    socket?.current.on("getUsers", (users) => {
+    socket?.emit("newUser", currentUserId);
+ 
+    socket?.on("getUsers", (users) => {
       setOnlineUsers(
         currentUser.followings.filter((f) => users.some((u) => u._id === f))
       );
     });
-  }, [socket, currentUserId, currentUser]);
+  }, [currentUser]);
 
   useEffect(() => {
     fetch("http://localhost:2600/api/users/me", {
@@ -148,7 +138,7 @@ function Messanger(props) {
       const data = await res.json();
       setCurrentUser(data.user);
     });
-  }, [currentUserId]);
+  }, []);
 
   return (
     <div>

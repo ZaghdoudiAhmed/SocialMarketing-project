@@ -60,6 +60,7 @@ function Timeline(props) {
         setPostData([res.data, ...postData]);
         setNewDescription("");
         setFiles(null);
+        window.location.reload(false)
       });
     } catch (err) {
       console.log(err);

@@ -4,6 +4,7 @@ import { format } from "timeago.js";
 import Swal from "sweetalert2";
 
 import axios from "axios";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 function Story({ currentUserId, currentUser }) {
   const [yourstory, setYourStory] = useState([]);
@@ -168,9 +169,18 @@ function Story({ currentUserId, currentUser }) {
             background: "white",
           }}
         >
-          <p>choose your file .</p>
+            <label
+                              htmlFor="file-upload"
+                              className="custom-file-upload x"
+                            >
+                              Upload Image{" "}
+                              <CloudUploadIcon className="y"> </CloudUploadIcon>
+                            </label>
+                        
           <input
-            type="file"
+          id="file-upload"
+          type="file"
+          name="file"
             onChange={(e) => {
               setFile(e.target.files[0]);
             }}

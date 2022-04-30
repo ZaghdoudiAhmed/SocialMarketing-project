@@ -52,13 +52,7 @@ function Timelineinfo({ friends, setFriends }) {
           Add Friend
         </a> */}
       </div>
-      <form className="edit-phto">
-        <i className="fa fa-camera-retro" />
-        <label className="fileContainer">
-          Edit Cover Photo
-          <input type="file" />
-        </label>
-      </form>
+    
       <div className="container-fluid">
         <div className="row merged">
           <div className="col-lg-2 col-sm-3">
@@ -66,13 +60,7 @@ function Timelineinfo({ friends, setFriends }) {
               <figure>
                 <img src={propicPath} alt={"profile picture"} />
 
-                <form className="edit-phto">
-                  <i className="fa fa-camera-retro" />
-                  <label className="fileContainer">
-                    Edit Display Photo
-                    <input type="file" />
-                  </label>
-                </form>
+
               </figure>
             </div>
           </div>

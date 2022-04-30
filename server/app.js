@@ -25,8 +25,8 @@ const peerServer = ExpressPeerServer(http, {
 
 app.use("/peerjs", peerServer);
 
-const io = require("socket.io")(http, { cors: { origin: "*" } });
-const iooo = require("socket.io")(httpd, { cors: { origin: "*" } });
+const io = require('socket.io')(http, { cors: {origin:'*'}});
+const iooo = require('socket.io')(httpd, { cors: {origin:'*'}});
 let users = [];
 
 const addUser = (userId, socketId) => {
@@ -50,25 +50,30 @@ iooo.on("connection", (socket) => {
 
   //take userId and socketId from user
   socket.on("newUser", (userId) => {
+    console.log(userId)
     addUser(userId, socket.id);
     iooo.emit("getUsers", users);
   });
 
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    console.log(users)
     const user = getUser(receiverId);
-    console.log(user);
+console.log(senderId, receiverId, text);
     iooo.to(user?.socketId).emit("getMessage", {
       senderId,
       text,
+      receiverId,
     });
   });
 
   ///////real time notification //////
 
   socket.on("sendNotification", ({ senderId, receiverId, text }) => {
+
     const receiver = getUser(receiverId);
-    console.log(users);
+    console.log(text)
+    console.log(users)
     iooo.to(receiver?.socketId).emit("getNotification", {
       senderId,
       receiverId,
@@ -94,24 +99,27 @@ iooo.on("connection", (socket) => {
   });
 });
 
-io.on("connection", (socket) => {
+
+io.on('connection', (socket) => {
   socket.on("join-room", (roomId, userId, userName) => {
+
     socket.join(roomId);
-    console.log(userId);
+    console.log(userId)
     socket.broadcast.to(roomId).emit("user-connected", userId);
 
-    socket.on("message", (message) => {
+socket.on("message", (message) => {
       io.in(roomId).emit("createMessage", message, userName);
     });
-    socket.on("disconnect", () => {
-      socket.broadcast.to(roomId).emit("user-disconnected", userId);
+ socket.on('disconnect',()=>{
+  socket.broadcast.to(roomId).emit('user-disconnected', userId)
+ });
     });
-  });
 
-  socket.on("chat", (msg) => {
-    io.emit("new message", msg);
+socket.on('chat',(msg)=>{
+    io.emit('new message',msg)
+
+})
   });
-});
 
 app.use(function (req, res, next) {
   // Website you wish to allow to connect

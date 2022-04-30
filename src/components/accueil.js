@@ -298,7 +298,7 @@ function Accueil() {
 
   useEffect(() => {
     socket?.emit("newUser", currentUserId);
-  }, [socket, currentUserId]);
+  }, [currentUserId]);
 
   useEffect(() => {
     getPosts();
@@ -493,7 +493,7 @@ function Accueil() {
                 <input
                   type={"file"}
                   accept={".png , .jpg, .jpeg"}
-                  className="form-control style-none"
+                  className="form-control style-none disp"
                   name={"image"}
                   onChange={(e) => {
                     setFile(window.URL.createObjectURL(e.target.files[0]));
@@ -592,6 +592,7 @@ function Accueil() {
                   please pick you first cover picture
                 </label>
                 <input
+                className="disp"
                   type="file"
                   accept={".png , .jpg, .jpeg"}
                   name={"image"}
