@@ -9,7 +9,6 @@ var mongoose = require("mongoose");
 var DonationRouter = require('./routers/Donation');
 var CompaignRouter = require('./routers/Campaign');
 var blogRouter = require('./routers/Blog');
-var indexRouter = require("./routers/index");
 var usersRouter = require("./routers/users");
 var adsRouter= require('./routers/Ad')
 var kmeansRouter = require('./routers/data-mining/kmeans')
@@ -226,7 +225,7 @@ app.use(bodyparser.json({ limit: "10mb" }));
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/', indexRouter);
+/*app.use('/', indexRouter);*/
 app.use('/',DonationRouter);
 app.use('/',blogRouter);
 app.use('/',CompaignRouter);

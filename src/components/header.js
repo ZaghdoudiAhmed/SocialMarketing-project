@@ -46,7 +46,7 @@ function Header({ socket, currentUserId, friends }) {
                 <img
                   width="45"
                   height="45"
-                  src={"/uploads/users/" + currentUser.profilepic}
+                  /*src={"/uploads/users/" + currentUser.profilepic}*/
                   alt
                 />
               </Link>
@@ -315,6 +315,9 @@ function Header({ socket, currentUserId, friends }) {
                   </li>
                 </ul>
               </li>
+              <li className={'test-li'}>
+                <Link to={'/ads-management'}>ADS Management<i className="bi bi-star-fill test-i"/></Link>
+              </li>
             </ul>
             <ul className="setting-area">
               <li>
@@ -384,7 +387,7 @@ function Header({ socket, currentUserId, friends }) {
               <img
                 width="35"
                 height="35"
-                src={"/uploads/users/" + currentUser.profilepic}
+               /* src={"/uploads/users/" + currentUser.profilepic}*/
                 alt
               />
               <span className="status f-online" />

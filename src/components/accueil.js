@@ -9,7 +9,8 @@ import React, {
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 import Select, { AriaOnFocus } from "react-select";
-
+import SuggestedProducts from "./timeline/SuggestedProducts";
+import Ads from './timeline/ads'
 import axios from "axios";
 import Swal from "sweetalert2";
 import { io } from "socket.io-client";
@@ -1263,6 +1264,7 @@ function Accueil() {
                             currentUser={currentUser}
                           />
                         </div>
+                        <SuggestedProducts/>
                         <div className="central-meta">
                           <div className="new-postbox">
                             <figure>
@@ -1577,31 +1579,8 @@ function Accueil() {
                               </div>
                             </div>
                           </div>
-                          {/* page like widget */}
-                          <div className="widget">
-                            <div className="banner medium-opacity bluesh">
-                              <div
-                                className="bg-image"
-                                style={{
-                                  backgroundImage:
-                                    "url(images/resources/baner-widgetbg.jpg)",
-                                }}
-                              />
-                              <div className="baner-top">
-                                <span>
-                                  <img alt src="images/book-icon.png" />
-                                </span>
-                                <i className="fa fa-ellipsis-h" />
-                              </div>
-                              <div className="banermeta">
-                                <p>create your own favourit page.</p>
-                                <span>like them all</span>
-                                <a data-ripple title href="#">
-                                  start now!
-                                </a>
-                              </div>
-                            </div>
-                          </div>
+                          {/* Ads */}
+                          <Ads />
                           <div className="widget stick-widget">
                             <h4 className="widget-title">Profile intro</h4>
                             <ul className="short-profile">

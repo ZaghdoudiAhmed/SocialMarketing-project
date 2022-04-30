@@ -66,9 +66,9 @@ function SuggestedProducts(props) {
                     <>
                         <div className="col-lg-3 col-sm-6" key={i}>
                             <div className="product-box">
-                                <figure>
+                                <figure style={{height:10+'rem'}}>
                                     <span className="new">New</span>
-                                    <img src={item?.ProductImage} width={200} height={150} />
+                                    <img src={item?.ProductImage} style={{maxWidth:100+'%',maxHeight:100+'%'}} />
                                     <ul className="cart-optionz">
                                         <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-shopping-cart"/></Link></li>
                                         <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
