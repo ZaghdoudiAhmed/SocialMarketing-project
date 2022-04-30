@@ -5,14 +5,24 @@ import {BiBot,BiUser} from 'react-icons/bi';
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
+import axios from 'axios';
 
 function Chat(){
     const [chat,setChat] = useState([]);
     const [inputMessage,setInputMessage] = useState('');
     const [botTyping,setbotTyping] = useState(false);
-    
+    const [x,setx]=useState(null)
+    const [y,sety]=useState(null)
+    const getimage =() =>{
+axios.get('http://127.0.0.1:8000/hub/takeimage').then((res)=>{
+  console.log(res.data)
+  setx(res.data['pred'])
+  sety(res.data['bar'])
+})
+    }
    useEffect(()=>{
-   
+  
+  
     
     },[chat])
 
@@ -107,11 +117,25 @@ function Chat(){
                                 <div key={key}>
                                     {user.sender==='bot' ?
                                         (
-                                            
+                                            <div>
                                             <div className= 'msgalignstart'>
                                                 <BiBot className="botIcon"  /><h6 className="botmsg">{user.msg}</h6>
+                                              
+                                            
                                             </div>
-                                        
+                                            <div>
+                                          {user.msg==="what is your feedback on the product received  ?"&&(
+                                                  <div>
+                                                      <button onClick={getimage} name="Click the Photo" defaultValue="Click an Image" className="btn btn-outline-primary" >
+                                                        Take a photo
+                                                        </button>
+                                                <img className="mto"alt =""src={"data:image/jpeg;base64,"+x}></img>
+                                                <img alt=""src={"data:image/jpeg;base64,"+y}></img>
+                                                </div>
+                                                )
+                                              }
+                                           </div>
+                                           </div>
                                         )
 
                                         :(
