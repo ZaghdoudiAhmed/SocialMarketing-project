@@ -22,7 +22,7 @@ const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(http, {
   debug: true,
 });
-
+const cors = require('cors');
 app.use("/peerjs", peerServer);
 
 const io = require('socket.io')(http, { cors: {origin:'*'}});
@@ -176,9 +176,8 @@ res.setHeader('Access-Control-Allow-Credentials', true);
 // Pass to next layer of middleware
 next();
 });
-const cors = require('cors');
-app.use(cors());
-app.use(bodyparser.json())
+
+
 var postsRouter = require("./routers/posts");
 var commentsRouter = require("./routers/comments");
 var conversationRouter = require("./routers/conversations");
@@ -221,17 +220,16 @@ app.use(cookieParser());
   useTempFiles: true
 }))*/
 
-app.use(cookieParser("secret"));
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use(passport.initialize());
-app.use(bodyparser.urlencoded({ extended: true }));
-app.use(express.urlencoded({ extended: false }));
 
-app.use(bodyparser.json({ limit: "10mb" }));
-app.use(bodyparser.urlencoded({ extended: true }));
-app.use(express.json());
+
+app.use(bodyparser.json({limit: "50mb"}));
+app.use(bodyparser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
 
 /*app.use('/', indexRouter);*/
 app.use('/',DonationRouter);
@@ -259,7 +257,7 @@ app.use("/notifications", notificationRouter);
 app.use("/stories", storiesRouter);
 
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

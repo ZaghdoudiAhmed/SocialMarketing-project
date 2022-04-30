@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-const currentUserId = localStorage.getItem("currentUser");
+
 import  {format } from "timeago.js";
 const Comment = (props) => {
-
   const {
     register,
     handleSubmit,

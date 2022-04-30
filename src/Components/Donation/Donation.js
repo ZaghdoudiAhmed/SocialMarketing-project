@@ -77,7 +77,7 @@ function Donation() {
         "http://localhost:2600/donation/listdonations"
       );
       setlistdonations(response.data);
-      const counters = document.querySelectorAll(".counter");
+      const counters = document.querySelectorAll(".counter2");
       counters.forEach((counter) => {
         counter.innerText = "0";
         const updateCounter = () => {
@@ -998,7 +998,7 @@ function Donation() {
                             <div className="counter-container">
                               <span className="counter1">Total Donations</span>
                               <div
-                                className="counter"
+                                className="counter2"
                                 data-target={totaldoantions}
                               >
                                 {totaldoantions}

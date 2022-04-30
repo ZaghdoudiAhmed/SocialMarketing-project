@@ -11,11 +11,12 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
-const currentUserId = localStorage.getItem("currentUser");
 import {
   Link,
   useNavigate,
 } from "react-router-dom";
+const currentUserId = localStorage.getItem("currentUser");
+
 const Addblog = () => {
   const [imgFile, imgFileSet] = useState([]);
   const {
