@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import {NotificationContainer, NotificationManager} from "react-notifications";
+import Header from "../header";
+import TimelineCover from "./timeline-cover";
 
 function EditPassword(props) {
     const navigate = useNavigate()
@@ -266,7 +268,7 @@ function EditPassword(props) {
                 </div>*/}
 
 
-                <div className="topbar stick">
+               {/* <div className="topbar stick">
                     <div className="logo">
                         <a title="" href="newsfeed.html"><img src="images/logo.png" alt=""/></a>
                     </div>
@@ -552,8 +554,10 @@ function EditPassword(props) {
                             </div>
                         </div>
                     </div>
-                </section>
+                </section>*/}
 
+                <Header/>
+                <TimelineCover/>
                 <section>
                     <div className="gap gray-bg">
                         <div className="container-fluid">

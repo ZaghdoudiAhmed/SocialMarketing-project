@@ -13,6 +13,7 @@ function Login(props) {
     const[logoClass, setLogoClass]= useState("")
 
     const[name, setName] = useState('')
+    const[lastname, setLastName] = useState('')
     const[email, setEmail] = useState('')
     const[loginemail, setLoginEmail] = useState('')
     const[resetEmail, setResetEmail] = useState('')
@@ -55,7 +56,8 @@ function Login(props) {
                         name,
                         email,
                         password,
-                        gender
+                        gender,
+                        lastname
                     })
                 })
             const data = await response.json()
@@ -102,12 +104,7 @@ function Login(props) {
                         setUserContext(oldValues=>{
                             return {...oldValues, token : data.token}
                         })
-                       /// navigate('/')
-                       /* if(data.role==='admin'){
-                            navigate('/test')
-                        } else {
-                            navigate('/home')
-                        }*/
+                        window.location.reload(false);
                     }
                 })
 
@@ -291,12 +288,12 @@ function Login(props) {
                             <form method="post">
                                 <div className="form-group">
                                     <input type="text" required="required" value={name} onChange={(e)=>setName(e.target.value)}/>
-                                    <label className="control-label" htmlFor="input" >First & Last Name</label><i
+                                    <label className="control-label" htmlFor="input" >First Name</label><i
                                     className="mtrl-select"></i>
                                 </div>
                                 <div className="form-group">
-                                    <input type="text" required="required"/>
-                                    <label className="control-label" htmlFor="input">User Name</label><i
+                                    <input type="text" required="required" value={lastname} onChange={(e)=>setLastName(e.target.value)}/>
+                                    <label className="control-label" htmlFor="input">Last Name</label><i
                                     className="mtrl-select"></i>
                                 </div>
                                 <div className="form-group">
@@ -324,11 +321,6 @@ function Login(props) {
                                         data-cfemail="6c29010d05002c">[email&#160;protected]</a></label><i
                                     className="mtrl-select"></i>
                                 </div>
-                                {/* <div className="checkbox">
-                                    <label>
-                                        <input type="checkbox" defaultChecked={false} required/><i className="check-box"></i>Accept
-                                        Terms & Conditions ?
-                                    </label>*/}
                                 <div className="mx-5">
                                     <ReCAPTCHA
                                         sitekey='6Ld-KAsfAAAAABrKh_MYB4borMQf3ditkWWsWx9I'

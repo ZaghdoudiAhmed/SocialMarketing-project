@@ -1,8 +1,8 @@
 import { useEffect, useState, React } from "react";
 
 import { Link } from "react-router-dom";
-import axios from "axios";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import '../../node_modules/font-awesome/css/font-awesome.min.css';
 function Header({ socket, currentUserId, friends }) {
   const [notifications, setNotifications] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
@@ -286,11 +286,6 @@ function Header({ socket, currentUserId, friends }) {
                   </Link>
                 </li>
                 <li>
-                  <a href="edit-password.html" title>
-                    edit-password
-                  </a>
-                </li>
-                <li>
                   <a href="edit-profile-basic.html" title>
                     edit profile basics
                   </a>
@@ -328,9 +323,9 @@ function Header({ socket, currentUserId, friends }) {
                   </a>
                 </li>
                 <li>
-                  <a href="about.html" title>
+                  <Link to={'/about'} title>
                     about
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="contact.html" title>
@@ -358,6 +353,9 @@ function Header({ socket, currentUserId, friends }) {
                   </a>
                 </li>
               </ul>
+            </li>
+            <li className={'test-li'}>
+              <Link to={'/ads-management'}>ADS Management<i className="bi bi-star-fill test-i"/></Link>
             </li>
           </ul>
           <ul className="setting-area">

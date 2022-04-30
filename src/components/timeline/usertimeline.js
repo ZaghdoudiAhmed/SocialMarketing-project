@@ -19,6 +19,9 @@ function Usertimeline(props) {
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
   const [userProfile, setProfile] = useState(null);
+
+  const [coverPath, setCoverPath] = useState('')
+  const [propicPath, setProPicPath] = useState('')
   const { userid } = useParams();
 
   const getPosts = async () => {
@@ -45,6 +48,16 @@ function Usertimeline(props) {
   useEffect(() => {
     axios.get(`http://localhost:2600/api/users/${userid}`).then((res) => {
       setProfile(res.data);
+      if (res.data.coverpic.length===0){
+        setCoverPath('uploads/users/cover-preview.jpg')
+      }else{
+        setCoverPath('/uploads/users/'+res.data.coverpic[res.data.coverpic.length - 1])
+      }
+      if (res.data.profilepic.length===0){
+        setProPicPath('/uploads/users/default-avatar.png')
+      }else{
+        setProPicPath('/uploads/users/'+res.data.profilepic[res.data.profilepic.length - 1])
+      }
       try {
         axios.get(url + "/all/" + res.data._id).then((res) => {
           setPostData(res.data);
@@ -88,7 +101,7 @@ function Usertimeline(props) {
               {/* <Timelineinfo friends={friends} setFriends={setFriends} /> */}
               <div className="feature-photo">
                 <figure>
-                  <img src="/images/resources/timeline-1.jpg" alt />
+                  <img src={coverPath} style={{height:400+'px'}} alt />
                 </figure>
                 <div className="add-btn">
                   <span>{friends.length} followers</span>
@@ -108,7 +121,7 @@ function Usertimeline(props) {
                     <div className="col-lg-2 col-sm-3">
                       <div className="user-avatar">
                         <figure>
-                          <img src="/images/resources/user-avatar.jpg" alt />
+                          <img src={propicPath} alt />
                           <form className="edit-phto">
                             <i className="fa fa-camera-retro" />
                             <label className="fileContainer">
@@ -123,7 +136,7 @@ function Usertimeline(props) {
                       <div className="timeline-info">
                         <ul>
                           <li className="admin-name">
-                            <h5>{userProfile.name}</h5>
+                            <h5>{userProfile.name +' '+userProfile.lastname}</h5>
                             <span>Group Admin</span>
                           </li>
                           <li>
@@ -371,7 +384,7 @@ function Usertimeline(props) {
                             <div className="central-meta item">
                               <div className="new-postbox">
                                 <figure>
-                                  <img src="/images/resources/admin2.jpg" alt />
+                                  <img src={propicPath} alt />
                                 </figure>
                                 <div className="newpst-input">
                                   {/* <form method="post">

@@ -9,7 +9,7 @@ import React, {
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 import Select, { AriaOnFocus } from "react-select";
-
+import Ad from './timeline/ads'
 import axios from "axios";
 import Swal from "sweetalert2";
 import { io } from "socket.io-client";
@@ -22,6 +22,7 @@ import Header from "./header";
 import Shortcuts from "./timeline/shortcuts";
 import Loading from "./loading";
 import Mentions from "rc-mentions";
+import SuggestedProducts from "./timeline/SuggestedProducts";
 
 function Accueil() {
   const url = "http://localhost:2600/posts";
@@ -404,7 +405,7 @@ function Accueil() {
                 encType="multipart/form-data"
                 target="hidden-form"
               >
-                <label>pp picker</label>
+                <label>Please select your profile picture</label>
                 <input
                   type="file"
                   accept={".png , .jpg, .jpeg"}
@@ -412,6 +413,7 @@ function Accueil() {
                   onChange={(e) => {
                     setFile(window.URL.createObjectURL(e.target.files[0]));
                   }}
+                  style={{display:'block'}}
                 />
                 <br />
                 <input
@@ -419,6 +421,7 @@ function Accueil() {
                   value={currentUser.email}
                   name={"email"}
                   readOnly
+                  hidden
                 />
                 <input
                   type={"submit"}
@@ -512,6 +515,7 @@ function Accueil() {
                   onChange={(e) => {
                     setCover(window.URL.createObjectURL(e.target.files[0]));
                   }}
+                  style={{display:'block'}}
                 />
                 <br />
                 <input
@@ -1223,6 +1227,8 @@ function Accueil() {
                       {/* sidebar */}
 
                       <div className="col-lg-6">
+                        <SuggestedProducts/>
+
                         <div className="central-meta">
                           <div className="new-postbox">
                             <figure>
@@ -1532,31 +1538,8 @@ function Accueil() {
                               </div>
                             </div>
                           </div>
-                          {/* page like widget */}
-                          <div className="widget">
-                            <div className="banner medium-opacity bluesh">
-                              <div
-                                className="bg-image"
-                                style={{
-                                  backgroundImage:
-                                    "url(images/resources/baner-widgetbg.jpg)",
-                                }}
-                              />
-                              <div className="baner-top">
-                                <span>
-                                  <img alt src="images/book-icon.png" />
-                                </span>
-                                <i className="fa fa-ellipsis-h" />
-                              </div>
-                              <div className="banermeta">
-                                <p>create your own favourit page.</p>
-                                <span>like them all</span>
-                                <a data-ripple title href="#">
-                                  start now!
-                                </a>
-                              </div>
-                            </div>
-                          </div>
+                          <Ad />
+
                           <div className="widget stick-widget">
                             <h4 className="widget-title">Profile intro</h4>
                             <ul className="short-profile">

@@ -1,7 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {NotificationContainer, NotificationManager} from "react-notifications";
-
+import TimelineCover from './timeline-cover'
+import Header from '../header'
 
 function Template(props) {
 
@@ -49,74 +50,75 @@ function Template(props) {
         pageNumbers.push(i)
     }
     const paginate=(n)=>setCurrentPage(n)
-        function makeAdmin(e,id) {
-        e.preventDefault()
-            fetch("http://localhost:2600/api/users/makeAdmin", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id
-                })
-            }).then(async response => {
-                    if (response.ok){
-                        NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
-                    }
+
+    function makeAdmin(e,id) {
+    e.preventDefault()
+        fetch("http://localhost:2600/api/users/makeAdmin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id
+            })
+        }).then(async response => {
+                if (response.ok){
+                    NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
                 }
-            )
-        }
-        function makeUser(e,id) {
-        e.preventDefault()
-            fetch("http://localhost:2600/api/users/makeUser", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id
-                })
-            }).then(async response => {
-                    if (response.ok){
-                        NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
-                    }
+            }
+        )
+    }
+    function makeUser(e,id) {
+    e.preventDefault()
+        fetch("http://localhost:2600/api/users/makeUser", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id
+            })
+        }).then(async response => {
+                if (response.ok){
+                    NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
                 }
-            )
-        }
-        function blockAccount(e,id) {
-        e.preventDefault()
-            fetch("http://localhost:2600/api/users/blockAccount", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id
-                })
-            }).then(async response => {
-                    if (response.ok){
-                        NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
-                    }
+            }
+        )
+    }
+    function blockAccount(e,id) {
+    e.preventDefault()
+        fetch("http://localhost:2600/api/users/blockAccount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id
+            })
+        }).then(async response => {
+                if (response.ok){
+                    NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
                 }
-            )
-        }
-        function unblockAccount(e,id) {
-        e.preventDefault()
-            fetch("http://localhost:2600/api/users/unblockAccount", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id
-                })
-            }).then(async response => {
-                    if (response.ok){
-                        NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
-                    }
+            }
+        )
+    }
+    function unblockAccount(e,id) {
+    e.preventDefault()
+        fetch("http://localhost:2600/api/users/unblockAccount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id
+            })
+        }).then(async response => {
+                if (response.ok){
+                    NotificationManager.success('Password Modified', 'Your password has been modified successfully!');
                 }
-            )
-        }
+            }
+        )
+    }
 
 
         useEffect(() => {
@@ -163,295 +165,8 @@ function Template(props) {
                 <NotificationContainer/>
                 <body>
                 <div className="theme-layout">
-                    <div className="topbar stick">
-                        <div className="logo">
-                            <a title="" href="newsfeed.html"><img src="images/logo.png" alt=""/></a>
-                        </div>
-
-                        <div className="top-area">
-                            <ul className="main-menu">
-                                <li>
-                                    <a href="#" title="">Home</a>
-                                    <ul>
-                                        <li><a href="index-2.html" title="">Home Social</a></li>
-                                        <li><a href="index2.html" title="">Home Social 2</a></li>
-                                        <li><a href="index-company.html" title="">Home Company</a></li>
-                                        <li><a href="landing.html" title="">Login page</a></li>
-                                        <li><a href="logout.html" title="">Logout Page</a></li>
-                                        <li><a href="newsfeed.html" title="">news feed</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#" title="">timeline</a>
-                                    <ul>
-                                        <li><a href="time-line.html" title="">timeline</a></li>
-                                        <li><a href="timeline-friends.html" title="">timeline friends</a></li>
-                                        <li><a href="timeline-groups.html" title="">timeline groups</a></li>
-                                        <li><a href="timeline-pages.html" title="">timeline pages</a></li>
-                                        <li><a href="timeline-photos.html" title="">timeline photos</a></li>
-                                        <li><a href="timeline-videos.html" title="">timeline videos</a></li>
-                                        <li><a href="fav-page.html" title="">favourit page</a></li>
-                                        <li><a href="groups.html" title="">groups page</a></li>
-                                        <li><a href="page-likers.html" title="">Likes page</a></li>
-                                        <li><a href="people-nearby.html" title="">people nearby</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#" title="">account settings</a>
-                                    <ul>
-                                        <li><a href="create-fav-page.html" title="">create fav page</a></li>
-                                        <li><a href="edit-account-setting.html" title="">edit account setting</a></li>
-                                        <li><a href="edit-interest.html" title="">edit-interest</a></li>
-                                        <li><a href="edit-password.html" title="">edit-password</a></li>
-                                        <li><a href="edit-profile-basic.html" title="">edit profile basics</a></li>
-                                        <li><a href="edit-work-eductation.html" title="">edit work educations</a></li>
-                                        <li><a href="messages.html" title="">message box</a></li>
-                                        <li><a href="inbox.html" title="">Inbox</a></li>
-                                        <li><a href="notifications.html" title="">notifications page</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#" title="">more pages</a>
-                                    <ul>
-                                        <li><a href="404.html" title="">404 error page</a></li>
-                                        <li><a href="about.html" title="">about</a></li>
-                                        <li><a href="contact.html" title="">contact</a></li>
-                                        <li><a href="faq.html" title="">faq's page</a></li>
-                                        <li><a href="insights.html" title="">insights</a></li>
-                                        <li><a href="knowledge-base.html" title="">knowledge base</a></li>
-                                        <li><a href="widgets.html" title="">Widgts</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <ul className="setting-area">
-                                <li>
-                                    <a href="#" title="Home" data-ripple=""><i className="ti-search"></i></a>
-                                    <div className="searched">
-                                        <form method="post" className="form-search">
-                                            <input type="text" placeholder="Search Friend"/>
-                                            <button data-ripple><i className="ti-search"/></button>
-                                        </form>
-                                    </div>
-                                </li>
-                                <li><a href="newsfeed.html" title="Home" data-ripple=""><i className="ti-home"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#" title="Notification" data-ripple="">
-                                        <i className="ti-bell"></i><span>20</span>
-                                    </a>
-                                    <div className="dropdowns">
-                                        <span>4 New Notifications</span>
-                                        <ul className="drops-menu">
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-1.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>sarah Loren</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag green">New</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-2.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Jhon doe</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag red">Reply</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-3.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Andrew</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag blue">Unseen</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-4.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Tom cruse</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag">New</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-5.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Amy</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag">New</span>
-                                            </li>
-                                        </ul>
-                                        <a href="notifications.html" title="" className="more-mesg">view more</a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#" title="Messages" data-ripple=""><i
-                                        className="ti-comment"></i><span>12</span></a>
-                                    <div className="dropdowns">
-                                        <span>5 New Messages</span>
-                                        <ul className="drops-menu">
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-1.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>sarah Loren</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag green">New</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-2.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Jhon doe</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag red">Reply</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-3.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Andrew</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag blue">Unseen</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-4.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Tom cruse</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag">New</span>
-                                            </li>
-                                            <li>
-                                                <a href="notifications.html" title="">
-                                                    <img src="images/resources/thumb-5.jpg" alt=""/>
-                                                    <div className="mesg-meta">
-                                                        <h6>Amy</h6>
-                                                        <span>Hi, how r u dear ...?</span>
-                                                        <i>2 min ago</i>
-                                                    </div>
-                                                </a>
-                                                <span className="tag">New</span>
-                                            </li>
-                                        </ul>
-                                        <a href="messages.html" title="" className="more-mesg">view more</a>
-                                    </div>
-                                </li>
-                                <li><a href="#" title="Languages" data-ripple=""><i className="fa fa-globe"></i></a>
-                                    <div className="dropdowns languages">
-                                        <a href="#" title=""><i className="ti-check"></i>English</a>
-                                        <a href="#" title="">Arabic</a>
-                                        <a href="#" title="">Dutch</a>
-                                        <a href="#" title="">French</a>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div className="user-img">
-                                <img src="images/resources/admin.jpg" alt=""/>
-                                <span className="status f-online"></span>
-                                <div className="user-setting">
-                                    <a href="#" title=""><span className="status f-online"></span>online</a>
-                                    <a href="#" title=""><span className="status f-away"></span>away</a>
-                                    <a href="#" title=""><span className="status f-off"></span>offline</a>
-                                    <a href="#" title=""><i className="ti-user"></i> view profile</a>
-                                    <a href="#" title=""><i className="ti-pencil-alt"></i>edit profile</a>
-                                    <a href="#" title=""><i className="ti-target"></i>activity log</a>
-                                    <a href="#" title=""><i className="ti-settings"></i>account setting</a>
-                                    <a href="#" title=""><i className="ti-power-off"></i>log out</a>
-                                </div>
-                            </div>
-                            <span className="ti-menu main-menu" data-ripple=""></span>
-                        </div>
-                    </div>
-
-                    <section>
-                        <div className="feature-photo">
-                            <figure><img src={coverPath} style={{height:400+'px'}} alt={"cover pic"} /></figure>
-                            <div className="add-btn">
-                                <span>1205 followers</span>
-                                <a href="#" title="" data-ripple="">Add Friend</a>
-                            </div>
-                            <form className="edit-phto">
-                                <i className="fa fa-camera-retro"></i>
-                                <label className="fileContainer">
-                                    Edit Cover Photo
-                                    <input type="file"/>
-                                </label>
-                            </form>
-                            <div className="container-fluid">
-                                <div className="row merged">
-                                    <div className="col-lg-2 col-sm-3">
-                                        <div className="user-avatar">
-                                            <figure>
-                                                <img src={propicPath} alt={"profile picture"} />
-                                                <form className="edit-phto">
-                                                    <i className="fa fa-camera-retro"></i>
-                                                    <label className="fileContainer">
-                                                        Edit Display Photo
-                                                        <input type="file"/>
-                                                    </label>
-                                                </form>
-                                            </figure>
-                                        </div>
-                                    </div>
-                                    <div className="col-lg-10 col-sm-9">
-                                        <div className="timeline-info">
-                                            <ul>
-                                                <li className="admin-name">
-                                                    <h5>{currentUser.name+' '+currentUser.lastName}</h5>
-                                                    <span>Group Admin</span>
-                                                </li>
-                                                <li>
-                                                    <a className="active" href="time-line.html" title="" data-ripple="">time
-                                                        line</a>
-                                                    <a className="" href="timeline-photos.html" title=""
-                                                       data-ripple="">Photos</a>
-                                                    <a className="" href="timeline-videos.html" title=""
-                                                       data-ripple="">Videos</a>
-                                                    <a className="" href="timeline-friends.html" title=""
-                                                       data-ripple="">Friends</a>
-                                                    <a className="" href="groups.html" title=""
-                                                       data-ripple="">Groups</a>
-                                                    <a className="" href="about.html" title="" data-ripple="">about</a>
-                                                    <a className="" href="#" title="" data-ripple="">more</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
+                    <Header/>
+                    <TimelineCover/>
                     <section>
                         <div className="gap gray-bg">
                             <div className="container-fluid">

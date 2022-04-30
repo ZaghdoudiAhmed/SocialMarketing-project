@@ -1,14 +1,12 @@
 import "./App.css";
-import {
-
-  Navigate,
-} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 import Accueil from "./components/accueil";
 import Timeline from "./components/timeline/time-line";
 import Timelinefriends from "./components/timeline/timeline-friends";
 import Timelinegroups from "./components/timeline/timeline-groups";
 import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
+import SuggestedProducts from "./components/timeline/SuggestedProducts";
 
 import React, { Suspense, lazy } from "react";
 import Donationbystate from "./components/Donation/Donationbystate";
@@ -42,6 +40,8 @@ import Indexcompany from "./components/company/index-company";
 import Messanger from "./components/timeline/messages/messanger";
 import Notification from "./components/timeline/notification";
 import About from "./components/timeline/about";
+import Ads from './components/timeline/ads';
+import AdsCrud from './components/timeline/AdsCrud'
 function App() {
   const currentUserId = localStorage.getItem("currentUser");
   const Donations = React.lazy(
@@ -70,6 +70,9 @@ function App() {
       <BrowserRouter>
         <Routes>
 
+          <Route path="/ads"   element={<Ads /> }/>
+          <Route path="/suggested"   element={<SuggestedProducts /> }/>
+          <Route path="/ads-management"   element={<AdsCrud /> }/>
           <Route path="/donations"   element={currentUserId ? <Donations /> : <Login />}/>
           <Route path="/donationbystate" element={currentUserId ? <Donationbystate />: <Login /> } />
           <Route path="/articles" element={currentUserId ? <Articles />: <Login /> } />
