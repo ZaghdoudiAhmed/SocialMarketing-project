@@ -21,12 +21,5 @@ var Comment = new Schema({
   ],
 });
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-module.exports =mongoose.model("comment", comment);;
-=======
 module.exports = mongoose.model("comments", Comment);
->>>>>>> 82223093b13f008567710c889ae1bc1caefff2c8
-=======
-module.exports = mongoose.model("comments", Comment);
->>>>>>> Stashed changes
+

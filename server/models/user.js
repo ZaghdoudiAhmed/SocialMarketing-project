@@ -90,9 +90,7 @@ User.set("toJSON", {
     return ret;
   },
 });
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
+
 //Remove refreshToken from the response
 User.set("toJSON", {
   transform: function (doc, ret, options) {
@@ -102,9 +100,4 @@ User.set("toJSON", {
 });
 mongoose.models = {}
 User.plugin(passportLocalMongoose, { usernameField: "email" });
->>>>>>> 82223093b13f008567710c889ae1bc1caefff2c8
-=======
-User.plugin(passportLocalMongoose, { usernameField: "email" });
->>>>>>> Stashed changes
-
 module.exports = mongoose.model("users", User);

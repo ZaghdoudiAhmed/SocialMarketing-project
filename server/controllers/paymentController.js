@@ -12,17 +12,28 @@ const paymentCtrl ={
     },
     createPayment: async(req, res) => {
         try {
+            let newPayment = new Payment();
+            newPayment.userName= req.body.userName;
+            newPayment.userEmail= req.body.userEmail;
+            newPayment.paymentID= req.body.paymentID;
+            newPayment.totalPrice= req.body.totalPrice;
+            newPayment.status= req.body.status;
+            await newPayment.save();
+            res.json({
+                successMessage: `${req.body.paymentID} was created`,
+                newPayment,
+            });
         
-            const {user_id, name, email,cart, paymentID, address} = req.body;
-            console.log(req.body);
+            // const { paymentID} = req.body;
+            // console.log(req.body);
             // const {user_id, name, email} = user;
 
-            const payment = new Payment({
-                user_id: _id, name, email, cart, paymentID, address
-            })
-            await payment.save();
-            console.log(payment)
-            res.json({msg: "Payment Succes!"})
+            // const payment = new Payment({
+            //     user_id: _id, name, email, cart, paymentID, address
+            // })
+            // await payment.save();
+            // console.log(payment)
+            // res.json({msg: "Payment Succes!"})
 
             // cart.filter(item => {
             //     return sold(item._id, item.quantity, item.sold)

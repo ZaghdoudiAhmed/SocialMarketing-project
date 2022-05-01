@@ -210,6 +210,8 @@ app.use('/api', require('./routers/categoryRouter'))
 app.use('/api', require('./routers/productRouter'))
 app.use('/api', require('./routers/filterRouter'))
 app.use('/api',require('./routers/paymentRouter'))
+app.use('/api',require('./routers/adressRouter'))
+app.use('/api',require('./routers/orderRouter'))
 app.use("/posts", postsRouter);
 app.use("/comments", commentsRouter);
 app.use("/conversations", conversationRouter);

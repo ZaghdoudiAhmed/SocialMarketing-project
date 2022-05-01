@@ -47,6 +47,8 @@ import About from "./components/timeline/about";
 import Machinelearning from "./components/machine_learning";
 import Videofeed from "./components/videofeed";
 import Chat from "./components/chat";
+import Order from "./components/EcommerceComponent/Order";
+import DetailOrder from "./components/EcommerceComponent/DetailOrder";
 function App() {
   const currentUserId = localStorage.getItem("currentUser");
   const Donations = React.lazy(
@@ -97,6 +99,8 @@ function App() {
           <Route path="/updateProd/:id" element={currentUserId ? <EditProduct />: <Login />} />
           <Route path="/cart" element={currentUserId ? <Cart />: <Login />} />
           <Route path="/checkout/:prix" element={currentUserId ? <CheckoutCart />: <Login />} />
+          <Route path="/order" element={currentUserId ? <Order />: <Login />} />
+          <Route path="/detailorder/:id" element={currentUserId ? <DetailOrder />: <Login />} />
           <Route path="/" element={currentUserId ? <Accueil /> : <Login />} />
           <Route  path="/timeline"   element={currentUserId ? <Timeline/> : <Login /> }/>
           <Route path="/timeline/:userid" element={<Usertimeline />} />
