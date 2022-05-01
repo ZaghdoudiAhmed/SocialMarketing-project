@@ -48,6 +48,8 @@ import AdsCrud from './components/timeline/AdsCrud'
 import Machinelearning from "./components/machine_learning";
 import Videofeed from "./components/videofeed";
 import Chat from "./components/chat";
+import Order from "./components/EcommerceComponent/Order";
+import DetailOrder from "./components/EcommerceComponent/DetailOrder";
 function App() {
   const currentUserId = localStorage.getItem("currentUser");
   const Donations = React.lazy(
@@ -152,6 +154,15 @@ function App() {
             path="/checkout/:prix"
             element={currentUserId ? <CheckoutCart /> : <Login />}
           />
+          <Route path="/shop" element={currentUserId ? <Shop />: <Login />} />
+          <Route path="/detailProduct/:id" element={currentUserId ? <DetailProduct />: <Login />} />
+          <Route path="/addProd" element={currentUserId ? <AddProduct />: <Login />} />
+          <Route path="/categories" element={currentUserId ? <Category />: <Login />} />
+          <Route path="/updateProd/:id" element={currentUserId ? <EditProduct />: <Login />} />
+          <Route path="/cart" element={currentUserId ? <Cart />: <Login />} />
+          <Route path="/checkout/:prix" element={currentUserId ? <CheckoutCart />: <Login />} />
+          <Route path="/order" element={currentUserId ? <Order />: <Login />} />
+          <Route path="/detailorder/:id" element={currentUserId ? <DetailOrder />: <Login />} />
           <Route path="/" element={currentUserId ? <Accueil /> : <Login />} />
           <Route
             path="/timeline"

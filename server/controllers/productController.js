@@ -107,7 +107,7 @@ const productCtrl = {
            
            
 
-            await Products.find({},{category :req.params.name})
+            await Product.find({},{category :req.params.name})
             .then(data=>{
                 if(!data){
                     return res.status(404).json({msg:'product is not found !'})
@@ -125,16 +125,56 @@ const productCtrl = {
         }
 
     },
+    retrieveProductByCateg:async(req,res)=>{
+        try{
+            const categ = req.params.categorie;
+            await Product.find({productCategory: categ}) 
+            .then(data =>{
+                if(!data){
+                    return res.status(404).json({msg:'product is not found !'})
+                }else{
+                   
+                    
+                    return res.json({data})
+                }
+            })
+
+        }catch(err){
+            return res.status(500).json({msg: err.message})  
+        }
+
+    },
+    retrieveProductByUser:async(req,res)=>{
+        try{
+            const nomuser=req.params.name;
+            await Product.find({userName:nomuser})
+            .then(data =>{
+                if(!data){
+                    return res.status(404).json({msg:'product is not found !'})
+                }else{
+                   
+                    
+                    return res.json({data})
+                }
+            })
+
+        }catch(err){
+            return res.status(500).json({msg: err.message}) 
+        }
+
+    },
     createProduct: async(req, res) =>{
         ////console.log(req.body);
         try {
         let product = new Product();
-		product.productName = req.body[0].productName;
-		product.productDesc = req.body[1].productDesc;
-		product.productPrice = req.body[2].productPrice;
-		product.productCategory = req.body[3].productCategory;
-		product.productQty = req.body[4].productQty;
-        product.ProductImage=req.body[5].ProductImage;
+        product.userName=req.body[0].userName;
+		product.productName = req.body[1].productName;
+		product.productDesc = req.body[2].productDesc;
+		product.productPrice = req.body[3].productPrice;
+		product.productCategory = req.body[4].productCategory;
+		product.productQty = req.body[5].productQty;
+        product.ProductImage=req.body[6].ProductImage;
+       
         await product.save();
        //// console.log(product);
 

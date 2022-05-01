@@ -12,9 +12,47 @@ import Loading from './utils/loading/Loading';
 import styled from "styled-components";
 import ProductDataService from "../services/Product.service"
 import { addToCart } from '../../cartmanagment';
+// import Loader from "react-loader-spinner";
+import StarRatings from "react-star-ratings";
+
 // import ReactPaginate from  "react-pagination";
 export default function Product(props) {
-  const dispatch = useDispatch();
+  const Container = styled.div`
+  padding: 15px;
+`;
+const OuterCard = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+`;
+const Card = styled.div`
+  background-color: white;
+  height: 450px;
+  cursor: pointer;
+  width: 14.5rem;
+  padding: 15px;
+  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s linear;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  border-radius: 8px;
+  /* overflow: hidden; */
+  /* hover */
+  &:hover {
+    transform: scale(0.95);
+    box-shadow: rgb(38, 57, 77) 0px 20px 10px -10px;
+  }
+`;
+  
   const [loading, setLoading] = useState(false)
 
   const [product, setProduct] =useState();
@@ -42,7 +80,7 @@ export default function Product(props) {
     },
   });
   const classes = useStyles();
-  
+  let dispatch = useDispatch();
   const navigate = useNavigate();
   const [loadProduct , setLoadProduct] = useState("");
   const{ allproducts } = useSelector((state) => state);
@@ -60,6 +98,9 @@ export default function Product(props) {
 
 
   useEffect(() => {
+    dispatch({
+      type:'LoadIT'
+  })
    if (filterproducts){
     setProduct(filterproducts)
    }else{
@@ -221,8 +262,9 @@ export default function Product(props) {
     
     setFilter("");
     setSorting("");
-    setPriceRange([0, sliderMax]);
+    // setPriceRange([0, sliderMax]);
     //history.push("/");
+    navigate("/shop");
   };
   // useEffect(() => {
    
@@ -232,6 +274,10 @@ export default function Product(props) {
 
   return (
     <>
+ 
+  
+   
+    <Container>
     <Container className={classes.root}>
     <Paper className={classes.paper}>
         <Grid container>
@@ -319,23 +365,30 @@ export default function Product(props) {
         )}
       </Grid> */}
     </Container>
-  
-   
-    
-    <div className="row">
+    {/* {loading ? (
+        <div className="d-flex justify-content-center m-5">
+          <Loader type="TailSpin" color="#25283D" height={100} width={100} />
+        </div>
+      ) : ( */}
+    <OuterCard>
     { product?.map((item , i ) =>   
         <>
           <div className="col-lg-3 col-sm-6" key={i}>
+          <Card>
             <div className="product-box">
               <figure>
                 <span className="new">New</span>
                    <img 
-                   src={item?.ProductImage} width={200} height={200} /> 
+                   className="mt-0"
+                   src={item?.ProductImage}  alt="product"
+                   style={{ objectFit: "cover" }}
+                   width="170px"
+                   height="150px" /> 
                 
                 
                 <ul className="cart-optionz">
                   <li><a title="Add Cart" data-toggle="tooltip"  onClick={(e)=>{
-    e.preventDefault(); addToCart(item,dispatch)}}><i className="ti-shopping-cart"/></a></li>
+                  e.preventDefault(); addToCart(item,dispatch)}}><i className="ti-shopping-cart"/></a></li>
                   <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
                   <li><a href="#" title="Wishlist" data-toggle="tooltip"  deleteProdByID={deleteProdByID}><i className="ti-heart" /></a></li>
                   <li><Link  to={`/updateProd/${item?._id}`}><i className="ti-split-v-alt" /></Link></li>
@@ -352,6 +405,16 @@ export default function Product(props) {
                 <div className="description">
                   <p>{item?.productDesc}</p>
                 </div>
+                <div>
+                    <StarRatings
+                      // rating={item.rating}
+                      starRatedColor="gold"
+                      numberOfStars={5}
+                      name="rating"
+                      starDimension="20px"
+                      starSpacing="2px"
+                    />
+                  </div>
               </ul>
               <div className='row_btn'>
                 {/* <button className="btn btn-primary" >Delete Product</button> */}
@@ -360,11 +423,12 @@ export default function Product(props) {
 
               </div>
             </div>
+          </Card>
           </div>
           </>
           ) }
    
-                  <div className="col-lg-12">
+                  {/* <div className="col-lg-12">
                     <ul className="paginationz">
                       <li className="prev"><a title href="#"><i className="fa fa-angle-left" /></a></li>
                       <li><a title href="#">01</a></li>
@@ -376,7 +440,10 @@ export default function Product(props) {
                       <li className="next"><a title href="#"><i className="fa fa-angle-right" /></a></li>
                     </ul>
                   </div>{/* pagination */}	
-                </div>
+                </OuterCard>
+    
+
+    </Container>
     
     
     </>
