@@ -19,7 +19,26 @@ function Usertimeline(props) {
   const [userProfile, setProfile] = useState(null);
 
   const { userid } = useParams();
+  const handleDeletePost = (id) => {
+    Swal.fire({
+      title: "Are you sure to delete your post ?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.get("http://localhost:2600/posts/delete/" + id).then((res) => {
+          const newList = postData.filter((post) => post._id !== id);
+          setPostData(newList);
+        });
 
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+      }
+    });
+  };
   const Toast = Swal.mixin({
     toast: true,
     position: "top-start",
@@ -108,6 +127,7 @@ function Usertimeline(props) {
               <div className="feature-photo">
                 <figure>
                   <img
+                  style={{ height: 400 + "px" }}
                     src={
                       userProfile.coverpic[0]
                         ? "/uploads/users/" + userProfile.coverpic[0]
@@ -422,6 +442,7 @@ function Usertimeline(props) {
                                       key={p._id}
                                       post={p}
                                       currentUser={currentUser}
+                                      handleDeletePost={handleDeletePost}
                                     />
                                   ))}
                               </>

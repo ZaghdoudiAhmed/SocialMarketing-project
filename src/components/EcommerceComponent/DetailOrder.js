@@ -20,9 +20,20 @@ import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { map } from 'leaflet';
+import Chat from "../chat";
+import {BiBot,BiUser} from 'react-icons/bi';
+import SendIcon from "@mui/icons-material/Send";
 
+import Avatar from "@mui/material/Avatar";
+import axios from 'axios'
 export default function DetailOrder() {
     const Container = styled.div`
     margin: 2rem 8rem;
@@ -60,6 +71,85 @@ const Button = styled.button`
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
   padding: 5px 15px;
 `;
+///////////
+const [chat,setChat] = useState([]);
+const [inputMessage,setInputMessage] = useState('');
+const [botTyping,setbotTyping] = useState(false);
+const [m,setx]=useState(null)
+const [y,sety]=useState(null)
+const getimage =() =>{
+axios.get('http://127.0.0.1:8000/hub/takeimage').then((res)=>{
+console.log(res.data)
+setx(res.data['pred'])
+sety(res.data['bar'])
+})
+}
+useEffect(()=>{
+
+
+
+},[chat])
+
+const close = () => {
+    var elts = document.getElementsByClassName("chat-box");
+    elts[0].classList.remove("show");
+  };
+  const change = () => {
+    var elts = document.getElementsByClassName("chat-box");
+    elts[0].classList.add("show");
+  };
+
+const handleSubmit=(evt)=>{
+    evt.preventDefault();
+    const name = "shreyas";
+    const request_temp = {sender : "user", sender_id : name , msg : inputMessage};
+    
+    if(inputMessage !== ""){
+        
+        setChat(chat => [...chat, request_temp]);
+        setbotTyping(true);
+        setInputMessage('');
+        rasaAPI(name,inputMessage);
+    }
+    else{
+        window.alert("Please enter valid message");
+    }
+    
+}
+
+const rasaAPI = async function handleClick(name,msg) {
+
+    //chatData.push({sender : "user", sender_id : name, msg : msg});
+    
+
+      await fetch('http://localhost:5005/webhooks/rest/webhook', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'charset':'UTF-8',
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({ "sender": name, "message": msg }),
+    })
+    .then(response => response.json())
+    .then((response) => {
+        if(response){
+            const temp = response[0];
+            const recipient_id = temp["recipient_id"];
+            const recipient_msg = temp["text"];        
+
+
+            const response_temp = {sender: "bot",recipient_id : recipient_id,msg: recipient_msg};
+            setbotTyping(false);
+            
+            setChat(chat => [...chat, response_temp]);
+           // scrollBottom();
+
+        }
+    }) 
+}
+/////////////
     let dispatch = useDispatch()
     let {ProductLine} = useSelector((state)=>state)
     const[orderdetail,setOrderdetail]= useState("");
@@ -68,13 +158,35 @@ const Button = styled.button`
     const [prod,setProduct]=useState("");
     const [idProd,setIdProd]=useState("");
     const [OrderStatus, setOrderStatus] = useState("");
+    const [userName,setUserName]= useState("");
+    const [userAddress,setUserAddress]= useState("");
+    
+    const [paymentMode,setPaymentMode]=useState("");
+    const [shippmentMode,setShippmentMode]=useState("");
+    const [totalPrice,setTotalPrice]=useState("");
     const [Orderd, setOrderd] = useState("");
-    const [OrderLine,setOrderLine]=useState();
+    const [OrderLine2,setOrderLine]=useState();
     const [test,setTest]=useState();
     var products=[];
     var idProduits=[];
     let x = 0 
+   
     const params = useParams();
+    const [open, setOpen] = React.useState(false);
+    let handleNameChange=(e) =>{
+        setOrderStatus(e.target.value)
+       
+      }
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+    
+  
     const retrieveProductByID=(idProd)=>{
         ProductService.getProductById(idProd)
         .then(response =>{
@@ -111,15 +223,21 @@ const Button = styled.button`
         .then(response => {
             console.log(response.data)
             setOrderdetail(response.data)
+            setUserName(response.data.data.userName)
+            setUserAddress(response.data.data.userAddress)
+            setPaymentMode(response.data.data.paymentMode)
+            setShippmentMode(response.data.data.shippmentMode)
+            setTotalPrice(response.data.data.totalPrice)
             setOrderStatus(response.data.data.orderStatus)
-            console.log(response.data.data.orderStatus)
+             
+          
 
             setOrderLine(response.data.data.OrderLine2)
-            console.log(response.data.data.OrderLine2)
+            // console.log(response.data.data.OrderLine2)
             
             for(var i=0;i<(response.data.data.OrderLine2).length;i++){
                     const item=(response.data.data.OrderLine2);
-                    console.log(item);
+                    // console.log(item);
                     
                     idProduits.push(item[i].product)
                     //retrieveProductByID(idProduits[i])
@@ -129,7 +247,7 @@ const Button = styled.button`
             
                 }
 
-           console.log(idProduits)
+        //    console.log(idProduits)
            let x = 0
            for(var i=0;i<idProduits.length;i++){
                const item =idProduits;
@@ -144,37 +262,7 @@ const Button = styled.button`
            console.log("********************")
 
            console.log(ProductLine);
-        //    let arr = Object.keys(products)
-        // console.log(typeof products)
-        // console.log(products.length)
-        // console.log(typeof products)
-        // for (const key of products.keys()) {
-        //     console.log(key);
-        //   }
-        //  console.log("before map")
-        //  products.map((item,i)=>{
-              
-        //         console.log(products[item], item)
-              
-        //   })
-        //  console.log("after map")
-        //  console.log(products[0])
-         // products.forEach(function(item, index, array) {
-        //     console.log("ha")
-        //     console.log(item, index);
-        //   });
-        //    products?.forEach(element => {
-        //        console.log(element)
-        //    });
-        //    setTest(products)
-        //    console.log(products.length)
-        //    for(var i=0;i<products.length;i++){
-        //     const item =products;
-        //     // console.log(item[i]);
-            
-        //}
-
-            
+      
            
            
 
@@ -194,7 +282,48 @@ const Button = styled.button`
             console.log(test)
         }
     },[])
-   
+
+    const handleEdit= () => {
+       
+        // let formData = new FormData(); 
+        
+        // var formData = new FormData();
+        // formData.append("username", "Groucho");
+        // formData.append("accountnum", 123456);
+        // // console.log(formData.get()) 
+        // formData.append('userAddress',userAddress)
+        // formData.append('totalPrice',totalPrice)
+        // formData.push({'OrderLine2':OrderLine})
+        // formData.push({'paymentMode':paymentMode})
+        // formData.push({'shippmentMode':shippmentMode})
+        // formData.push({'orderStatus':OrderStatus})
+        // var formData = new FormData();
+        // formData.append('orderStatus',OrderStatus)
+        var data={
+           
+            "orderStatus":OrderStatus
+
+        }
+        console.log( data);
+        //formData.get('orderStatus')
+        
+        OrderService.editOrder(params.id, data)
+        .then(response =>{
+            console.log(response)
+            console.log(response.data.data.orderStatus);
+            setOrderStatus(response.data.data.orderStatus)
+       if(response.data.data.orderStatus=="shipped"){
+           change();
+       }
+          
+           })
+        .catch(e => {
+             console.log(e);
+        });
+        // // setOrderStatus(data)
+
+        setOpen(false);
+      };
 
    
 
@@ -216,7 +345,29 @@ const Button = styled.button`
     
   return (
     <>
-          <Navbar></Navbar>
+        <section>
+          <div className="ext-gap bluesh high-opacity">
+            <div
+              className="content-bg-wrap"
+
+            />
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="top-banner">
+                    <h1>Donation</h1>
+                    <nav className="breadcrumb">
+                      <a className="breadcrumb-item" href="/">
+                        Shop
+                      </a>
+                      <span className="breadcrumb-item active">Orders</span>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
 
 
@@ -457,23 +608,57 @@ const Button = styled.button`
                                                                  <th  scope="col">Date:</th>
                                                                  <th  scope="col">type:</th>
                                                                  
-                                                                 <th  scope="col"><Button>Edit</Button></th>
+                                                                 <th  scope="col">
+                                                                      <Button onClick={handleClickOpen}>Edit</Button>
+                                                                      <Dialog open={open} onClose={handleClose}>
+                                                                          <DialogTitle>Edit Order Status</DialogTitle>
+                                                                          <DialogContent>
+                                                                              <DialogContentText>
+      
+                                                                                  To edit order status, please enter your order status ("ordered", "packed", "shipped", "delivered") here. We
+                                                                                  will send updates occasionally.
+                                                                              </DialogContentText>
+                                                                              <TextField
+                                                                                  autoFocus
+                                                                                  margin="dense"
+                                                                                  id="orderStatus"
+                                                                                  label="order Status:"
+                                                                                  type="name"
+                                                                                  value={OrderStatus}
+                                                                                  name="orderStatus"
+                                                                                  onChange={(e) => handleNameChange(e)}
+                                                                                  fullWidth
+                                                                                  variant="standard"
+                                                                              />
+                                                                          </DialogContent>
+                                                                          <DialogActions>
+                                                                              <Button onClick={handleClose}>Cancel</Button>
+                                                                              <Button onClick={handleEdit}>save</Button>
+                                                                          </DialogActions>
+                                                                      </Dialog>
+                                                                </th>
                                                                   </tr>
                                                             </thead>
                                                             <tbody>
                                                             
                                            
-                                                                  <tr  >
-                                                                 {/* <td>{new Date(OrderStatus[0].date).toLocaleDateString()}</td>
-                                                                  <td>{OrderStatus[0].type}</td>
-                                                                   */}
+                                                                  
+                                                              
+                                                                  
+                                                                   <tr  >
+                                                                  <td>{new Date(orderdetail.data.createdAt).toLocaleDateString()}</td>
+                                                                   <td>{OrderStatus}</td>
+                                                                   </tr>
+                                                                 
+                                                                  
+                                                                   
                                 
                                 
                                  
                                                              
                        
                         
-                                                         </tr>
+                                                         
                      
 
                                                             </tbody>
@@ -508,7 +693,7 @@ const Button = styled.button`
                             
                               </CartContainer>
                               </Container>
-            
+                    
 
 
 
@@ -522,7 +707,66 @@ const Button = styled.button`
 
 
 
+          <div className="chat-box">
+        <div className="chat-head">
+        <h5>AI Assistant</h5>
+              <span className="status f-online" />
+              <h6>Ahmed Chokri</h6>
+           <div className="more">
+                <span>
+                  <i className="ti-more-alt" />
+                </span>
+                <span className="close-mesage">
+                  <i className="ti-close" onClick={close} />
+                </span>
+              </div>
+              {botTyping ? <h6>Bot Typing....</h6> : null}
+            </div>
+            <div className="chat-list">
+              <ul className="scroll">   {chat.map((user,key) => (
+                                <div key={key}>
+                                    {user.sender==='bot' ?
+                                        (
+                                            <div>
+                                            <div className= 'msgalignstart'>
+                                                <BiBot className="botIcon"  /><h6 className="botmsg">{user.msg}</h6>
+                                              
+                                            
+                                            </div>
+                                            <div>
+                                          {user.msg==="what is your feedback on the product received  ?"&&(
+                                                  <div>
+                                                      <button onClick={getimage} name="Click the Photo" defaultValue="Click an Image" className="btn btn-outline-primary" >
+                                                        Take a photo
+                                                        </button>
+                                                <img className="mto"alt =""src={"data:image/jpeg;base64,"+m}></img>
+                                                <img alt=""src={"data:image/jpeg;base64,"+y}></img>
+                                                </div>
+                                                )
+                                              }
+                                           </div>
+                                           </div>
+                                        )
 
+                                        :(
+                                            <div className= 'msgalignend'>
+                                                <h6 className="usermsg">{user.msg}</h6><BiUser className="userIcon" />
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            ))}
+                </ul>
+         </div>
+              <form className="text-box" onSubmit={handleSubmit}>
+                <textarea
+                  onChange={e => setInputMessage(e.target.value)} value={inputMessage} type="text"
+                />
+                <Button type="submit">
+                  <SendIcon></SendIcon>{" "}
+                </Button>
+              </form>
+            </div>
           <Footer></Footer>
     
     </>

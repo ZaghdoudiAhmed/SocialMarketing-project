@@ -8,7 +8,7 @@ import Timelinephotos from "./components/timeline/timeline-photos";
 import Timelinevideos from "./components/timeline/timeline-videos";
 import TimelineStories from "./components/timeline/timeline-stories";
 import SuggestedProducts from "./components/timeline/SuggestedProducts";
-
+import HomeShop from "./components/EcommerceComponent/HomeShop";
 import React, { Suspense, lazy } from "react";
 import Donationbystate from "./components/Donation/Donationbystate";
 import Articles from "./components/Article/Articles";
@@ -50,23 +50,12 @@ import Videofeed from "./components/videofeed";
 import Chat from "./components/chat";
 import Order from "./components/EcommerceComponent/Order";
 import DetailOrder from "./components/EcommerceComponent/DetailOrder";
+import Donation from "./components/Donation/Donation";
+import Blog from "./components/Blog/Blog" 
 function App() {
   const currentUserId = localStorage.getItem("currentUser");
-  const Donations = React.lazy(
-    () =>
-      new Promise((resolve, reject) =>
-        setTimeout(
-          () => resolve(import("./components/Donation/Donation")),
-          1000
-        )
-      )
-  );
-  const Blog = React.lazy(
-    () =>
-      new Promise((resolve, reject) =>
-        setTimeout(() => resolve(import("./components/Blog/Blog")), 1000)
-      )
-  );
+
+
   return (
     <Suspense
       fallback={
@@ -79,7 +68,7 @@ function App() {
         <Routes>
           <Route
             path="/donations"
-            element={currentUserId ? <Donations /> : <Login />}
+            element={currentUserId ? <Donation /> : <Login />}
           />
           <Route
             path="/donationbystate"
@@ -154,7 +143,8 @@ function App() {
             path="/checkout/:prix"
             element={currentUserId ? <CheckoutCart /> : <Login />}
           />
-          <Route path="/shop" element={currentUserId ? <Shop />: <Login />} />
+          <Route path="/shophome/:id" element={currentUserId ? <HomeShop />: <Login />} />
+
           <Route path="/detailProduct/:id" element={currentUserId ? <DetailProduct />: <Login />} />
           <Route path="/addProd" element={currentUserId ? <AddProduct />: <Login />} />
           <Route path="/categories" element={currentUserId ? <Category />: <Login />} />

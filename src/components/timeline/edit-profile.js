@@ -77,7 +77,7 @@ function EditProfile(props) {
             <NotificationContainer/>
             <body>
             <div className="theme-layout">
-                <Header/>
+                <Header currentUserId={currentUserId}/>
                 <TimelineCover/>
 
                 <section>

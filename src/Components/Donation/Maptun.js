@@ -1,8 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import addWeeks from "date-fns/addWeeks";
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import DateFnsUtils from '@date-io/date-fns';
+//import { DateRangePicker, DateRange} from "materialui-daterange-picker";
+import 'react-date-range/dist/styles.css'
+import 'react-date-range/dist/theme/default.css'
+import { DateRangePicker } from 'react-date-range';
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -24,9 +30,23 @@ function getWeeksAfter(date, amount) {
 }
 const Maptun = () => {
   const currentUserId = localStorage.getItem("currentUser");
+  const handleSelect=(ranges)=>{
+    console.log(ranges['selection']['startDate']);
+    setstart(ranges['selection']['startDate'])
+    setend(ranges['selection']['endDate'])
 
-  const [value, setValue] = React.useState([null, null]);
+  }
+  const [start, setstart] = useState(new Date());
+  const [end, setend] = useState(new Date());
   const mapRef = useRef();
+  const selectionRange = {
+    startDate: start,
+    endDate: end,
+    key: 'selection',
+  }
+const [value, setValue] = React.useState([null, null]);
+
+const toggle = () => setOpen(!open);
   const {
     register,
     handleSubmit,
@@ -73,6 +93,7 @@ const Maptun = () => {
       setisupload(false);
     } else {
       var result = [];
+      var value =[start ,end]
       ///  result.push(e);
       result.push(e, { image: imgFile }, { loc: position }, { time: value },{Creator : currentUserId });
       ///  result.push({loc:position})
@@ -82,7 +103,6 @@ const Maptun = () => {
      });
       setistrue(false);
       reset();
-      setValue([null, null]);
       imgFileSet([]);
     }
   };
@@ -292,24 +312,10 @@ const Maptun = () => {
                   </div>
                 )}
               </div>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DateRangePicker
-                  required
-                  disablePast
-                  value={value}
-                  maxDate={getWeeksAfter(value[0], 4)}
-                  onChange={(newValue) => {
-                    setValue(newValue);
-                  }}
-                  renderInput={(startProps, endProps) => (
-                    <React.Fragment>
-                      <TextField {...startProps} />
-                      <Box sx={{ mx: 2 }}> to </Box>
-                      <TextField {...endProps} />
-                    </React.Fragment>
-                  )}
-                />
-              </LocalizationProvider>
+              <DateRangePicker
+        ranges={[selectionRange]}
+        onChange={handleSelect}
+      />
               <div className="submit-btns">
                 <button type="submit" className="mtr-btn">
                   <span>Save your compaign</span>

@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 
 function Shortcuts(props) {
+  const navigate = useNavigate();
   const Remove = () => {
     localStorage.removeItem("currentUser");
-    window.reload();
+    window.location.reload();
   };
   return (
     <div className="widget">
@@ -45,22 +46,22 @@ function Shortcuts(props) {
           </Link>
         </li>
         <li>
-          <i className="ti-direction" />
+          <i className="bi bi-people-fill" />
           <Link to="/donations">Donations</Link>
         </li>
         <li>
-          <i className="ti-direction" />
+          <i className="ti-shopping-cart" />
           <Link to="/shop">Shop</Link>
         </li>
         <li>
-          <i className="ti-direction" />
+          <i className="ti-pencil-alt" />
           <Link to="/blog">Blog</Link>
         </li>
         <li>
-          <i className="ti-direction" />
+          <i className="ti-world" />
           <Link to="/articles">Articles</Link>
         </li>
-        <li>
+        <li style={{cursor: 'pointer'}}>
           <i className="ti-power-off" />
           <a onClick={Remove} title>
             Logout

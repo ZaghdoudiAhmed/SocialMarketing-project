@@ -163,6 +163,25 @@ const productCtrl = {
         }
 
     },
+    retrieveProductShop:async(req,res)=>{
+        try{
+            const nomuser=req.params.name;
+            await Product.find({userName:{$ne:nomuser}})
+            .then(data =>{
+                if(!data){
+                    return res.status(404).json({msg:'product is not found !'})
+                }else{
+                   
+                    
+                    return res.json({data})
+                }
+            })
+
+        }catch(err){
+            return res.status(500).json({msg: err.message}) 
+        }
+
+    },
     createProduct: async(req, res) =>{
         ////console.log(req.body);
         try {

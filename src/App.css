@@ -13,7 +13,17 @@
   overflow: hidden;
   position: absolute;
 }
-
+.rdrDefinedRangesWrapper {
+  font-size: 12px;
+  width: 226px;
+  border-right: solid 1px #eff2f7;
+  background: #fff;
+  display: none;
+}
+.rdrDateDisplayWrapper {
+  background-color: rgb(239, 242, 247);
+  display: none;
+}
 .e-quick-popup-wrapper .e-event-popup .e-popup-header .e-subject-wrap .e-subject {
   cursor: default;
   font-size: 20px;

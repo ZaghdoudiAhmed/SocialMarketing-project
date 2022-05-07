@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import alanBtn from "@alan-ai/alan-sdk-web";
 import Article from "./Article";
 import wordsToNumbers from "words-to-numbers";
+import Header from "../EcommerceComponent/Header"
 function Articles(props) {
   const [newArticles, setnewArticle] = useState([]);
   useEffect(() => {
@@ -23,7 +24,9 @@ function Articles(props) {
     });
   }, []);
   return (
+    
     <div>
+      <Header></Header>
       <div>
         <div className="theme-layout">
           <div className="responsive-header">
@@ -160,21 +163,8 @@ function Articles(props) {
             </nav>
           </div>
           {/* responsive header */}
-          <section>
-            <div className="gap100 no-top">
-              <div className="container">
-                <div className="row remove-ext-40">
-                  <div className="col-lg-12">
-                    <div className="section-heading">
-                      <h2>Most important Articles</h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
           <main>
-            <section className="site-title">
+            <section className="site-title pi">
               <div
                 className="site-background"
                 data-aos="fade-up"

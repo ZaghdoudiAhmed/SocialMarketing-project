@@ -12,10 +12,18 @@ const getOrderById=(id)=>{
     return http.get(`/user/order/getByid/${id}`);
 }
 
+const getOrderByUser=(name)=>{
+    return http.get(`/user/order/getByUser/${name}`);
+}
+const editOrder=(id,data)=>{
+    return http.put(`/user/order/update/${id}`,data);
+}
 const OrderService={
     createOrder,
     getOrder,
-    getOrderById
+    getOrderById,
+    getOrderByUser,
+    editOrder
 }
 
 export default OrderService;

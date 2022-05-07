@@ -367,7 +367,7 @@ function AdsCrud(props) {
                             </div>
                             <input className={'btn btn-primary offset-lg-9 col-2'} type={"submit"} value={"submit"} onClick={()=> {
                                 handleClose()
-                                window.location.reload(false);
+                                window.onbeforeunload = null;
                             }} />
                         </form>
                         <iframe style={{ display: "none" }} name="hidden-form" />

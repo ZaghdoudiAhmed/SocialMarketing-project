@@ -173,10 +173,10 @@ function Header({ socket, currentUserId, friends }) {
           </nav>
         </div>
 
-        <div className="topbar stick">
+        <div class="topbar stick is_stuck" style={{position: "fixed" , top: "0px", width: "1750px"}}>
           <div className="logo">
             <Link to="/" title>
-              <img src="/images/logo.png" alt />
+              <img className="logg"src="/images/2nd-Chance-Icon-sm.png" alt />
             </Link>
           </div>
           <div className="top-area">
@@ -195,11 +195,6 @@ function Header({ socket, currentUserId, friends }) {
                     <a href="/donations" title>
                       Donations
                     </a>
-                  </li>
-                  <li>
-                    <Link to="/company" title>
-                      Home Company
-                    </Link>
                   </li>
                   <li>
                     <Link to="/shop" title>
@@ -242,79 +237,13 @@ function Header({ socket, currentUserId, friends }) {
                     </Link>
                   </li>
                   <li>
-                    <a href="fav-page.html" title>
-                      favourit page
-                    </a>
-                  </li>
-                  <li>
-                    <a href="groups.html" title>
-                      groups page
-                    </a>
-                  </li>
-                  <li>
-                    <a href="page-likers.html" title>
-                      Likes page
-                    </a>
-                  </li>
-                  <li>
-                    <a href="people-nearby.html" title>
-                      people nearby
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" title>
-                  account settings
-                </a>
-                <ul>
-                  <li>
                     <Link to="/edit-profile" title>
-                      Edit profile
+                    edit profile
                     </Link>
-                  </li>
-                  <li>
-                    <Link to="/edit-password" title>
-                      edit password
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/user-management" title>
-                      user management
-                    </Link>
-                  </li>
-                  <li>
-                    <a href="edit-password.html" title>
-                      edit-password
-                    </a>
-                  </li>
-                  <li>
-                    <a href="edit-profile-basic.html" title>
-                      edit profile basics
-                    </a>
-                  </li>
-                  <li>
-                    <a href="edit-work-eductation.html" title>
-                      edit work educations
-                    </a>
-                  </li>
-                  <li>
-                    <Link to="/messages" title>
-                      message box
-                    </Link>
-                  </li>
-                  <li>
-                    <a href="inbox.html" title>
-                      Inbox
-                    </a>
-                  </li>
-                  <li>
-                    <a href="notifications.html" title>
-                      notifications page
-                    </a>
                   </li>
                 </ul>
               </li>
+        
               <li className={'test-li'}>
                 <Link to={'/ads-management'}>ADS Management<i className="bi bi-star-fill test-i"/></Link>
               </li>
@@ -387,7 +316,7 @@ function Header({ socket, currentUserId, friends }) {
               <img
                 width="35"
                 height="35"
-               /* src={"/uploads/users/" + currentUser.profilepic}*/
+              src={"/uploads/users/" + currentUser.profilepic}
                 alt
               />
               <span className="status f-online" />
@@ -425,7 +354,7 @@ function Header({ socket, currentUserId, friends }) {
                 </a>
               </div>
             </div>
-            <span className="ti-menu main-menu" data-ripple />
+          
           </div>
         </div>
       </div>

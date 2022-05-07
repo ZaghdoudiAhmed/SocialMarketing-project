@@ -6,6 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 import Select, { AriaOnFocus } from "react-select";
@@ -18,6 +19,7 @@ import { Modal, Button } from "react-bootstrap";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import Mentions from "rc-mentions";
+import Fab from '@mui/material/Fab';
 
 import Post from "./post/post";
 import Header from "./header";
@@ -1052,115 +1054,11 @@ function Accueil() {
               </div>
             </div>
           </div>
-          <div className="fixed-sidebar left">
-            <div className="menu-left">
-              <ul className="left-menu">
-                <li>
-                  <button
-                    className="btn btn-light border-0"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-magnet" aria-hidden="true" />
-                  </button>
-                </li>
-                <li>
-                  <a
-                    href="fav-page.html"
-                    title="favourit page"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="fa fa-star-o" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="insights.html"
-                    title="Account Stats"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-stats-up" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="inbox.html"
-                    title="inbox"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-import" />
-                  </a>
-                </li>
-                <li>
-                  <Link
-                    to="/messages"
-                    title="Messages"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-comment-alt" />
-                  </Link>
-                </li>
-                <li>
-                  <a
-                    href="edit-account-setting.html"
-                    title="Setting"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-panel" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="faq.html"
-                    title="Faq's"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-light-bulb" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="timeline-friends.html"
-                    title="Friends"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-themify-favicon" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="widgets.html"
-                    title="Widgets"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-eraser" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="notifications.html"
-                    title="Notification"
-                    data-toggle="tooltip"
-                    data-placement="right"
-                  >
-                    <i className="ti-bookmark-alt" />
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+      
           {/* left sidebar menu */}
           <section>
             <div className="gap2 gray-bg">
-              <div className="container-fluid">
+              <div className="container-fluid pm">
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="row merged20" id="page-contents">
@@ -1211,7 +1109,7 @@ function Accueil() {
                             </ul>
                           </div>
                           {/* recent activites */}
-                          <div className="widget stick-widget">
+                          <div className="widget stick-widget lp">
                             <h4 className="widget-title">Other Users</h4>
                             <ul className="followers">
                               {users.map((u) => (
@@ -1235,14 +1133,15 @@ function Accueil() {
                                     {currentUser?.followers?.includes(
                                       u._id
                                     ) ? null : (
-                                      <button
-                                        onClick={() =>
-                                          handlefollow(u._id, u.name)
-                                        }
-                                        className=" btn btn-primary underline"
-                                      >
-                                        Add Friend
-                                      </button>
+                              
+                                    
+<Fab className="cop" color="primary">
+  <PersonAddIcon onClick={() =>
+                                        handlefollow(u._id, u.name)
+                                      }
+                                  />
+</Fab>
+
                                     )}
                                   </div>
                                 </li>
@@ -1582,7 +1481,7 @@ function Accueil() {
                           </div>
                           {/* Ads */}
                           <Ads />
-                          <div className="widget stick-widget">
+                          <div className="widget stick-widget ">
                             <h4 className="widget-title">Profile intro</h4>
                             <ul className="short-profile">
                               <li>

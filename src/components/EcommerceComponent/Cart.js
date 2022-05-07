@@ -206,6 +206,12 @@ let deleteItemFromcart = async(product) => {
   })
   SetLoadTotalPrice('he')
 }
+let clearCart=async()=>{
+  console.log('totot');
+  dispatch({
+    type:'CLEAR_CART'
+  })
+}
   return (
     <>
     <div class="theme-layout">
@@ -280,7 +286,7 @@ let deleteItemFromcart = async(product) => {
                 </div>
                      
                       </QuantityContainer>
-
+                   
                     </CartContainer>
 
 
@@ -335,7 +341,12 @@ let deleteItemFromcart = async(product) => {
                    
                 //   </td>
                 // </tr>
+               
+
                )} 
+                <Button   onClick={(event) => clearCart()} clearCart>
+                Clear Cart
+              </Button>
               </OuterContainer>
 {/*              
                  </tbody>

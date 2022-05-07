@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-var Schema = mongoose.Schema;
 const orderSchema = new mongoose.Schema(
 {
     userName: {
@@ -44,22 +43,28 @@ const orderSchema = new mongoose.Schema(
           required: true,
 
       },
-      orderStatus: [
-        {
-          type: {
-            type: String,
-            enum: ["ordered", "packed", "shipped", "delivered"],
-            default: "ordered",
-          },
-          date: {
-            type: Date,
-          },
-          isCompleted: {
-            type: Boolean,
-            default: false,
-          },
-        },
-      ],
+      orderStatus:{
+        type:String,
+        enum: ["ordered", "packed", "shipped", "delivered"],
+        default: "ordered",
+
+      }
+      // orderStatus: [
+      //   {
+      //     type: {
+      //       type: String,
+      //       enum: ["ordered", "packed", "shipped", "delivered"],
+      //       default: "ordered",
+      //     },
+      //     date: {
+      //       type: Date,
+      //     },
+      //     isCompleted: {
+      //       type: Boolean,
+      //       default: false,
+      //     },
+      //   },
+      // ],
     },
     { timestamps: true }
 

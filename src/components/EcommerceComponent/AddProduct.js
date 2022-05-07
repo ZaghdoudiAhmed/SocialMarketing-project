@@ -1,15 +1,21 @@
 import React,{useState,useEffect} from 'react';
 import Footer from './Footer';
 import Navbar from './NavBar';
+//import { useDispatch } from "react-redux";
 //import { createProduct } from '../../actions/products';
 import ProductDataService from "../services/Product.service";
 import CategoryDataService from "../services/Category.service";
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from "react-hook-form";
+import UserService from "../services/User.service";
 export default function AddProduct() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
     const [selectedFile, setSelectedFile] = useState(null);
     const [imgFile, imgFileSet] = useState([]);
+    const [userName, setUserName] = useState('');
     const initialProductState={  
+        userName,
         productName:"",
         productDesc:"",
        
@@ -22,7 +28,12 @@ export default function AddProduct() {
     const[categories,setCategories]=useState();
     const [loadCategories , setLoadCategories] = useState("")
     const [submitted, setSubmitted]= useState(false);
+    const currentUserId = localStorage.getItem("currentUser");
     const navigate = useNavigate();
+    let handleNameChange=(e) =>{
+      setUserName(e.target.value)
+     
+    }
     const handleInputChange = event => {
         const { name, value } = event.target;
         setProduct({ ...product, [name]: value });
@@ -38,39 +49,37 @@ export default function AddProduct() {
           };
         }
       };
-    //let state1 = {data: { CoverImage: "" }}
-    //let handleImageCoverChange = ({ currentTarget: input }) => {
-     /// console.log("here we goo ");
-      //  const data = state1.data;
-      //  data[input.name] = input.files[0];
-      //  state1.data = data;
+      useEffect(() => {
+        UserService.getUserById(currentUserId)
+        .then(response => {
+          console.log(response.data)
+          setUserName(response.data.name)
+         
+  
         
-      ///  }
+  
+  
+      })
+      .catch(e => {
+          console.log(e);
+      });
+      }, [currentUserId])
+   
 
       
        let state = {data: []}
-      // const handleImageChange = ({ currentTarget: input }) => {
-      //   console.log("here we goo ");
-      //     let data = state.data;
-      //     for (let index = 0; index < input.files.length; index++) {
-      //         const element = input.files[index];
-      //         data.push(element);
-              
-      //     }
-      //     state.data = data;
-         
-      // }
+      
     const saveProduct = async () => {
       const FD = []
       let productName = document.getElementById('productName').value
       let productCatg =document.getElementById('productCategory').value
-      //console.log(productCatg)
-     // console.log(state1.data);
-     // console.log(state.data);
+     
      
      
    
-    
+      
+      
+      FD.push({'userName': userName})
       FD.push({'productName': productName})
       FD.push({'productDesc':product.productDesc})
       
@@ -86,13 +95,7 @@ export default function AddProduct() {
      ///// console.log(pair[0] + ', ' + pair[1]);
   }
   
-  //     //  var data={
-  //     //    title:product.title,
-  //     //    description:product.description,
-  //     //    content:product.content,
-  //     //    price:product.price,
-  //     //    category:product.category,
-  //     //    quantity:product.quantity};
+  
   console.log(FD)
        ProductDataService.createProduct(FD)
         .then(response =>{
@@ -100,7 +103,7 @@ export default function AddProduct() {
 
           setSubmitted(true);
           console.log("done");
-          navigate("/shop");
+          navigate("/shophome");
 
           
         })
@@ -165,31 +168,73 @@ export default function AddProduct() {
                          />
                   <label className="control-label" htmlFor="input"> Product id </label><i className="mtrl-select" />
                 </div> */}
+                <div className="form-group">	
+                 
+                         <input type="text"
+                              id="name"
+                              required="required"
+                              value={userName}
+                              
+                              name="userName"
+                              onChange={(e) => handleNameChange(e)}
+                            />
+                            
+                  <label className="control-label" htmlFor="input">User name </label>
+                 
+                </div>
 
                 <div className="form-group">	
                   <input type="text" 
                         id="productName"
                          required="required"
                          value={product.productName}
-                         onChange={handleInputChange}
+                         
                          name="productName"
+                         {...register("productName", {
+                            required: {
+                              value: true,message: "product Name is required",
+                            },
+                          })}
+                          onChange={handleInputChange}
                          />
-                  <label className="control-label" htmlFor="input">Product name </label><i className="mtrl-select" />
+                  <label className="control-label" htmlFor="input">Product name </label>
+                  <i className="mtrl-select" />
+                  <i className="colorred">
+                        {errors?.productName && errors.productName.message}
+                  </i>
                 </div>
                 <div className="form-group">	
                   <input type="text" id="productDesc" required="required" 
                   value={product.productDesc} 
+                  name="productDesc"
+                  {...register("productDesc", {
+                    required: {
+                      value: true,message: "product Description is required",
+                    },
+                  })}
                   onChange={handleInputChange}
-                  name="productDesc"/>
+                  />
                   <label className="control-label" htmlFor="input">Description </label><i className="mtrl-select" />
+                  <i className="colorred">
+                        {errors?.productDesc && errors.productDesc.message}
+                  </i>
                 </div>		
                 
                 <div className="form-group">	
                   <input type="text" id="productPrice" required="required"
                     value={product.productPrice} 
+                    name="productPrice"
+                    {...register("productPrice", {
+                      required: {
+                        value: true,message: "product Price is required",
+                      },
+                    })}
                     onChange={handleInputChange}
-                    name="productPrice"/>
+                    />
                   <label className="control-label" htmlFor="input">Price </label><i className="mtrl-select" />
+                  <i className="colorred">
+                        {errors?.productPrice && errors.productPrice.message}
+                  </i>
                 </div>		
                 <div className="form-group">	
                   <input type="text" id="productQty" required="required"  
@@ -229,7 +274,7 @@ export default function AddProduct() {
                 
                 <div className="submit-btns">
                   <button type="button" className="mtr-btn"><span>Cancel</span></button>
-                  <button type="button" onClick={saveProduct} className="mtr-btn"><span>Create Product</span></button>
+                  <button type="button" onClick={handleSubmit(saveProduct)} className="mtr-btn"><span>Create Product</span></button>
                 </div>
               </form>
             </div>

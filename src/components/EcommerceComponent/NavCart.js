@@ -270,7 +270,7 @@ export default function NavCart() {
   </div>{/* topbar transparent header */}
   <section>
     <div className="ext-gap bluesh high-opacity">
-      <div className="content-bg-wrap"    style={{ background: "url(images/resources/animated-bg2.png)" }} />
+      <div className="content-bg-wrap" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12">

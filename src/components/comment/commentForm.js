@@ -1,7 +1,7 @@
 import { useState, React } from "react";
 
 import axios from "axios";
-
+import AddCommentIcon from '@mui/icons-material/AddComment';
 function CommentForm({ post, handleComment, currentUser, friends }) {
   const [bodycomment, setBodyComment] = useState("");
   const renderSuggestions = (entry) => {
@@ -25,21 +25,20 @@ function CommentForm({ post, handleComment, currentUser, friends }) {
         />
       </div>
       <div className="post-comt-box">
-        <form method="post">
+        <form method="post" style = {{display:"flex"}}>
           <textarea
             placeholder="Post your comment"
             onChange={(e) => setBodyComment(e.target.value)}
             value={bodycomment}
             markup="@[__name__](___id__)"
           ></textarea>
-          <button
-            className="btn btn-outline-primary"
-            type="button"
-            id="button-addon2"
+        
+            <AddCommentIcon
+  className="ui"
             onClick={onClick}
           >
             Button
-          </button>
+          </AddCommentIcon>
         </form>
       </div>
     </li>

@@ -21,7 +21,7 @@ export default function Shop() {
               <div className="shop-page">
                 <div className="shop-filter-sec">
                   
-                  <Link className="btn btn-primary" to="/addProd">Add New Product</Link>
+                  {/* <Link className="btn btn-primary" to="/addProd">Add New Product</Link> */}
                 
                <Products></Products>
               </div>

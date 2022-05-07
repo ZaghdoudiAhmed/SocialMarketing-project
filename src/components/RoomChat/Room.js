@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -35,6 +36,8 @@ import Editorcomponent from "./Editorcomponent";
 import Courbe from "./Poverty";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import Swal from "sweetalert2";
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 const Room = () => {
   const [State, setstate] = useState(false);
   const actions = [
@@ -44,6 +47,7 @@ const Room = () => {
     { icon: <ShareIcon />, name: "Share" },
   ];
 
+  const navigate = useNavigate()
   const { id1 } = useParams();
   const affiche_msg = () => {
     var msg = document.querySelector(".peoples-mesg-box1");
@@ -92,6 +96,7 @@ const Room = () => {
       secure: true,
       port: 443,
     });
+
     let myVideoStream;
     ///get the media of user
     navigator.mediaDevices
@@ -231,7 +236,6 @@ const Room = () => {
       <Container maxWidth="xlg" className="bluesh high-opacity">
         <div
           className="content-bg-wrap"
-          style={{ background: 'url("images/resources/animated-bg2.png")' }}
         />
         <div className="container-fluid">
           <Box className="top-bannerr" sx={{ height: "100vh" }}>
@@ -304,6 +308,25 @@ const Room = () => {
                     </div>
                   </div>
                 </div>
+                <Fab color="primary" aria-label="add">
+  <ExitToAppIcon onClick={()=>{
+const video = document.querySelector('video');
+
+// A video's MediaStream object is available through its srcObject attribute
+const mediaStream = video.srcObject;
+
+// Through the MediaStream, you can get the MediaStreamTracks with getTracks():
+const tracks = mediaStream.getTracks();
+
+// Tracks are returned as an array, so if you know you only have one, you can stop it with: 
+tracks[0].stop();
+
+// Or stop all like so:
+tracks.forEach(track => track.stop())
+navigate('/')
+}}
+    />
+</Fab>
               </Box>
             </Container>
           </Box>{" "}
@@ -327,7 +350,9 @@ const Room = () => {
                 />
               ))}
             </SpeedDial>
+
           </Box>
+
         </Card>
       </Container>
     </div>

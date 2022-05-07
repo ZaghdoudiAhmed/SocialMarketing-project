@@ -42,40 +42,40 @@ function TimelineCover() {
     return (
         <>
             <section>
-                <div className="feature-photo">
-                    <figure><img src={coverPath} style={{height:400+'px'}} alt={"cover pic"} /></figure>
-                    <div className="add-btn">
-                        <span>1205 followers</span>
-                        <a href="#" title="" data-ripple="">Add Friend</a>
-                    </div>
-                    <form
+
+                <div className="user-avatar1 feature-photo">
+                    <figure><img src={coverPath} style={{height:700+'px'}} alt={"cover pic"} />
+                   <div>
+                       <form
                 method={"POST"}
                 action={"http://localhost:2600/api/users/updatecoverpic/"+currentUserId}
                 encType="multipart/form-data"
                 target="hidden-form"
-              >
-                <label className={"mr-3"}>
-                  please pick you first cover picture
-                </label>
-                <input
-                className="disp"
+                className="edit-phto">
+        
+
+                <i className="fa fa-camera-retro"/>
+                                            <label className="fileContainer">
+                                                Edit Display Photo  </label>
+                                                <input      
+                                                className="disp"
                   type="file"
                   accept={".png , .jpg, .jpeg"}
                   name={"image"}
                   onChange={(e) => {
                     setCoverPath(window.URL.createObjectURL(e.target.files[0]));
-                  }}
-                />
-                <br />
-                <input
-                  type={"text"}
-                  value={currentUser.email}
-                  name={"email"}
-                  hidden
-                  readOnly
-                />
-                <input type={"submit"} value={"submit"} />
+                  }}/>
+                                          
+                                            <input type={"submit"} value={"submit"} />
               </form>
+                       
+                       </div> 
+                    </figure>
+                    <div className="add-btn">
+                        <span>1205 followers</span>
+                        <a href="#" title="" data-ripple="">Add Friend</a>
+                    </div>
+   
                     <div className="container-fluid">
                         <div className="row merged">
                             <div className="col-lg-2 col-sm-3">

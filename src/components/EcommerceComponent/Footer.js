@@ -90,7 +90,9 @@ export default function Footer() {
         </div>
       </div>
     </div>
-    <Link className="shopping-cart" to={"/cart"} title><i className="fa fa-shopping-bag" /><span>{cart?.length}</span></Link>
+    {cart?.length == 0  ?(<></>) :
+     (<Link className="shopping-cart" to={"/cart"} title><i className="fa fa-shopping-bag" /><span>{cart?.length}</span></Link>)}
+    
     </>
   );
 }

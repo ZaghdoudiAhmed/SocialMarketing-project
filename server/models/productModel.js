@@ -6,6 +6,12 @@ const ProductSchema  = new mongoose.Schema({
     //     type: 'String',
     //     required: false,
     // },
+    userName: {
+        type: 'String',
+      
+        trim: true,
+        
+    },
     productName: {
         type: 'String',
         required: false,

@@ -21,6 +21,26 @@ function Timeline(props) {
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
   const [socket, setSocket] = useState(null);
+  const handleDeletePost = (id) => {
+    Swal.fire({
+      title: "Are you sure to delete your post ?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.get("http://localhost:2600/posts/delete/" + id).then((res) => {
+          const newList = postData.filter((post) => post._id !== id);
+          setPostData(newList);
+        });
+
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+      }
+    });
+  };
 
   const Toast = Swal.mixin({
     toast: true,
@@ -46,11 +66,13 @@ function Timeline(props) {
     post.append("Creator", currentUserId);
 
     try {
-      await axios.post(url, post).then((res) => {
+      await axios.post(url, post).then((res) => { 
+     
         Toast.fire({
           icon: "success",
           title: "Your post is added succesfuly",
         });
+     
         socket.emit("sendNotification", {
           senderId: res.data.Creator._id,
           receiverId: currentUserId,
@@ -60,7 +82,7 @@ function Timeline(props) {
         setPostData([res.data, ...postData]);
         setNewDescription("");
         setFiles(null);
-        window.location.reload(false)
+        window.onbeforeunload = null;
       });
     } catch (err) {
       console.log(err);
@@ -391,6 +413,7 @@ function Timeline(props) {
                                   key={p._id}
                                   post={p}
                                   currentUser={currentUser}
+                                  handleDeletePost={handleDeletePost}
                                 />
                               );
                             }
@@ -441,6 +464,14 @@ function Timeline(props) {
                               </a>
                             </div>
                           </div>
+                        </div>
+                        <div className="widget friend-list stick-widget">
+                        <h4 className="widget-title">Your Products</h4>
+                        <div id="searchDir" />
+                        <ul id="people-list" className="friendz-list">
+                       
+                        <Link  to={`/shophome/${currentUserId}`}> Product List </Link>
+                        </ul>
                         </div>
                         <div className="widget friend-list stick-widget">
                           <h4 className="widget-title">Your Friends</h4>

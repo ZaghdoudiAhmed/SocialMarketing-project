@@ -3,6 +3,8 @@ import Footer from './Footer';
 import Navbar from './NavBar';
 import { DataGrid } from '@mui/x-data-grid';
 import OrderService from '../services/Order.service';
+import UserService from "../services/User.service";
+import { responsiveProperty } from '@mui/material/styles/cssUtils';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,7 +16,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from "styled-components";
 import { large, medium  } from "../../responsive.js";
-import { Link } from 'react-router-dom';
+import { Link , useNavigate,useParams } from "react-router-dom";
 
 
 
@@ -44,6 +46,7 @@ const Button = styled.button`
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
   padding: 5px 15px;
 `;
+// let dispatch = useDispatch();
 
 
   const [loadOrder,setLoadOrder]=useState("");
@@ -54,11 +57,18 @@ const Button = styled.button`
   const[paymentMode,setPaymentMode]=useState("")
   const [totalPrice,setTotalPrice]=useState("")
   const [OrderStatus,setOrderStatus]=useState("")
-  const or=[]
+  const or=[];
+  const currentUserId = localStorage.getItem("currentUser");
+  const params = useParams();
   useEffect(() => {
-    OrderService.getOrder()
-    .then(response =>{
-      console.log(response.data)
+    // dispatch({type:"INIT_CART"});
+    UserService.getUserById(currentUserId)
+    .then(response => {
+      //console.log(response.data.name)
+      OrderService.getOrderByUser(response.data.name)
+      .then(response =>{
+
+        console.log(response.data)
       setOrder(response.data)
       setLoadOrder("done!")
       { orders.data.forEach(function (item ){
@@ -75,8 +85,13 @@ const Button = styled.button`
      
      })
       }
-      
+      })
     })
+    .catch(e => {
+      console.log(e);
+   });
+
+    
   }, [loadOrder])
 
   const getListOrder=(orders)=>{
@@ -87,8 +102,10 @@ const Button = styled.button`
     }
     return content;
 
+
   }
  
+  
 
   
 

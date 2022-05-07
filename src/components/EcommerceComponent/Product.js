@@ -10,7 +10,8 @@ import{
 import { Link , useNavigate,useParams } from "react-router-dom";
 import Loading from './utils/loading/Loading';
 import styled from "styled-components";
-import ProductDataService from "../services/Product.service"
+import ProductDataService from "../services/Product.service";
+import UserService from "../services/User.service";
 import { addToCart } from '../../cartmanagment';
 // import Loader from "react-loader-spinner";
 import StarRatings from "react-star-ratings";
@@ -84,7 +85,8 @@ const Card = styled.div`
   const navigate = useNavigate();
   const [loadProduct , setLoadProduct] = useState("");
   const{ allproducts } = useSelector((state) => state);
- 
+  const [currentUser, setCurrentUser] = useState("");
+  const currentUserId = localStorage.getItem("currentUser");
   const params = useParams();
 
   const [sliderMax, setSliderMax] = useState(1000);
@@ -93,7 +95,7 @@ const Card = styled.div`
 
   const [filter, setFilter] = useState("");
   const [sorting, setSorting] = useState("");
-  const [pageNumber,setPageNumber]=useState(0)
+
 
 
 
@@ -104,7 +106,7 @@ const Card = styled.div`
    if (filterproducts){
     setProduct(filterproducts)
    }else{
-    retrieveAllProducts();
+    retrieveProdByUser();
    }
 
 
@@ -185,7 +187,33 @@ const Card = styled.div`
     //return () => cancel();
   }, [filter, params, sorting]);
 
+ const retrieveProdByUser=()=>{
+  UserService.getUserById(currentUserId)
+  .then(response => {
+           
+  //   console.log(response.data);
+  //   console.log(response.data.name);
+    ProductDataService.retrieveShopByUser(response.data.name)
+    .then(response =>{
+    console.log(response.data.data)
+    console.log(typeof(response.data.data))
+    setProduct(response.data.data)
+    { Object.keys(response.data.data)?.map((item,i)=>{
+      console.log(response.data.data[item])
+    })}
+   
+   })
+    .catch(e => {
+    console.log(e);
+ });
  
+
+  })
+  .catch(e => {
+    console.log(e);
+ });
+
+ }
 
   const retrieveAllProducts=() =>{
     ProductDataService.getAllProducts()
@@ -390,8 +418,8 @@ const Card = styled.div`
                   <li><a title="Add Cart" data-toggle="tooltip"  onClick={(e)=>{
                   e.preventDefault(); addToCart(item,dispatch)}}><i className="ti-shopping-cart"/></a></li>
                   <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
-                  <li><a href="#" title="Wishlist" data-toggle="tooltip"  deleteProdByID={deleteProdByID}><i className="ti-heart" /></a></li>
-                  <li><Link  to={`/updateProd/${item?._id}`}><i className="ti-split-v-alt" /></Link></li>
+                  {/* <li><a href="#" title="Wishlist" data-toggle="tooltip"  deleteProdByID={deleteProdByID}><i className="ti-heart" /></a></li>
+                  <li><Link  to={`/updateProd/${item?._id}`}><i className="ti-split-v-alt" /></Link></li> */}
                   
                 </ul>
               </figure>

@@ -117,13 +117,23 @@ img {
   -o-box-shadow: 0 0 6px #747474;
   box-shadow: 0 0 6px #747474;
 }
-
+.cop{
+  background-color: #088dcd!important;
+  width: 36px!important;
+  height: 36px!important;
+}
 section {
   float: left;
   position: relative;
   width: 100%;
 }
-
+.ui{
+  padding-top: 5px;
+  color : #088dcd ;
+  height: 30px;
+    width: 30px;
+    cursor: pointer;
+}
 .gap {
   float: left;
   padding: 60px 0;
@@ -790,6 +800,62 @@ header.sticky {
   margin-bottom: 0;
   position: relative;
 }
+.user-avatar .edit-phto {
+  border-radius: 0;
+  bottom: -40px;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: all 0.3s linear 0s;
+  padding: 5px;
+  text-align: center;
+}
+
+.user-avatar:hover .edit-phto {
+  bottom: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
+.user-avatar1 {
+  border: 8px solid rgba(255, 255, 255, 0.8);
+  border-radius: 3px 25px 0;
+  box-shadow: 0 1px 0 #e1e8ed;
+  float: right;
+  margin-top: -168px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.user-avatar1 > figure > img {
+  width: 100%;
+}
+
+.user-avatar1 > figure {
+  margin-bottom: 0;
+  position: relative;
+}
+.user-avatar1 .edit-phto {
+  border-radius: 0;
+  bottom: -40px;
+  left: 0;
+  opacity: 0;
+  display: none;
+  width: 100%;
+  transition: all 0.3s linear 0s;
+  padding: 5px;
+  text-align: center;
+}
+
+.user-avatar1:hover .edit-phto {
+  bottom: 0;
+  opacity: 1;
+  display:flex;
+}
 
 .timeline-info {
   background: #fff none repeat scroll 0 0;
@@ -925,23 +991,7 @@ header.sticky {
   width: 126px;
 }
 
-.user-avatar .edit-phto {
-  border-radius: 0;
-  bottom: -40px;
-  left: 0;
-  opacity: 0;
-  visibility: hidden;
-  width: 100%;
-  transition: all 0.3s linear 0s;
-  padding: 5px;
-  text-align: center;
-}
 
-.user-avatar:hover .edit-phto {
-  bottom: 0;
-  opacity: 1;
-  visibility: visible;
-}
 
 /*--- dropdowns ---*/
 
@@ -5440,6 +5490,7 @@ canvas {
   -ms-background-size: contain !important;
   -o-background-size: contain !important;
   background-size: contain !important;
+  background:url(../images/resources/animated-bg2.png);
 }
 
 @keyframes slidedown {
@@ -11307,14 +11358,21 @@ header.sticky {
     position: absolute;
     right: -4px;
 }
-
+.pi{
+  padding-top: 10px;
+}
 
 /*--- timeline area ---*/
 
 .feature-photo .container-fluid {
     padding: 0 43px;
 }
-
+.lp{
+  height: 400px!important;
+}
+.pm{
+  padding-top: 35px;
+}
 .feature-photo {
     display: block;
     position: relative;
@@ -11330,25 +11388,6 @@ header.sticky {
     width: 100%;
 }
 
-.user-avatar {
-    border: 8px solid rgba(255, 255, 255, 0.8);
-    border-radius: 3px 25px 0;
-    box-shadow: 0 1px 0 #e1e8ed;
-    float: right;
-    margin-top: -168px;
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-}
-
-.user-avatar > figure > img {
-    width: 100%
-}
-
-.user-avatar > figure {
-    margin-bottom: 0;
-    position: relative;
-}
 
 .timeline-info {
     background: #fff none repeat scroll 0 0;
@@ -11486,23 +11525,6 @@ header.sticky {
     width: 126px;
 }
 
-.user-avatar .edit-phto {
-    border-radius: 0;
-    bottom: -40px;
-    left: 0;
-    opacity: 0;
-    visibility: hidden;
-    width: 100%;
-    transition: all 0.3s linear 0s;
-    padding: 5px;
-    text-align: center;
-}
-
-.user-avatar:hover .edit-phto {
-    bottom: 0;
-    opacity: 1;
-    visibility: visible;
-}
 
 
 /*--- dropdowns ---*/
@@ -16120,32 +16142,7 @@ canvas {
     margin-bottom: 0;
 }
 
-.content-bg-wrap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-animation: slide 50s linear infinite;
-    -moz-animation: slide 50s linear infinite;
-    -ms-animation: slide 50s linear infinite;
-    -o-animation: slide 50s linear infinite;
-    /* animation: slide 50s linear infinite; */
-    will-change: background-position;
-    -webkit-background-size: contain !important;
-    -moz-background-size: contain !important;
-    -ms-background-size: contain !important;
-    -o-background-size: contain !important;
-    background-size: contain !important;
-}
+
 
 @keyframes slidedown {
     0% {

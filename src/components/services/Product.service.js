@@ -23,12 +23,25 @@ import http from "../../http-common";
     const getProductsByFilter=(data)=>{
         return http.get(`/product/search/${data}`)
     }
+    const retrieveProductByCateg=(categorie)=>{
+        return http.get(`/productbycatg/${categorie}`)
+
+    }
+    const retrieveProductByUser=(nameUser)=>{
+        return http.get(`/productbyUser/${nameUser}`)
+    }
+    const retrieveShopByUser=(nameUser)=>{
+        return http.get(`/shopbyuser/${nameUser}`)
+    }
     const ProductService={
         getAllProducts,
         createProduct,
         getProductById,
         deleteProductByID,
         updateProduct,
-        getProductsByFilter
+        getProductsByFilter,
+        retrieveProductByCateg,
+        retrieveProductByUser,
+        retrieveShopByUser
     };
 export default ProductService;

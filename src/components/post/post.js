@@ -11,6 +11,7 @@ import Comment from "../comment/comment";
 import CommentForm from "../comment/commentForm";
 
 function Post({ post, socket, currentUser, friends, handleDeletePost }) {
+
   const [likes, setLikes] = useState(post?.Likes);
   const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState();
@@ -39,7 +40,7 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
       toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
   });
-
+ 
   const handlelike = async () => {
     const user = {
       userId: currentUser._id,

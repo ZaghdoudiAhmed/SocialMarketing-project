@@ -20,26 +20,13 @@ function Timelinevideos(props) {
                 Add Friend
               </a>
             </div>
-            <form className="edit-phto">
-              <i className="fa fa-camera-retro" />
-              <label className="fileContainer">
-                Edit Cover Photo
-                <input type="file" />
-              </label>
-            </form>
+
             <div className="container-fluid">
               <div className="row merged">
                 <div className="col-lg-2 col-sm-3">
                   <div className="user-avatar">
                     <figure>
                       <img src="images/resources/user-avatar.jpg" alt />
-                      <form className="edit-phto">
-                        <i className="fa fa-camera-retro" />
-                        <label className="fileContainer">
-                          Edit Display Photo
-                          <input type="file" />
-                        </label>
-                      </form>
                     </figure>
                   </div>
                 </div>

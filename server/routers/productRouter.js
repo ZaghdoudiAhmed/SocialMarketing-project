@@ -24,15 +24,17 @@ router.post('/stats',  upload.none(), function (req, res) {
 router.route('/products')
     .get(productCtrl.getProducts)
     .post(  productCtrl.createProduct)
-router.route('/relatedprod/:name')
-    .get(productCtrl.retrieveRelatedProduct)
-
-
+router.route('/productbycatg/:categorie')
+    .get(productCtrl.retrieveProductByCateg)
+router.route('/productbyuser/:name')
+     .get(productCtrl.retrieveProductByUser)
+router.route('/shopbyuser/:name')
+     .get(productCtrl.retrieveProductShop)
 router.route('/products/:id')
     .delete(productCtrl.deleteProduct)
     .put(productCtrl.updateProduct)
     .get(productCtrl.getProductById)
 
-
+  
 
 module.exports = router

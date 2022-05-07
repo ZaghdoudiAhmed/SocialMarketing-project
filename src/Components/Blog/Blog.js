@@ -7,7 +7,7 @@ const Blog = () => {
   const [data1, setdata1] = useState([]);
   let navigate = useNavigate();
   async function fetchdata() {
-    await axios.get('http://localhost:2600/blog/'+currentUserId).then(result => {
+    await axios.get('http://localhost:2600/blog').then(result => {
       console.log(result.data)
       setdata1(result.data);
     })
