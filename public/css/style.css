@@ -4815,7 +4815,7 @@ canvas {
 }
 
 .chat-head > h6 {
-  display: inline-block;
+  display: list-item;
   font-weight: bold;
   margin: 0;
   vertical-align: top;
@@ -15495,7 +15495,7 @@ canvas {
 }
 
 .chat-head > h6 {
-    display: inline-block;
+  display: list-item!important;
     font-weight: bold;
     margin: 0;
     vertical-align: top;

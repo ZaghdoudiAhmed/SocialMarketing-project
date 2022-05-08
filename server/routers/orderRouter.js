@@ -9,5 +9,6 @@ router.get('/user/order/get',orderCtrl.getOrder)
 router.get('/user/order/getByid/:id',orderCtrl.getOrderById)
 router.get('/user/order/getByUser/:name',orderCtrl.retreiveOrderByUser);
 router.put('/user/order/update/:id',orderCtrl.editStatus)
-
+router.post('/user/feedback/create',orderCtrl.createfeedback);
+router.get('/user/feedback/:userid',orderCtrl.getfeedback)
 module.exports = router;

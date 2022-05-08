@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema;
-
+var Schema = mongoose.Schema;
 const ProductSchema  = new mongoose.Schema({
     // fileName: {
     //     type: 'String',
@@ -45,7 +45,8 @@ const ProductSchema  = new mongoose.Schema({
     sold:{
         type: Number
        
-    }
+    },
+    userId:{ type: Schema.Types.ObjectId, ref: 'users' },
 },
 { timestamps: true }
 );

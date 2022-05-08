@@ -3,10 +3,14 @@ import { Link ,useNavigate} from "react-router-dom";
 
 function Shortcuts(props) {
   const navigate = useNavigate();
+  const currentUserId = localStorage.getItem("currentUser");
   const Remove = () => {
     localStorage.removeItem("currentUser");
     window.location.reload();
   };
+  const navig=()=>{
+    navigate(`/shophome/${currentUserId}`);
+  }
   return (
     <div className="widget">
       <h4 className="widget-title">Shortcuts</h4>
@@ -65,6 +69,13 @@ function Shortcuts(props) {
           <i className="ti-truck" />
           <Link to="/order">Orders</Link>
         </li>
+        <li style={{cursor: 'pointer'}}>
+          <i className="ti-package" />
+          <a onClick={navig} title>
+          Your products
+          </a>
+        </li>
+
         <li style={{cursor: 'pointer'}}>
           <i className="ti-power-off" />
           <a onClick={Remove} title>

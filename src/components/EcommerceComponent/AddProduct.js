@@ -82,20 +82,12 @@ export default function AddProduct() {
       FD.push({'userName': userName})
       FD.push({'productName': productName})
       FD.push({'productDesc':product.productDesc})
-      
+      FD.push({'userId':currentUserId})
       FD.push({'productPrice':product.productPrice})
       FD.push({'productCategory':productCatg})
       FD.push({'productQty':product.productQty})
     console.log(imgFile);
       FD.push({'ProductImage':imgFile})
-    //   state.data.forEach((element) => {
-    //     FD.append(element.name, element)
-    //  });
-    for (var pair of FD.entries()) {
-     ///// console.log(pair[0] + ', ' + pair[1]);
-  }
-  
-  
   console.log(FD)
        ProductDataService.createProduct(FD)
         .then(response =>{

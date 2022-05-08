@@ -1184,7 +1184,7 @@ function Donation() {
                       <section>
                         <h2 className="positt">List of Categories </h2>
                         <div className="gap">
-                          <div className="container">
+                          <div className="container mi">
                             <div className="row" id="page-contents">
                               <div className="col-lg-12">
                                 <div className="row masonry">

@@ -138,27 +138,9 @@ ProductDataService.updateProduct(params.id , FD )
     <div className="theme-layout">
     <section>
     <div className="gap100">
-      <div className="container">
+      <div className="container mi">
         <div className="row">
           <div className="col-lg-9">
-            <div className="forum-warper">
-              <div className="post-filter-sec">
-                <form method="post" className="filter-form">
-                  <input type="post" placeholder="Search post" />
-                  <button><i className="ti-search" /></button>
-                </form>
-                <div className="purify">
-                  <span>filter by</span>
-                  <select>
-                    <option>Assending A-Z</option>
-                    <option>Desending Z-A</option>
-                    <option>Desending (date)</option>
-                    <option>Asending (date)</option>
-                  </select>
-                  <a href="#" title>purify</a>
-                </div>
-              </div>
-            </div>
             <div className="forum-form">
               <h5 className="f-title"><i className="ti-info-alt" /> edit product </h5>
             

@@ -189,11 +189,11 @@ const productCtrl = {
         product.userName=req.body[0].userName;
 		product.productName = req.body[1].productName;
 		product.productDesc = req.body[2].productDesc;
-		product.productPrice = req.body[3].productPrice;
-		product.productCategory = req.body[4].productCategory;
-		product.productQty = req.body[5].productQty;
-        product.ProductImage=req.body[6].ProductImage;
-       
+		product.productPrice = req.body[4].productPrice;
+		product.productCategory = req.body[5].productCategory;
+		product.productQty = req.body[6].productQty;
+        product.ProductImage=req.body[7].ProductImage;
+        product.userId=req.body[3].userId;
         await product.save();
        //// console.log(product);
 

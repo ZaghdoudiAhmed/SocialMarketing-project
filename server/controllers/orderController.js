@@ -2,6 +2,7 @@ const Order = require("../models/orderModel");
 const Payment =require('../models/paymentModel');
 const User =require('../models/user');
 const Address = require("../models/address");
+const feedback = require("../models/feedback");
 const orderCtrl={
     createOrder:async (req,res)=>{
 
@@ -146,6 +147,27 @@ const orderCtrl={
         console.log(err)
         return res.status(500).json({msg: err.message})
       }
+    },
+    getfeedback:async(req,res)=>{
+
+    const id= req.params.userid;
+    console.log(id)
+    console.log("mm")
+    const feedback1= await feedback.find({to: id}) ;
+    console.log('ff')
+    console.log(feedback1)
+    res.send(feedback1);
+   },
+ 
+    createfeedback:async(req,res)=>{
+      console.log(req.body[0]['from'])
+      const feedback1= new feedback({
+        from:req.body[0]['from'], 
+        to:req.body[1]['to'],
+        messagefeedback:req.body[2]['messagefeedback']
+      })
+      await feedback1.save()
     }
+ 
 }
 module.exports=orderCtrl;

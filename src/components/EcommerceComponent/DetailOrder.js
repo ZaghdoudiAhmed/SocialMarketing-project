@@ -35,6 +35,8 @@ import SendIcon from "@mui/icons-material/Send";
 import EditIcon from "@mui/icons-material/Edit";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
+import Swal from "sweetalert2";
+
 export default function DetailOrder() {
   const Container = styled.div`
     margin: 2rem 8rem;
@@ -78,11 +80,16 @@ export default function DetailOrder() {
   const [botTyping, setbotTyping] = useState(false);
   const [m, setx] = useState(null);
   const [y, sety] = useState(null);
+  const [z, setz] = useState(null);
+  const [h, seth] = useState(null);
+  const currentUserId = localStorage.getItem("currentUser");
+
   const getimage = () => {
     axios.get("http://127.0.0.1:8000/hub/takeimage").then((res) => {
       console.log(res.data);
       setx(res.data["pred"]);
       sety(res.data["bar"]);
+      setz(res.data["sentence"]);
     });
   };
   useEffect(() => {}, [chat]);
@@ -90,6 +97,28 @@ export default function DetailOrder() {
   const close = () => {
     var elts = document.getElementsByClassName("chat-box");
     elts[0].classList.remove("show");
+  
+   /// console.log(orderdetail.data.OrderLine2[0].product);
+    const n =orderdetail.data.OrderLine2[0].product;
+    console.log(orderdetail.data)
+    const g=orderdetail.data.userName
+    axios.get("http://localhost:2600/api/products/"+n).then((res)=>{ 
+       const result =[]
+      const h= res.data.data.userName
+      seth(h);
+      const m =res.data.data.userId
+  result.push({ from: currentUserId }, { to: m }, { messagefeedback: g+z });
+  axios.post("http://localhost:2600/api/user/feedback/create",result)
+  Swal.fire({
+    position: 'top-end',
+    icon: 'success',
+    title: 'Your feedback is sent to '+h,
+    showConfirmButton: false,
+    timer: 1500
+  })
+    })
+  
+    
   };
   const change = () => {
     var elts = document.getElementsByClassName("chat-box");
@@ -400,9 +429,13 @@ export default function DetailOrder() {
             value={inputMessage}
             type="text"
           />
-          <Button type="submit">
-            <SendIcon></SendIcon>{" "}
-          </Button>
+                <Fab type="submit"
+                                      size="small"
+                                      color="primary"
+                                      aria-label="add"
+                                    >
+                                       <SendIcon  size="small"></SendIcon>
+                                    </Fab>
         </form>
       </div>
         <Container>

@@ -26,6 +26,7 @@ import Header from "./header";
 import Story from "./Story/stories";
 import Shortcuts from "./timeline/shortcuts";
 import Loading from "./loading";
+import Feedback from "./EcommerceComponent/Feedback";
 
 function Accueil() {
   const url = "http://localhost:2600/posts";
@@ -76,7 +77,7 @@ function Accueil() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [bio, setBio] = useState("");
-
+const [msgs, setMsgs] = useState([]);
   const handleClose = () => setShow1(false);
 
   const options = [
@@ -306,6 +307,10 @@ function Accueil() {
     getPosts();
     getFriends();
     getNotFollowers();
+    axios.get("http://localhost:2600/api/user/feedback/"+currentUserId).then((response) => {
+      console.log(response);
+      setMsgs(response.data);
+    })
   }, []);
 
   useEffect(() => {
@@ -1482,25 +1487,11 @@ function Accueil() {
                           {/* Ads */}
                           <Ads />
                           <div className="widget stick-widget ">
-                            <h4 className="widget-title">Profile intro</h4>
+                            <h4 className="widget-title">Your feedback</h4>
                             <ul className="short-profile">
-                              <li>
-                                <span>about</span>
-                                <p>
-                                  Hi, i am jhon kates, i am 32 years old and
-                                  worked as a web developer in microsoft{" "}
-                                </p>
-                              </li>
-                              <li>
-                                <span>fav tv show</span>
-                                <p>
-                                  Sacred Games, Spartcus Blood, Games of Theron{" "}
-                                </p>
-                              </li>
-                              <li>
-                                <span>favourit music</span>
-                                <p>Justin Biber, Shakira, Nati Natasah</p>
-                              </li>
+                              {msgs.map((message)=>(
+                               <Feedback props={message} />
+                              ))}
                             </ul>
                           </div>
                         </aside>
