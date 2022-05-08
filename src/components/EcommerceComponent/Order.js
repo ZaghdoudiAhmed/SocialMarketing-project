@@ -18,13 +18,15 @@ import styled from "styled-components";
 import { large, medium  } from "../../responsive.js";
 import { Link , useNavigate,useParams } from "react-router-dom";
 
-
+import Fab from '@mui/material/Fab';
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
 
 
 
 
 
 export default function Order() {
+  const navigate = useNavigate();
   const Container = styled.div`
   margin: 2rem 8rem;
   display: flex;
@@ -114,13 +116,13 @@ const Button = styled.button`
     <Navbar></Navbar>
    <MainContainer>
     <div className="checkout-total">
-                      <h4>Order Details</h4>
+          
    
     
     <div >
-      <Container>
+      <Container >
     <TableContainer component={Paper}>
-    <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+    <Table className="gt" aria-label="custom pagination table">
     
                 <thead>
                     <tr >
@@ -149,9 +151,12 @@ const Button = styled.button`
                         <td>{orders.data[i].totalPrice}</td>
                         <td>{orders.data[i].paymentMode}</td>
                         {/* <td>{orders.data[i].OrderStatus}</td> */}
-                        <td><Link    to={`/detailorder/${orders.data[i]._id}`}><Button>view detail</Button></Link></td>
-   
-                        
+                        <td>
+  <Fab size="small" color="primary" aria-label="add">       <InfoSharpIcon onClick={()=>{navigate(`/detailorder/${orders.data[i]._id}`)}}/></Fab>
+                 
+
+                        </td>
+                      
                          </tr>
                        )
                      

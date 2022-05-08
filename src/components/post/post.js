@@ -11,7 +11,7 @@ import Comment from "../comment/comment";
 import CommentForm from "../comment/commentForm";
 
 function Post({ post, socket, currentUser, friends, handleDeletePost }) {
-
+console.log(post);
   const [likes, setLikes] = useState(post?.Likes);
   const [dislike, setDislike] = useState(post?.Dislikes);
   const [comments, setComments] = useState();
@@ -418,7 +418,15 @@ function Post({ post, socket, currentUser, friends, handleDeletePost }) {
               <div className="description">
                 <p>{post.Description}</p>
               </div>
-              <img src={"/uploads/posts/" + post.Photo} />
+              {
+                !post.Photo ? (
+                     <div></div>   
+                ): 
+                (
+             <img src={"/uploads/posts/" + post.Photo} />
+                )
+              }
+             
               <div className="we-video-info">
                 <ul>
                   <li>

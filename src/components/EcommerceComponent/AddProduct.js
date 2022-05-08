@@ -103,7 +103,7 @@ export default function AddProduct() {
 
           setSubmitted(true);
           console.log("done");
-          navigate("/shophome");
+          navigate("/shophome/"+ currentUserId);
 
           
         })
@@ -132,28 +132,10 @@ export default function AddProduct() {
     <Navbar></Navbar>
     <div className="theme-layout">
   <section>
-    <div className="gap100">
+    <div className="gap100 mi">
       <div className="container">
         <div className="row">
           <div className="col-lg-9">
-            <div className="forum-warper">
-              <div className="post-filter-sec">
-                <form method="post" className="filter-form">
-                  <input type="post" placeholder="Search post" />
-                  <button><i className="ti-search" /></button>
-                </form>
-                <div className="purify">
-                  <span>filter by</span>
-                  <select>
-                    <option>Assending A-Z</option>
-                    <option>Desending Z-A</option>
-                    <option>Desending (date)</option>
-                    <option>Asending (date)</option>
-                  </select>
-                  <a href="#" title>purify</a>
-                </div>
-              </div>
-            </div>
             <div className="forum-form">
               <h5 className="f-title"><i className="ti-info-alt" /> Create new product </h5>
               <form method="post">
@@ -283,13 +265,10 @@ export default function AddProduct() {
             <aside className="sidebar full-style">
               <div className="widget">
                 <h4 className="widget-title">Categories</h4>
-                <Link href='/categories' underline="hover">
-                  {'Categories'}
-                </Link>
                 <ul className="forum-static">
                 {categories?.map((item,i)=>
                 <li key={i}>
-                <a href="#" title>{item?.name}</a>
+                <a  title>{item?.name}</a>
                 <span>13</span>
               </li>
     )}

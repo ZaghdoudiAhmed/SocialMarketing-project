@@ -164,7 +164,7 @@ const ProductDesc = styled.div``;
                
                 <section>
                     <div class="gap100">
-                        <div class="container">
+                        <div class="container mi">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="prod-detail">

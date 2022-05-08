@@ -12,15 +12,14 @@ import styled from "styled-components";
 import ProductDataService from "../services/Product.service";
 import UserService from "../services/User.service";
 import { addToCart } from '../../cartmanagment';
-
+import Fab from '@mui/material/Fab';
 import StarRatings from "react-star-ratings";
 import Navbar from './NavBar';
 import Footer from './Footer';
 import MultiRangeSlider from "multi-range-slider-react";
 import { large, medium,small  } from "../../responsive.js";
 import Userproduct from './UserProduct';
-
-
+import AddIcon from '@mui/icons-material/Add';
 export default function  HomeShop() {
   let isMounted = true;
     const Container = styled.div`
@@ -70,7 +69,7 @@ export default function  HomeShop() {
   const [currentUser, setCurrentUser] = useState("");
   const currentUserId = localStorage.getItem("currentUser");
   const [UserName,setUserName]= useState("");
-  
+  const navigate = useNavigate()
  
   useEffect(() => {
       
@@ -109,98 +108,51 @@ export default function  HomeShop() {
     <>
    <div className="theme-layout">
     <Navbar></Navbar>
-      
+          
+  
    
     
     <section>
       <div className="gap100">
-        <div className="container">
-          <div className="row">
+        <div className="container mi">
+          <div className="row">  
+         <div className="nu"><Fab onClick={() =>{navigate('/addProd')}}><AddIcon color="primary" fontSize="large" /></Fab> </div> 
             <div className="col-lg-12">
-              <div className="shop-page">
-                <div className="shop-filter-sec">
-                
-              
-   
-                
-      
-    <Container>  
-     
-    <Link className="btn btn-primary"  to="/addProd">
-     Add New Product
-     </Link>
-          <OuterCard>
-                { product?.map((item , i ) => {  
-                return(
-       
-          <div className="col-lg-3 col-sm-6" key={i}>
-          <Card>
-            <div className="product-box">
-              <figure>
-                <span className="new">New</span>
-                   <img 
-                   className="mt-0"
-                   src={item?.ProductImage}  alt="product"
-                   style={{ objectFit: "cover" }}
-                   width="170px"
-                   height="150px" /> 
-                
-                
-                <ul className="cart-optionz">
-                  {/* <li><a title="Add Cart" data-toggle="tooltip"  onClick={(e)=>{
-                  e.preventDefault(); addToCart(item,dispatch)}}><i className="ti-shopping-cart"/></a></li> */}
-                  <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
+                 <div class="shop-page">
+    <div class="row">
+    {product?.map((item,i) => (
+                    <div className="col-lg-3 col-sm-6">
+  <div className="product-box">
+    <figure>
+      <span className="new">New</span>
+      <img src={item?.ProductImage} />
+      <ul className="cart-optionz">
+      <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
                   <li><a href="#" title="Wishlist" data-toggle="tooltip" ><i className="ti-heart" /></a></li> 
                   <li><Link  to={`/updateProd/${item?._id}`}><i className="ti-split-v-alt" /></Link></li>
-                  
-                </ul> 
-             </figure>
-              <ul className="product-name">
-            
-                <h2 title={item?.productName}>{item?.productName}</h2>
-              
-                <div className="prices">
-                  <span>{item?.productPrice} DT</span>
-                </div>
-                <div className="description">
-                  <p>{item?.productDesc}</p>
-                </div>
-                <div>
-                    <StarRatings
-                      // rating={item.rating}
-                      starRatedColor="gold"
-                      numberOfStars={5}
-                      name="rating"
-                      starDimension="20px"
-                      starSpacing="2px"
-                    />
-                  </div>
-              </ul>
-              {/* <div className='row_btn'>
-                 <button className="btn btn-primary" >Delete Product</button> 
-                <Link className="btn btn-primary" to="#"> Buy</Link> 
-                 <Link className="btn btn-primary" to={'/detailProduct/${item?._id}'}> view</Link> 
-
-              </div> */}
-            </div>
-          </Card>
-          </div>
+      </ul>
+    </figure>
+    <div className="product-name">
+      <h5><a href="#" title={item?.productName}>{item?.productName}</a></h5>
+      <ul className="starz">
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+      </ul>
+      <div className="prices">
+        <ins>{item?.productPrice} DT</ins>
+      </div>
+    </div>
+  </div>
+</div>    
          
-         )}) }   
-                </OuterCard>
-                 </Container> 
-        
-             
-         
-             
-               
-       
-         
-              
-                
+    ))}
+      </div>  
+</div>
+   
               </div>
-            </div>
-          </div>
         </div>
         </div>
       </div>

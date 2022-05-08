@@ -304,8 +304,7 @@ const Card = styled.div`
     <>
  
   
-   
-    <Container>
+
     <Container className={classes.root}>
     <Paper className={classes.paper}>
         <Grid container>
@@ -393,85 +392,39 @@ const Card = styled.div`
         )}
       </Grid> */}
     </Container>
-    {/* {loading ? (
-        <div className="d-flex justify-content-center m-5">
-          <Loader type="TailSpin" color="#25283D" height={100} width={100} />
-        </div>
-      ) : ( */}
-    <OuterCard>
-    { product?.map((item , i ) =>   
-        <>
-          <div className="col-lg-3 col-sm-6" key={i}>
-          <Card>
-            <div className="product-box">
-              <figure>
-                <span className="new">New</span>
-                   <img 
-                   className="mt-0"
-                   src={item?.ProductImage}  alt="product"
-                   style={{ objectFit: "cover" }}
-                   width="170px"
-                   height="150px" /> 
-                
-                
-                <ul className="cart-optionz">
-                  <li><a title="Add Cart" data-toggle="tooltip"  onClick={(e)=>{
-                  e.preventDefault(); addToCart(item,dispatch)}}><i className="ti-shopping-cart"/></a></li>
-                  <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
-                  {/* <li><a href="#" title="Wishlist" data-toggle="tooltip"  deleteProdByID={deleteProdByID}><i className="ti-heart" /></a></li>
-                  <li><Link  to={`/updateProd/${item?._id}`}><i className="ti-split-v-alt" /></Link></li> */}
-                  
-                </ul>
-              </figure>
-              <ul className="product-name">
-            
-                <h2 title={item?.productName}>{item?.productName}</h2>
-              
-                <div className="prices">
-                  <span>{item?.productPrice} DT</span>
-                </div>
-                <div className="description">
-                  <p>{item?.productDesc}</p>
-                </div>
-                <div>
-                    <StarRatings
-                      // rating={item.rating}
-                      starRatedColor="gold"
-                      numberOfStars={5}
-                      name="rating"
-                      starDimension="20px"
-                      starSpacing="2px"
-                    />
-                  </div>
-              </ul>
-              <div className='row_btn'>
-                {/* <button className="btn btn-primary" >Delete Product</button> */}
-                {/* <Link className="btn btn-primary" to="#"> Buy</Link> */}
-                {/* <Link className="btn btn-primary" to={'/detailProduct/${item?._id}'}> view</Link> */}
-
-              </div>
-            </div>
-          </Card>
-          </div>
-          </>
-          ) }
-   
-                  {/* <div className="col-lg-12">
-                    <ul className="paginationz">
-                      <li className="prev"><a title href="#"><i className="fa fa-angle-left" /></a></li>
-                      <li><a title href="#">01</a></li>
-                      <li><a title href="#" className="active">02</a></li>
-                      <li><a title href="#">03</a></li>
-                      <li><a title href="#">04</a></li>
-                      <li className="space">.......</li>
-                      <li><a title href="#">21</a></li>
-                      <li className="next"><a title href="#"><i className="fa fa-angle-right" /></a></li>
-                    </ul>
-                  </div>{/* pagination */}	
-                </OuterCard>
-    
-
-    </Container>
+    <div class="shop-page">
+    <div class="row">
+    {product?.map((item,i) => (
+                    <div className="col-lg-3 col-sm-6">
+  <div className="product-box">
+    <figure>
+      <span className="new">New</span>
+      <img src={item?.ProductImage} />
+      <ul className="cart-optionz">
+        <li><a onClick={(e)=>{
+                  e.preventDefault(); addToCart(item,dispatch)}} title="Add Cart" data-toggle="tooltip"><i className="ti-shopping-cart" /></a></li>
+        <li><Link  to={`/detailProduct/${item?._id}`}><i className="ti-eye" /></Link></li>
+      </ul>
+    </figure>
+    <div className="product-name">
+      <h5><a href="#" title={item?.productName}>{item?.productName}</a></h5>
+      <ul className="starz">
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+        <li><i className="fa fa-star" /></li>
+      </ul>
+      <div className="prices">
+        <ins>{item?.productPrice} DT</ins>
+      </div>
+    </div>
+  </div>
+</div>    
+         
+    ))}
+      </div>  
+</div>
     
     
     </>

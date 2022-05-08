@@ -216,191 +216,93 @@ let clearCart=async()=>{
     <>
     <div class="theme-layout">
         <NavCart></NavCart>
-
-      <section>
-    
-       
+<section>
   <div className="gap100">
-  <TopButtons>
-      
-      <Link  to={"/shop"}><ButtonBack>Continue To Shop</ButtonBack></Link>
-   
-    
-</TopButtons>
-    <Container>
-    
-      
-    {/* <div className="container"> */}
-      {/* <div className="row"> */}
-        {/* <div className="col-lg-12"> */}
-          {/* <div className="cart-sec"> */}
-         <OrderContainer>
-            {/* <table >
-            <tbody> */}
-            {/* <tr>
-            
+    <div className="container mi">
+      <div className="row">
+        <div className="col-lg-12">
+          <div className="cart-sec">
+            <table className="table table-responsive">
+              <tbody><tr>
                   <th>Product name</th>
                   <th>price</th>
                   <th>quantity</th>
                   <th>total price</th>
-                </tr> */}
-                <OuterContainer>
-              
+                </tr>
                 { cart?.map((item,i) =>{
                   return(
-                    <CartContainer >
-                      <ImageContainer>
-                      <img src={item?.product.ProductImage} 
-                      width="150rem"
-                         
-                         style={{ objectFit: "cover" }} />
-                      </ImageContainer>
-                      <DetailsContainer>
-                      <div><h2>{item?.product.productName}</h2></div>
-                      <div>
-                      <p>{item?.product.productDesc}</p>
+                    <tr>
+                  <td>
+                    <a title className="delete-cart"><i className="ti-close"  onClick={(event) => deleteItemFromcart(item?.product)} /></a>
+                    <div className="cart-avatar">
+                      <img style={{width: "120px"}}src={item?.product.ProductImage}  alt />
+                    </div>
+                    <div className="cart-meta">
+                      <span>{item?.product.productName}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="cart-prices">  
+                      <ins>
+                        <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">$</span>60</span>
+                      </ins> 
+                    </span>
+                  </td>
+                  <td>
+                    <div className="cart-list-quantity">
+                      <div className="c-input-number">
+                        <span>
+                          <input id="box1" type="number" className="manual-adjust" value={item?.quantity} onChange={(event) => handlequantitychange(event , item)} />
+                        </span>
                       </div>
-                       
-                      
-                      </DetailsContainer>
-                      <QuantityContainer>
-                        <div>
-                        <h4 style={{ display: "inline-block" }}>Quantity:</h4>
-                        <h4 style={{ display: "inline-block" }}>
-                        <input type='number' className='form-control' value={item?.quantity} onChange={(event) => handlequantitychange(event , item)}></input>
-                        </h4>
-                        </div>
-                        <div>
-                        <h4 style={{ display: "inline-block" }}>Total Price:</h4>
-                  <h3 style={{ marginLeft: "3.5rem", fontSize: "1.5rem" }}>
-                  ${item.product.productPrice*item.quantity}
-                  </h3>
-                </div>
-                <div className="mx-auto">
-                  <Button
-                    onClick={(event) => deleteItemFromcart(item?.product)}
-                    
-                  >
-                    Remove
-                  </Button>
-                </div>
-                     
-                      </QuantityContainer>
-                   
-                    </CartContainer>
-
-
+                    </div>
+                  </td>
+                  <td>
+                    <span className="total-price">${item.product.productPrice*item.quantity}</span>
+                  </td>
+                </tr>
                   )
+  
+                })
+
                 }
-               
-                // <tr>
-                //   <td>
-                //     <a  title className="delete-cart"
-                //     // onClick={(e) =>{e.preventDefault(); deleteFromCart(item._id,dispatch)}}
-                //     onClick={(event) => deleteItemFromcart(item?.product)}
-                //     ><i className="ti-close" /></a>
-                //     <div className="cart-avatar">
-                //       <img src={item?.product.ProductImage} alt width={60} height={60} />
-                //     </div>
-                //     <div className="cart-meta">
-                //       <span>{item?.product.productName}</span>
-                //     </div>
-                //   </td>
-                //   <td>
-                //     <span className="cart-prices"> 
-                //       <del>
-                //         <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">$</span>{item?.product.productPrice}</span>
-                //       </del> 
-                //       <ins>
-                //         <span className="woocommerce-Price-amount amount"><span className="woocommerce-Price-currencySymbol">$</span>{item?.product.productPrice}</span>
-                //       </ins> 
-                //     </span>
-                //   </td>
-                //   <td>
-                //     <div className="cart-list-quantity">
-                //       {/* <div className="amount">
-                //         <button onClick={() => increment()}> + </button>
-                      
-                //         <span>
-                //           {item?.quantity} 
-                //         </span>
-                //         <button onClick={() => decrement ()}> - </button>
-                //       </div> */}
-                //       <input type='number' className='form-control' value={item?.quantity} onChange={(event) => handlequantitychange(event , item)}></input>
-                //     </div>
-                //   </td>
-
-                
-     
-                //   <td>
-                
-                    
-
-                //      <span className="total-price">${item.product.productPrice*item.quantity}</span>
-                  
-                   
-                //   </td>
-                // </tr>
-               
-
-               )} 
-                <Button   onClick={(event) => clearCart()} clearCart>
-                Clear Cart
-              </Button>
-              </OuterContainer>
-{/*              
-                 </tbody>
-              </table> */}
-              </OrderContainer>
-          {/* </div>
-          toto */}
-        {/* </div> */}
-        {/* ** */}
-        {/* <div className="col-lg-6">
+              
+              </tbody></table>
+          </div>
+        </div>
+        <div className="col-lg-6">
           <div className="amount-area">
-            <Link  title className="update-cart" to={"/shop"}>Back To Shop</Link>
-         
+            <a title className="update-cart" style={{color: "white"}} onClick={(event) => clearCart()} clearCart >Clear Cart</a>
           </div>
-        </div> */}
-        <SummaryContainer>
-        <div >
-          <div >
-            <ul>
-              <li>
-                <span>Cart Subtotal:</span>
-                <i>${totalPrice}</i>
-              </li>
-              <li>
-                <span>Shipping:</span>
-                <i>Free</i>
-              </li>
-              <li className="order-total">
-                <span>ORDER TOTAL:</span>
-                <i>${totalPrice}</i>
-              </li>
-            </ul>
-          </div>
-          <div className="proceed">
-                      
-                    { cart?.length == 0 ?
+        </div>
+
+          <div class="col-lg-6">
+						<div class="total-area">
+							<ul>
+								<li>
+									<span>Cart Subtotal:</span>
+									<i>${totalPrice}</i>
+								</li>
+								<li>
+									<span>Shipping:</span>
+									<i>Free</i>
+								</li>
+								<li class="order-total">
+									<span>ORDER TOTAL:</span>
+									<i>${totalPrice}</i>
+								</li>
+							</ul>
+						</div>
+						<div class="proceed tip">
+            { cart?.length == 0 ?
                      (<button className="button" disabled> proceed to checkout 2 </button>) :
                      (<Link className="button"to={`/checkout/${totalPrice}`}>proceed to checkout</Link>)}
-            
-          </div>
-           {/* { cart?.length == 0 ?
-                     (<ButtonBack>proceed to checkout</ButtonBack>) :
-                     (<Link className="ButtonBack"to={`/checkout/${totalPrice}`}>proceed to checkout</Link>)} */}
-          
-        </div>
-        </SummaryContainer>
-      {/* </div>	  */}
-      {/* *** */}
-     {/* </div> */}
-    </Container>
-    {/* ici */}
+						</div>
+					</div>
+
+      </div>	
+    </div>
   </div>
-  
-  
 </section>{/* CART SECTION */}
 
 

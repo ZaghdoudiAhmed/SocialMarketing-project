@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-
+import ReplyIcon from '@mui/icons-material/Reply';
 import "./comment.css";
 import { format } from "timeago.js";
 import moment from "moment";
 import CommentForm from "./commentForm";
 import axios from "axios";
 import Swal from "sweetalert2";
-
+import Fab from '@mui/material/Fab';
 function Comment({ comment, replies, currentUser, socket }) {
   const canReply = Boolean(currentUser);
   const [activeComment, setActiveComment] = useState(null);
@@ -227,7 +227,7 @@ function Comment({ comment, replies, currentUser, socket }) {
               }
               title="Reply"
             >
-              <i className="fa fa-reply" />
+              <i className="fa fa-reply" style={{cursor: "pointer"}}/>
             </a>
           )}
         </div>
@@ -269,10 +269,10 @@ function Comment({ comment, replies, currentUser, socket }) {
             <div className="we-comment">
               <div className="coment-head">
                 <h5>
-                  <a href="time-line.html">{currentUser.name}</a>
+                  <a href="/">{currentUser.name}</a>
                 </h5>
               </div>
-              <div className="newpst-input">
+              <div className="newpst-input" style={{display: 'flex'}}>
                 <p>
                   <textarea
                     row={2}
@@ -280,16 +280,9 @@ function Comment({ comment, replies, currentUser, socket }) {
                     value={replyBody}
                   />
                 </p>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  style={{ color: "#088dcd" }}
-                  onClick={handleReply}
-                >
-                  reply
-                </button>
+                  <ReplyIcon   className="prof" onClick={handleReply}   style={{ color: "#088dcd",cursor : "pointer" }}></ReplyIcon>
+
               </div>
-              <i className="del fa fa-close" />
             </div>
           </li>
         )}

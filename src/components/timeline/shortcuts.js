@@ -61,6 +61,10 @@ function Shortcuts(props) {
           <i className="ti-world" />
           <Link to="/articles">Articles</Link>
         </li>
+        <li>
+          <i className="ti-truck" />
+          <Link to="/order">Orders</Link>
+        </li>
         <li style={{cursor: 'pointer'}}>
           <i className="ti-power-off" />
           <a onClick={Remove} title>

@@ -22,7 +22,7 @@ await axios.get("http://localhost:2600/compaign/getcompaigns/"+currentUserId).th
   return (
     <div>
       <div className="theme-layout">
-        <Header />
+        <Header currentUserId={{currentUserId}}/>
         {/* topbar */}
         <section>
           <div className="feature-photo">

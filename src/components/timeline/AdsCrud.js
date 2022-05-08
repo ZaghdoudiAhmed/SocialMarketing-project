@@ -6,6 +6,7 @@ import {Switch} from "@mui/material";
 import {NotificationContainer, NotificationManager} from "react-notifications";
 import Swal from 'sweetalert2'
 import Tour from 'reactour'
+import Timelineinfo from './timeline-info'
 function AdsCrud(props) {
     const [largeBox, setLargeBox]=useState(false)
     const [currentStep, setCurrentStep]=useState()
@@ -381,8 +382,11 @@ function AdsCrud(props) {
                         </Button>
                     </Modal.Footer>*/}
                 </Modal>
-                <Header/>
-                <TimelineCover/>
+                <Header currentUserId={currentUserId} />
+              {/* topbar */}
+        <section>
+          <Timelineinfo />
+        </section>
                 <section>
                     <div className="gap gray-bg">
                         <div className="container-fluid">

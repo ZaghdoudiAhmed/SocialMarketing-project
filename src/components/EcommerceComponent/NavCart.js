@@ -190,9 +190,7 @@ export default function NavCart() {
     </nav>
   </div>{/* responsive header */}
   <div className="topbar transparent">
-    <div className="logo">
-      <a title href="newsfeed.html"><img src="images/logo2.png" alt /></a>
-    </div>
+  
    
     <div className="overlay" id="overlay">
       <nav className="overlay-menu">
@@ -277,7 +275,7 @@ export default function NavCart() {
             <div className="top-banner">
               <h1>Shop Cart</h1>
               <nav className="breadcrumb">
-                <a className="breadcrumb-item" href="index-2.html">Home</a>
+                <a className="breadcrumb-item" href="/shop">Shop</a>
                 <span className="breadcrumb-item active">Cart</span>
               </nav>
             </div>

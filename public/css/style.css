@@ -775,7 +775,9 @@ header.sticky {
 .feature-photo > figure {
   margin-bottom: 0;
 }
-
+.tip{
+  padding-top: 5px;
+}
 .feature-photo > figure img {
   display: inline-block;
   width: 100%;
@@ -1342,15 +1344,27 @@ header.sticky {
   margin-left: 10px;
   vertical-align: top;
   width: 85.5%;
+  
 }
 
 .newpst-input > form {
   display: inline-block;
   width: 100%;
 }
+.toi{
+  padding: 1px 0!important;
+}
+.mi{
+  padding: 0rem 1rem 1rem 1rem!important;
+}
 .newpst-input textarea {
   float: left;
-  width: 100%;
+  width: 500px!important;
+  height: 50px!important;
+
+}
+.prof{
+  margin-top: 10px;
 }
 .attachments {
   border: 1px solid #eee;
@@ -4769,7 +4783,7 @@ canvas {
   border-radius: 3px;
   bottom: -2px;
   position: absolute;
-  right: 100%;
+  right: 10%!important;
   width: 300px;
   z-index: 9999999;
   transform: translate(40px) scale(0);
@@ -8355,7 +8369,7 @@ figure.sign-author {
 .shop-page {
   display: inline-block;
   position: relative;
-  width: 100%;
+  width: 120%;
 }
 
 .shop-filter-sec {
@@ -9451,9 +9465,20 @@ button.submit-checkout {
 
 .proceed {
   float: right;
-  margin-top: -65px;
+  margin-top: 5px!important;
 }
-
+.nu{
+  padding-left: 1115px;
+  margin-bottom: 25px;
+}
+.gt{
+  width: 1400px!important;
+  border-collapse: collapse;
+  border-spacing: 0;
+  min-width: 1400px!important;
+  margin-left: 35px!important;
+  margin-top: 10px!important;
+}
 .proceed .button {
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
@@ -15438,7 +15463,7 @@ canvas {
     border-radius: 3px;
     bottom: -2px;
     position: fixed;
-    right: 100%;
+    right: 10%!important;
     width: 350px;
     z-index: 9999999;
     transform: translate(40px) scale(0);
@@ -18904,7 +18929,8 @@ figure.sign-author {
 }
 
 .product-box > figure img {
-    width: 100%;
+  width: 800px!important;
+  height: 300px!important;
 }
 
 .product-box figure > span {

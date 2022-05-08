@@ -191,10 +191,6 @@ export default function Navbar() {
     </nav>
   </div>{/* responsive header */}
   <div className="topbar transparent">
-    <div className="logo">
-      <a title href="newsfeed.html"><img src="images/logo2.png" alt /></a>
-    </div>
-
     <div className="overlay" id="overlay">
       <nav className="overlay-menu">
         <ul className="offcanvas-menu">
@@ -271,14 +267,14 @@ export default function Navbar() {
   </div>{/* topbar transparent header */}
   <section>
     <div className="ext-gap bluesh high-opacity">
-      <div className="content-bg-wrap"    style={{ background: "url(images/resources/animated-bg2.png)" }} />
+      <div className="content-bg-wrap"/>
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12">
             <div className="top-banner">
               <h1>Our Shop</h1>
               <nav className="breadcrumb">
-                <a className="breadcrumb-item" href="index-2.html">Home</a>
+                <a className="breadcrumb-item" href="/">Home</a>
                 <span className="breadcrumb-item active">Shop</span>
               </nav>
             </div>

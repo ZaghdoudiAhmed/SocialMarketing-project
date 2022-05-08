@@ -190,9 +190,7 @@ export default function NavDetail() {
     </nav>
   </div>{/* responsive header */}
   <div className="topbar transparent">
-    <div className="logo">
-      <a title href="newsfeed.html"><img src="images/logo2.png" alt /></a>
-    </div>
+
  
     <div className="overlay" id="overlay">
       <nav className="overlay-menu">
@@ -272,7 +270,7 @@ export default function NavDetail() {
  
   <section>
     <div className="ext-gap bluesh high-opacity">
-      <div className="content-bg-wrap"  style={{background: `url(${process.env.PUBLIC_URL+'/assets/images/resources/animated-bg2.png'})`}} />
+      <div className="content-bg-wrap" />
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12">
