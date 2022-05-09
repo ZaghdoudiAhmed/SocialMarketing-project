@@ -353,9 +353,6 @@ function Login(props) {
                     <div className="land-featurearea">
                         <div className="land-meta">
                             <h1>2nd Chance</h1>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                            </p>
                             <div className="second-chance-logo">
                                 <span><img className={"snd-chance-logo "+logoClass} src="images/2nd-Chance-Icon-sm.png"
                                            alt="2nd chance logo" width="500px" height="250px" /></span>
